@@ -85,6 +85,24 @@ switch ($act) {
         noteKhach();
         break;
 
+        // TRANG NHẬT KÝ TOUR
+    case 'nhatKy':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        nhatKy();
+        break;
+
+        // TRANG BÁO CÁO VẬN HÀNH
+    case 'vanHanh':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        vanHanh();
+        break;
+
     default:
         require './views/404.php';
         break;

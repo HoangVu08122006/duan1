@@ -41,3 +41,19 @@ function noteKhach(){
 
     require './views/layout_admin.php'; // load layout admin
 }
+
+function nhatKy(){
+    ob_start();
+    require './views/admin/nhatKyTour.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
+
+function vanHanh(){
+    ob_start();
+    require './views/admin/baoCaoVanHanh.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
