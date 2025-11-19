@@ -9,3 +9,35 @@ function adminDashboard() {
 
     require './views/layout_admin.php';
 }
+
+function nhanSu(){
+    ob_start();
+    require './views/admin/nhanSu.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
+
+function dieuHanhTour(){
+    ob_start();
+    require './views/admin/dieuHanhTour.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
+
+function doanKhach(){
+    ob_start();
+    require './views/admin/doanKhach.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
+
+function noteKhach(){
+    ob_start();
+    require './views/admin/noteKhach.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}

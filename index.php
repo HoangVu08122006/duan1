@@ -49,6 +49,42 @@ switch ($act) {
         adminDashboard();
         break;
 
+    // TRANG DANH SÁCH NHÂN SỰ
+    case 'nhanSu':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        nhanSu();
+        break;
+
+        // TRANG ĐIỀU HÀNH TOUR
+    case 'dieuHanhTour':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        dieuHanhTour();
+        break;
+
+        // TRANG QUẢN LÝ ĐOÀN KHÁCH
+    case 'doanKhach':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        doanKhach();
+        break;
+
+        // TRANG GHI CHÚ KHÁCH HÀNG
+    case 'noteKhach':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        noteKhach();
+        break;
+
     default:
         require './views/404.php';
         break;
