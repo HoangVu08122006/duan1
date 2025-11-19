@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+}
+
+.admin-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ================= MENU TRÁI ================= */
+.sidebar {
+    width: 250px;
+    background: #ffffff;
+    color: #130000;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* full height màn hình */
+    border-right: 1px solid #ddd;
+}
+
+/* Tiêu đề sidebar */
+.sidebar-title {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-weight: bold;
+}
+
+/* Menu chính */
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1; /* chiếm phần giữa */
+    overflow-y: auto; /* bật scroll khi menu dài */
+}
+
+/* Scrollbar gọn */
+.menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.menu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.menu::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.menu::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.menu li a {
+    display: block;
+    padding: 12px 20px;
+    color: #000000;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.menu li a:hover {
+    background: #f3f3f3;
+    color: #0ca2ff;
+}
+
+/* Logout luôn ở dưới */
+.logout-box {
+    padding: 15px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    text-align: center;
+    background: #f4f4f4;
+}
+
+.logout-box a {
+    color: #130000;
+    text-decoration: none;
+    font-weight: bold;
+}
+.logout-box a:hover{
+    color:#0ca2ff;
+}
+
+/* ================= PHẦN BÊN PHẢI ================= */
+.admin-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-header {
+    background: #fff;
+    padding: 15px 20px;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: right;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 20px;
+    background: #f9f9f9;
+    overflow-y: auto;
+}
+
+.admin-footer {
+    background: #fff;
+    padding: 12px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+}
