@@ -8,6 +8,7 @@ body {
 .admin-container {
     display: flex;
     height: 100vh;
+    overflow: hidden; /* tránh scroll chung */
 }
 
 /* ================= SIDEBAR ================= */
@@ -21,31 +22,32 @@ body {
     border-right: 1px solid #ddd;
 }
 
-/* Tiêu đề sidebar */
+/* Tiêu đề sidebar cố định */
 .sidebar-title {
     text-align: center;
     padding: 16px 0;
     font-size: 18px;
     border-bottom: 1px solid rgba(0,0,0,0.1);
     font-weight: bold;
+    flex-shrink: 0; /* không co lại */
 }
 
-/* ================= MENU ================= */
+/* Menu cuộn độc lập */
 .menu {
     list-style: none;
     padding: 0;
     margin: 0;
-    flex: 1; /* chiếm phần giữa */
+    flex: 1; /* chiếm khoảng còn lại */
     overflow-y: auto;
 }
 
-/* Scrollbar gọn */
+/* Scrollbar sidebar */
 .menu::-webkit-scrollbar { width: 6px; }
 .menu::-webkit-scrollbar-track { background: #f1f1f1; }
 .menu::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
 .menu::-webkit-scrollbar-thumb:hover { background: #555; }
 
-/* Menu chính - nhỏ gọn */
+/* Menu chính */
 .menu li a {
     display: block;
     padding: 8px 16px;
@@ -76,7 +78,7 @@ body {
     display: none;
 }
 
-/* Submenu thụt vào, nhỏ gọn */
+/* Submenu thụt vào */
 .menu .submenu li a {
     padding: 6px 32px;
     font-size: 13px;
@@ -85,7 +87,7 @@ body {
 }
 .menu .submenu li a:hover { background: #dbdde0; }
 
-/* Mở submenu khi click (JS sẽ thêm class 'open') */
+/* Mở submenu khi click (JS thêm class 'open') */
 .menu li.has-submenu.open .submenu { display: block; }
 
 /* Mũi tên quay xuống khi mở submenu */
@@ -95,20 +97,19 @@ body {
 }
 .menu li.has-submenu.open > a::after { transform: rotate(180deg); }
 
-/* ================= LOGOUT ================= */
+/* Logout box cố định dưới cùng */
 .logout-box {
     padding: 12px;
     border-top: 1px solid rgba(0,0,0,0.1);
     text-align: center;
     background: #f4f4f4;
+    flex-shrink: 0; /* không co lại */
 }
-
 .logout-box a {
     color: #130000;
     text-decoration: none;
     font-weight: bold;
 }
-
 .logout-box a:hover { color: #0ca2ff; }
 
 /* ================= PHẦN BÊN PHẢI ================= */
@@ -116,16 +117,20 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* tránh scroll chung */
 }
 
+/* Header cố định */
 .admin-header {
     background: #fff;
     padding: 12px 16px;
     font-size: 15px;
     border-bottom: 1px solid #ddd;
     text-align: right;
+    flex-shrink: 0; /* cố định */
 }
 
+/* Nội dung chính cuộn độc lập */
 .admin-content {
     flex: 1;
     padding: 16px;
@@ -133,9 +138,18 @@ body {
     overflow-y: auto;
 }
 
+/* Scrollbar content */
+.admin-content::-webkit-scrollbar { width: 8px; }
+.admin-content::-webkit-scrollbar-track { background: #f1f1f1; }
+.admin-content::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+.admin-content::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Footer cố định */
 .admin-footer {
     background: #fff;
     padding: 10px;
     border-top: 1px solid #ddd;
     text-align: center;
+    flex-shrink: 0; /* cố định */
 }
+

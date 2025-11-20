@@ -12,6 +12,13 @@ require_once './controllers/HomeController.php';
 require_once './controllers/AuthController.php';
 require_once './controllers/AdminController.php'; // dashboard
 
+// Models
+require_once './models/TrangThaiLichKhoiHanh.php';
+require_once './models/LichKhoiHanh.php';
+require_once './models/TourDuLich.php';
+require_once './models/nhanSuModel.php';
+
+
 // Session
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -102,6 +109,33 @@ switch ($act) {
         }
         vanHanh();
         break;
+
+        case 'nhanSu':
+            nhanSu(); break;
+        case 'viewNhanSu':
+            $id = $_GET['id'] ?? 0;
+            viewNhanSu($id); break;
+        case 'addNhanSu':
+            addNhanSu(); break;
+        case 'editNhanSu':
+            $id = $_GET['id'] ?? 0;
+            editNhanSu($id); break;
+        case 'deleteNhanSu':
+            $id = $_GET['id'] ?? 0;
+            deleteNhanSu($id); break;
+
+        case 'dieuHanhTour': dieuHanhTour(); 
+        break;
+        case 'viewLich':
+            $id = $_GET['id'] ?? 0; 
+            viewLich($id); break;
+        case 'addLich': addLich(); break;
+        case 'editLich':
+            $id = $_GET['id'] ?? 0; editLich($id); break;
+        case 'deleteLich':
+            $id = $_GET['id'] ?? 0; deleteLich($id); break;
+
+
 
     default:
         require './views/404.php';
