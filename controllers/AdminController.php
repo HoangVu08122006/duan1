@@ -10,10 +10,42 @@ function adminDashboard() {
     require './views/layout_admin.php';
 }
 
+function danhMucTour(){
+    ob_start();
+    require './views/admin/DanhMucTour/danhMucTour.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
+
+function tourDuLich(){
+    ob_start();
+    require './views/admin/TourDuLich/tourDuLich.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
+
+function taoBooking(){
+    ob_start();
+    require './views/admin/TaoBooking/taoBooking.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
+
+function quanLyBooking(){
+    ob_start();
+    require './views/admin/QuanLyBooking/quanLyBooking.php'; // load file view tĩnh
+    $content = ob_get_clean();
+
+    require './views/layout_admin.php'; // load layout admin
+}
+
 
 function doanKhach(){
     ob_start();
-    require './views/admin/doanKhach.php'; // load file view tĩnh
+    require './views/admin/DoanKhach/doanKhach.php'; // load file view tĩnh
     $content = ob_get_clean();
 
     require './views/layout_admin.php'; // load layout admin
@@ -21,7 +53,7 @@ function doanKhach(){
 
 function noteKhach(){
     ob_start();
-    require './views/admin/noteKhach.php'; // load file view tĩnh
+    require './views/admin/NoteKhach/noteKhach.php'; // load file view tĩnh
     $content = ob_get_clean();
 
     require './views/layout_admin.php'; // load layout admin
@@ -29,7 +61,7 @@ function noteKhach(){
 
 function nhatKy(){
     ob_start();
-    require './views/admin/nhatKyTour.php'; // load file view tĩnh
+    require './views/admin/NhatKy/nhatKyTour.php'; // load file view tĩnh
     $content = ob_get_clean();
 
     require './views/layout_admin.php'; // load layout admin
@@ -37,7 +69,7 @@ function nhatKy(){
 
 function vanHanh(){
     ob_start();
-    require './views/admin/baoCaoVanHanh.php'; // load file view tĩnh
+    require './views/admin/BaoCaoVanHanh/baoCaoVanHanh.php'; // load file view tĩnh
     $content = ob_get_clean();
 
     require './views/layout_admin.php'; // load layout admin

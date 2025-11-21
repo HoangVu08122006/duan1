@@ -63,6 +63,7 @@ switch ($act) {
         break;
 
 
+
          // DANH MỤC TOUR
     case 'danhMuc':
         $danhMucController = new DanhMucController();
@@ -90,6 +91,42 @@ switch ($act) {
                 require './views/404.php';
                 break;
         }
+        break;
+
+        // TRANG DANH MỤC TOUR
+    case 'danhMuc':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        danhMucTour();
+        break;
+
+        // TRANG TOUR DU LỊCH
+    case 'tour':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        tourDuLich();
+        break;
+
+        // TRANG TẠO BOOKING
+    case 'taoBooking':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        taoBooking();
+        break;
+
+        // TRANG QUẢN LÝ BOOKING
+    case 'trangThaiBooking':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        quanLyBooking();
         break;
 
 

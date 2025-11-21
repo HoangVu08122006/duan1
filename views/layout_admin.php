@@ -18,7 +18,7 @@ require_once __DIR__ . '/../commons/env.php';
 
     <!-- PHẦN BÊN PHẢI -->
     <div class="admin-right">
-
+                      
         <!-- HEADER -->
         <?php require_once __DIR__ . '/components/header.php'; ?>
 
