@@ -2,7 +2,7 @@
 // Biến môi trường, dùng chung toàn hệ thống
 // Khai báo dưới dạng HẰNG SỐ để không phải dùng $GLOBALS
 
-define('BASE_URL', 'http://localhost/duan1/duan1/');
+define('BASE_URL', 'http://localhost/duan1-wd20305-main/mvc-oop-basic-duan1/');
 
 
 define('DB_HOST'    , 'localhost');
