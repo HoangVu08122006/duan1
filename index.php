@@ -11,12 +11,14 @@ require_once './commons/function.php';
 require_once './controllers/HomeController.php';
 require_once './controllers/AuthController.php';
 require_once './controllers/AdminController.php'; // dashboard
+require_once './controllers/DanhMucController.php';
 
 // Models
 require_once './models/TrangThaiLichKhoiHanh.php';
 require_once './models/LichKhoiHanh.php';
 require_once './models/TourDuLich.php';
 require_once './models/nhanSuModel.php';
+require_once './models/DanhMucModel.php';
 
 
 // Session
@@ -25,9 +27,13 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // Route
-$act = $_GET['act'] ?? '/';
+$act =$_GET['act'] ?? '/';  
+
+
 
 switch ($act) {
+
+    
 
     // Trang chủ
     case '/':
@@ -54,6 +60,37 @@ switch ($act) {
             exit();
         }
         adminDashboard();
+        break;
+
+
+
+         // DANH MỤC TOUR
+    case 'danhMuc':
+        $danhMucController = new DanhMucController();
+        $action = $_GET['action'] ?? 'index';
+        switch ($action) {
+            case 'index':
+                $danhMucController->index();
+                break;
+            case 'addForm':
+                $danhMucController->addForm();
+                break;
+            case 'addSubmit':
+                $danhMucController->addSubmit();
+                break;
+            case 'editForm':
+                $danhMucController->editForm();
+                break;
+            case 'editSubmit':
+                $danhMucController->editSubmit();
+                break;
+            case 'delete':
+                $danhMucController->delete();
+                break;
+            default:
+                require './views/404.php';
+                break;
+        }
         break;
 
         // TRANG DANH MỤC TOUR
@@ -91,6 +128,7 @@ switch ($act) {
         }
         quanLyBooking();
         break;
+
 
     // TRANG DANH SÁCH NHÂN SỰ
     case 'nhanSu':

@@ -16,12 +16,11 @@
             $selected = ($tour['id_tour'] == $lich['id_tour']) ? 'selected' : '';
         ?>
             <option value="<?= $tour['id_tour'] ?>" <?= $selected ?>><?= $tour['ten_tour'] ?></option>
-        <?php endforeach; ?>
-    </select><br>
-
-    <label>Hướng dẫn viên chính:</label>
-    <select name="id_hdv" required>
-        <?php foreach($hdvs as $hdv): 
+        <?php endforeach; ?>                           
+    </select><br>                                                                                               
+    <label>Hướng dẫn viên chính:</label>                  
+    <select name="id_hdv" required>                      
+        <?php foreach($hdvs as $hdv):                     
             $selected = ($hdv['id_hdv'] == $lich['id_hdv']) ? 'selected' : '';
         ?>
             <option value="<?= $hdv['id_hdv'] ?>" <?= $selected ?>><?= $hdv['ho_ten'] ?></option>
