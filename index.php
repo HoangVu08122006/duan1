@@ -65,33 +65,33 @@ switch ($act) {
 
 
          // DANH MỤC TOUR
-    case 'danhMuc':
-        $danhMucController = new DanhMucController();
-        $action = $_GET['action'] ?? 'index';
-        switch ($action) {
-            case 'index':
-                $danhMucController->index();
-                break;
-            case 'addForm':
-                $danhMucController->addForm();
-                break;
-            case 'addSubmit':
-                $danhMucController->addSubmit();
-                break;
-            case 'editForm':
-                $danhMucController->editForm();
-                break;
-            case 'editSubmit':
-                $danhMucController->editSubmit();
-                break;
-            case 'delete':
-                $danhMucController->delete();
-                break;
-            default:
-                require './views/404.php';
-                break;
-        }
-        break;
+    // case 'danhMuc':
+    //     $danhMucController = new DanhMucController();
+    //     $action = $_GET['action'] ?? 'index';
+    //     switch ($action) {
+    //         case 'index':
+    //             $danhMucController->index();
+    //             break;
+    //         case 'addForm':
+    //             $danhMucController->addForm();
+    //             break;
+    //         case 'addSubmit':
+    //             $danhMucController->addSubmit();
+    //             break;
+    //         case 'editForm':
+    //             $danhMucController->editForm();
+    //             break;
+    //         case 'editSubmit':
+    //             $danhMucController->editSubmit();
+    //             break;
+    //         case 'delete':
+    //             $danhMucController->delete();
+    //             break;
+    //         default:
+    //             require './views/404.php';
+    //             break;
+    //     }
+    //     break;
 
         // TRANG DANH MỤC TOUR
     case 'danhMuc':
@@ -101,6 +101,8 @@ switch ($act) {
         }
         danhMucTour();
         break;
+
+        
 
         // TRANG TOUR DU LỊCH
     case 'tour':
@@ -156,6 +158,39 @@ switch ($act) {
         }
         doanKhach();
         break;
+
+        case 'viewDoanKhach':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        viewDoanKhach();
+        break;
+
+        case 'editKhach':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        editKhach();
+        break;
+
+        case 'addKhach':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        addKhach();
+        break;
+
+        case 'deleteKhach':
+        if (!isset($_SESSION['admin'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        deleteKhach();
+        break;
+
 
         // TRANG GHI CHÚ KHÁCH HÀNG
     case 'noteKhach':
