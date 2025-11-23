@@ -8,7 +8,7 @@
 </head>
 <style></style>
 <body>
-    <h1>Điều hành tour</h1>
+    <h1>Quản lý lịch khởi hành & phân bổ nhân sự</h1>
     <div class="search-box"><input type="text" id="searchInput" placeholder="Tìm theo Tour/HDV..."></div>
 <button class="add-btn" onclick="location.href='index.php?act=addLich'">Thêm lịch mới</button>
 

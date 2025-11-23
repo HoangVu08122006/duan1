@@ -191,16 +191,6 @@ switch ($act) {
         deleteKhach();
         break;
 
-
-        // TRANG GHI CHÚ KHÁCH HÀNG
-    case 'noteKhach':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        noteKhach();
-        break;
-
         // TRANG NHẬT KÝ TOUR
     case 'nhatKy':
         if (!isset($_SESSION['admin'])) {
