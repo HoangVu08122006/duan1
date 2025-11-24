@@ -234,6 +234,16 @@ switch ($act) {
         case 'deleteLich':
             $id = $_GET['id'] ?? 0; deleteLich($id); break;
 
+            
+        case 'hdvHome':
+    if (!isset($_SESSION['hdv'])) {
+        header("Location: index.php?act=login");
+        exit();
+    }
+    require './views/hdv/home.php'; 
+    break;
+
+
 
 
     default:

@@ -5,22 +5,44 @@ function showLoginForm() {
 }
 
 function loginHandle() {
+    require_once './models/nhanSuModel.php';
+    require_once './models/AdminModel.php';
+
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // Tài khoản mẫu
-    $adminUser = 'admin';
-    $adminPass = '123456';
+    // ==============================
+    // 1. KIỂM TRA ADMIN
+    // ==============================
+    $admin = getAdminByUsername($username);
 
-    if ($username == $adminUser && $password == $adminPass) {
-        $_SESSION['admin'] = $username;
+    if ($admin && $admin['pass_admin'] == $password) {
+        $_SESSION['admin'] = $admin['name_admin'];
         header("Location: index.php?act=dashboard");
         exit();
-    } else {
-        $error = "Sai tài khoản hoặc mật khẩu!";
-        require './views/login.php';
     }
+
+    // ==============================
+    // 2. KIỂM TRA HDV
+    // (login bằng email OR họ tên)
+    // ==============================
+        $nhanSu = new HuongDanVien();
+        $hdv = $nhanSu->getHDVByEmailOrName($username);
+
+
+    if ($hdv && $hdv['pass'] == $password) {
+        $_SESSION['hdv'] = $hdv['ho_ten'];
+        $_SESSION['id_hdv'] = $hdv['id_hdv'];
+
+        header("Location: index.php?act=hdvHome"); // tạo route này
+        exit();
+    }
+
+    // Sai tài khoản
+    $error = "Sai tài khoản hoặc mật khẩu!";
+    require './views/login.php';
 }
+
 
 function logout() {
     session_destroy();
