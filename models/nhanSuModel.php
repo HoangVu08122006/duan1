@@ -78,4 +78,14 @@ class HuongDanVien {
     public function getTrangThai() {
         return $this->db->query("SELECT * FROM trang_thai_lam_viec_hdv")->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    function getHDVByEmailOrName($value) {
+    $conn = connectDB();
+    $sql = "SELECT * FROM huong_dan_vien 
+            WHERE email = ? OR ho_ten = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$value, $value]);
+    return $stmt->fetch();
+}
+
 }

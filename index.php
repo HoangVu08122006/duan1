@@ -202,16 +202,6 @@ case 'danhMuc':
         deleteKhach();
         break;
 
-
-        // TRANG GHI CHÚ KHÁCH HÀNG
-    case 'noteKhach':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        noteKhach();
-        break;
-
         // TRANG NHẬT KÝ TOUR
     case 'nhatKy':
         if (!isset($_SESSION['admin'])) {
@@ -254,6 +244,16 @@ case 'danhMuc':
             $id = $_GET['id'] ?? 0; editLich($id); break;
         case 'deleteLich':
             $id = $_GET['id'] ?? 0; deleteLich($id); break;
+
+            
+        case 'hdvHome':
+    if (!isset($_SESSION['hdv'])) {
+        header("Location: index.php?act=login");
+        exit();
+    }
+    require './views/hdv/home.php'; 
+    break;
+
 
 
 

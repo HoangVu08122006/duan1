@@ -412,14 +412,6 @@ function deleteLich($id){
 
 
 
-function noteKhach(){ 
-    ob_start(); 
-    require './views/admin/NoteKhach/noteKhach.php'; // load file view tĩnh 
-    $content = ob_get_clean(); 
-    require './views/layout_admin.php'; // load layout admin 
-    }
-
-
 function nhatKy(){ 
     ob_start(); 
     require './views/admin/NhatKy/nhatKyTour.php'; // load file view tĩnh 
