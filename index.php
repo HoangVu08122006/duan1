@@ -11,7 +11,7 @@ require_once './commons/function.php';
 require_once './controllers/HomeController.php';
 require_once './controllers/AuthController.php';
 require_once './controllers/AdminController.php'; // dashboard
-require_once './controllers/DanhMucController.php';
+// require_once './controllers/DanhMucController.php';
 
 // Models
 require_once './models/TrangThaiLichKhoiHanh.php';
@@ -64,47 +64,58 @@ switch ($act) {
 
 
 
-         // DANH MỤC TOUR
-    // case 'danhMuc':
-    //     $danhMucController = new DanhMucController();
-    //     $action = $_GET['action'] ?? 'index';
-    //     switch ($action) {
-    //         case 'index':
-    //             $danhMucController->index();
-    //             break;
-    //         case 'addForm':
-    //             $danhMucController->addForm();
-    //             break;
-    //         case 'addSubmit':
-    //             $danhMucController->addSubmit();
-    //             break;
-    //         case 'editForm':
-    //             $danhMucController->editForm();
-    //             break;
-    //         case 'editSubmit':
-    //             $danhMucController->editSubmit();
-    //             break;
-    //         case 'delete':
-    //             $danhMucController->delete();
-    //             break;
-    //         default:
-    //             require './views/404.php';
-    //             break;
+        //  DANH MỤC TOUR
+    // case 'DanhMucTour':
+    //      if (!isset($_SESSION['admin'])) {
+    //         header("Location: index.php?act=login");
+    //         exit();
     //     }
-    //     break;
+    //     danhMucTour();
+    // $danhMucController = new DanhMucController();
+    // $action = $_GET['action'] ?? 'index';
+    // switch ($action) {
+    //     case 'index': $danhMucController->index(); break;
+    //     case 'addForm': $danhMucController->addForm(); break;
+    //     case 'addSubmit': $danhMucController->addSubmit(); break;
+    //     case 'editForm': $danhMucController->editForm(); break;
+    //     case 'editSubmit': $danhMucController->editSubmit(); break;
+    //     case 'delete': $danhMucController->delete(); break;
+    //     default: require './views/404.php'; break;
+    // }
+    // break;
 
         // TRANG DANH MỤC TOUR
-    case 'danhMuc':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        danhMucTour();
-        break;
+// ------------------- DANH MỤC TOUR CRUD -------------------
+case 'danhMuc':
+    if (!isset($_SESSION['admin'])) {
+        header("Location: index.php?act=login");
+        exit();
+    }
 
-        
+    $action = $_GET['action'] ?? 'list';
+
+    switch($action){
+        case 'add':
+            danhMucAdd();
+            break;
+        case 'edit':
+            danhMucEdit();
+            break;
+        case 'delete':
+            danhMucDelete();
+            break;
+        case 'list':
+        default:
+            danhMucTour();
+            break;
+    }
+    break;
+
+
 
         // TRANG TOUR DU LỊCH
+
+    // TRANG TOUR DU LỊCH
     case 'tour':
         if (!isset($_SESSION['admin'])) {
             header("Location: index.php?act=login");

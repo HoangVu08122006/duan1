@@ -1,18 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>404 Not Found</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        h1 { font-size: 50px; }
-        p { font-size: 20px; }
-        a { text-decoration: none; color: #007BFF; }
-    </style>
-</head>
-<body>
-    <h1>404</h1>
-    <p>Trang bạn yêu cầu không tồn tại.</p>
-    <a href="index.php">Quay về trang chủ</a>
-</body>
-</html>
+<?php
+$title = "404 - Không tìm thấy trang";
+ob_start();
+?>
+
+<div class="container py-5 text-center">
+    <h1 class="display-1 text-danger">404</h1>
+    <p class="lead">Trang bạn yêu cầu không tồn tại.</p>
+    <a href="index.php?act=dashboard" class="btn btn-primary">Quay về trang chủ</a>
+</div>
+
+<?php
+$content = ob_get_clean();
+require './views/layout_admin.php';
+?>
