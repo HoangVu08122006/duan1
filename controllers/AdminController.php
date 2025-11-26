@@ -3,6 +3,7 @@ require_once './models/DoanKhach.php';
 require_once './models/nhanSuModel.php';
 require_once './models/LichKhoiHanh.php';
 require_once './models/TourDuLich.php';
+require_once './models/DanhMucModel.php';
 
 // ------------------- Trang Admin -------------------
 function adminDashboard() {
@@ -14,12 +15,93 @@ function adminDashboard() {
 }
 
 // ------------------- Tour -------------------
-function danhMucTour() {
+// function danhMucTour() {
+//     ob_start();
+//     require './views/admin/danhMuc/danhMucTour.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+// ------------------- DANH MỤC TOUR CRUD -------------------
+
+function danhMucTour() {  // đổi tên hàm từ danhMucList
+    $model = new DanhMucModel();
+    $list = $model->getAll();
+
     ob_start();
-    require './views/admin/DanhMucTour/danhMucTour.php';
+    require './views/admin/danhMuc/list.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
+// controllers/AdminController.php
+
+function danhMucAdd() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'ten_danh_muc' => $_POST['ten_danh_muc'],
+            'mo_ta'        => $_POST['mo_ta'] ?? ''
+        ];
+
+        $model = new DanhMucModel();
+        $model->create($data);
+
+        header("Location: index.php?act=danhMuc");
+        exit;
+    }
+
+    ob_start();
+    require './views/admin/danhMuc/add.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function danhMucEdit() {
+
+    $id = $_GET['id'] ?? 0;
+    $model = new DanhMucModel();
+    $dm = $model->getOne($id);
+
+    if (!$dm) {
+        echo "Danh mục không tồn tại!";
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        
+        $data = [
+            'ten_danh_muc' => $_POST['ten_danh_muc'],
+            'mo_ta'        => $_POST['mo_ta']
+        ];
+
+        $model->update($id, $data);
+
+        header("Location: index.php?act=danhMuc"); // đổi redirect
+        exit;
+    }
+
+    ob_start();
+    require './views/admin/danhMuc/edit.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+// function danhMucDelete() {
+//     $id = $_GET['id'] ?? 0;
+//     $model = new DanhMucModel();
+//     $model->delete($id);
+
+//     header("Location: index.php?act=danhMucTour");
+// }
+function danhMucDelete() {
+    $id = $_GET['id'] ?? 0;
+    $model = new DanhMucModel();
+    $model->delete($id);
+
+    header("Location: index.php?act=danhMuc"); // đổi redirect
+    exit;
+}
+
 
 function tourDuLich() {
     ob_start();

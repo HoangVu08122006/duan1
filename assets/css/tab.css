@@ -144,3 +144,47 @@ button.delete:hover { background: #c82333; }
         white-space: nowrap;
     }
 }
+
+/* Form styles */
+.form-container {
+    .tour-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .tour-form {
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+    }
+    .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+    .form-group label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-group input,
+    .form-group textarea {
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .submit-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+    .back-btn {
+        display: inline-block;
+        margin-top: 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+}
