@@ -103,11 +103,174 @@ function danhMucDelete() {
 }
 
 
+//require_once './models/TourDuLich.php';
+
+// ------------------- Tour -------------------
 function tourDuLich() {
+    $model = new TourDuLich();
+    $search = $_GET['search'] ?? '';
+    $list = $model->getAll($search);
+
     ob_start();
-    require './views/admin/TourDuLich/tourDuLich.php';
+    require './views/admin/TourDuLich/list.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
+}
+
+// function tourAdd() {
+//     $model = new TourDuLich();
+
+//     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//         $data = [
+//             'id_danh_muc' => $_POST['id_danh_muc'],
+//             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+//             'id_khach_san' => $_POST['id_khach_san'],
+//             'id_nha_hang' => $_POST['id_nha_hang'],
+//             'ten_tour' => $_POST['ten_tour'],
+//             'mo_ta' => $_POST['mo_ta'],
+//             'thoi_luong' => $_POST['thoi_luong'],
+//             'gia_co_ban' => $_POST['gia_co_ban'],
+//             'chinh_sach' => $_POST['chinh_sach']
+//         ];
+
+//         $model->create($data);
+//         header('Location: index.php?act=tour');
+//         exit();
+//     }
+
+//     // Lấy dữ liệu cho dropdown
+//     $danh_muc = $model->getAllDanhMuc();
+//     $trang_thai = $model->getAllTrangThai();
+//     $khach_san = $model->getAllKhachSan();
+//     $nha_hang = $model->getAllNhaHang();
+
+//     ob_start();
+//     require './views/admin/TourDuLich/add.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+
+
+function tourAdd() {
+    $model = new TourDuLich();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'id_danh_muc' => $_POST['id_danh_muc'],
+            'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+            'id_khach_san' => $_POST['id_khach_san'],
+            'id_nha_hang' => $_POST['id_nha_hang'],
+            // 'id_hdv' => $_POST['id_hdv'],
+            'ten_tour' => $_POST['ten_tour'],
+            'mo_ta' => $_POST['mo_ta'],
+            'thoi_luong' => $_POST['thoi_luong'],
+            'gia_co_ban' => $_POST['gia_co_ban'],
+            'chinh_sach' => $_POST['chinh_sach']
+        ];
+
+        $model->create($data);
+        header('Location: index.php?act=tour');
+        exit();
+    }
+
+    // Lấy dữ liệu để hiển thị trong select
+    $danhMucList = $model->getAllDanhMuc();
+    $trangThaiList = $model->getAllTrangThai();
+    $khachSanList = $model->getAllKhachSan();
+    $nhaHangList = $model->getAllNhaHang();
+   // $hdvList = $model->getAllHdv(); // HDV
+ob_start();
+  require './views/admin/TourDuLich/add.php';
+    $content = ob_get_clean();
+   require './views/layout_admin.php';
+}
+
+// function tourEdit() {
+//     $model = new TourDuLich();
+//     $id = $_GET['id'] ?? 0;
+//     $tour = $model->getOne($id);
+
+//     if (!$tour) {
+//         echo "Tour không tồn tại!";
+//         exit;
+//     }
+
+//     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//         $data = [
+//             'id_danh_muc' => $_POST['id_danh_muc'],
+//             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+//             'id_khach_san' => $_POST['id_khach_san'],
+//             'id_nha_hang' => $_POST['id_nha_hang'],
+//             'ten_tour' => $_POST['ten_tour'],
+//             'mo_ta' => $_POST['mo_ta'],
+//             'thoi_luong' => $_POST['thoi_luong'],
+//             'gia_co_ban' => $_POST['gia_co_ban'],
+//             'chinh_sach' => $_POST['chinh_sach']
+//         ];
+
+//         $model->update($id, $data);
+//         header('Location: index.php?act=tour');
+//         exit();
+//     }
+
+//     $danh_muc = $model->getAllDanhMuc();
+//     $trang_thai = $model->getAllTrangThai();
+//     $khach_san = $model->getAllKhachSan();
+//     $nha_hang = $model->getAllNhaHang();
+
+//     ob_start();
+//     require './views/admin/TourDuLich/edit.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+function tourEdit() {
+    $model = new TourDuLich();
+    $id = $_GET['id'] ?? 0;
+    $tour = $model->getOne($id);
+
+    if (!$tour) {
+        echo "Tour không tồn tại!";
+        exit;
+    }
+
+    // Nếu submit Form
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'id_danh_muc' => $_POST['id_danh_muc'],
+            'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+            'id_khach_san' => $_POST['id_khach_san'],
+            'id_nha_hang' => $_POST['id_nha_hang'],
+            'ten_tour' => $_POST['ten_tour'],
+            'mo_ta' => $_POST['mo_ta'],
+            'thoi_luong' => $_POST['thoi_luong'],
+            'gia_co_ban' => $_POST['gia_co_ban'],
+            'chinh_sach' => $_POST['chinh_sach']
+        ];
+
+        $model->update($id, $data);
+        header('Location: index.php?act=tour');
+        exit;
+    }
+
+    // --- LẤY DỮ LIỆU CHO DROPDOWN ---
+   $danhMucList = $model->getAllDanhMuc();
+    $trangThaiList = $model->getAllTrangThai();
+    $khachSanList = $model->getAllKhachSan();
+    $nhaHangList = $model->getAllNhaHang();
+
+    // Load View
+    ob_start();
+    require './views/admin/TourDuLich/edit.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function tourDelete() {
+    $model = new TourDuLich();
+    $id = $_GET['id'] ?? 0;
+    $model->delete($id);
+    header('Location: index.php?act=tour');
+    exit();
 }
 
 // ------------------- Booking -------------------

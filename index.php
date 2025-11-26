@@ -116,13 +116,17 @@ case 'danhMuc':
         // TRANG TOUR DU LỊCH
 
     // TRANG TOUR DU LỊCH
-    case 'tour':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        tourDuLich();
-        break;
+case 'tour':
+    $action = $_GET['action'] ?? 'list';
+    switch($action){
+        case 'add': tourAdd(); break;
+        case 'edit': tourEdit(); break;
+        case 'delete': tourDelete(); break;
+        case 'view': tourView(); break;
+        case 'list':
+        default: tourDuLich(); break;
+    }
+    break;
 
         // TRANG TẠO BOOKING
     case 'taoBooking':

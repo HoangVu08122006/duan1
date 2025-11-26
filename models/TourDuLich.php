@@ -1,23 +1,103 @@
 <?php
-require_once __DIR__ . '/Database.php';
+require_once './models/Database.php';
 
 class TourDuLich {
-    private $conn;
+    private $pdo;
 
     public function __construct() {
-        $this->conn = new Database();
+        $this->pdo = (new Database())->getConnection();
     }
 
-    public function getAll() {
-        $stmt = $this->conn->prepare("SELECT * FROM tour_du_lich");
-        $stmt->execute();
+    // Lấy danh sách tour, có search theo tên
+ public function getAll($search = '') {
+        $sql = "SELECT t.*, 
+                       dm.ten_danh_muc, 
+                       tt.trang_thai_tour, 
+                       ks.ten_khach_san, 
+                       nh.ten_nha_hang
+                FROM tour_du_lich t
+                JOIN danh_muc_tour dm ON t.id_danh_muc = dm.id_danh_muc
+                JOIN trang_thai_tour tt ON t.id_trang_thai_tour = tt.id_trang_thai_tour
+                LEFT JOIN khach_san ks ON t.id_khach_san = ks.id_khach_san
+                LEFT JOIN nha_hang nh ON t.id_nha_hang = nh.id_nha_hang
+                WHERE t.ten_tour LIKE :search
+                ORDER BY t.id_tour DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['search' => "%$search%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getById($id) {
-        $stmt = $this->conn->prepare("SELECT * FROM tour_du_lich WHERE id_tour = :id");
-        $stmt->execute(['id'=>$id]);
+    // Lấy 1 tour theo id
+    public function getOne($id) {
+        $sql = "SELECT t.*, 
+                       d.ten_danh_muc, 
+                       tt.trang_thai_tour
+                FROM tour_du_lich t
+                LEFT JOIN danh_muc_tour d ON t.id_danh_muc = d.id_danh_muc
+                LEFT JOIN trang_thai_tour tt ON t.id_trang_thai_tour = tt.id_trang_thai_tour
+                WHERE t.id_tour = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    // Thêm tour mới
+    public function create($data) {
+        $sql = "INSERT INTO tour_du_lich 
+                (id_danh_muc, id_trang_thai_tour, id_khach_san, id_nha_hang, ten_tour, mo_ta, thoi_luong, gia_co_ban, chinh_sach)
+                VALUES 
+                (:id_danh_muc, :id_trang_thai_tour, :id_khach_san, :id_nha_hang, :ten_tour, :mo_ta, :thoi_luong, :gia_co_ban, :chinh_sach)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($data);
+    }
+
+    // Cập nhật tour
+    public function update($id, $data) {
+        $data['id_tour'] = $id;
+        $sql = "UPDATE tour_du_lich SET 
+                    id_danh_muc = :id_danh_muc,
+                    id_trang_thai_tour = :id_trang_thai_tour,
+                    id_khach_san = :id_khach_san,
+                    id_nha_hang = :id_nha_hang,
+                    ten_tour = :ten_tour,
+                    mo_ta = :mo_ta,
+                    thoi_luong = :thoi_luong,
+                    gia_co_ban = :gia_co_ban,
+                    chinh_sach = :chinh_sach
+                WHERE id_tour = :id_tour";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($data);
+    }
+
+    // Xóa tour
+    public function delete($id) {
+        $sql = "DELETE FROM tour_du_lich WHERE id_tour = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute(['id' => $id]);
+    }
+
+    // Lấy danh sách danh mục tour
+    public function getAllDanhMuc() {
+        $stmt = $this->pdo->query("SELECT * FROM danh_muc_tour ORDER BY ten_danh_muc");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Lấy danh sách trạng thái tour
+    public function getAllTrangThai() {
+        $stmt = $this->pdo->query("SELECT * FROM trang_thai_tour ORDER BY trang_thai_tour");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Lấy danh sách khách sạn
+    public function getAllKhachSan() {
+        $stmt = $this->pdo->query("SELECT * FROM khach_san ORDER BY ten_khach_san");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Lấy danh sách nhà hàng
+    public function getAllNhaHang() {
+        $stmt = $this->pdo->query("SELECT * FROM nha_hang ORDER BY ten_nha_hang");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
-?>
