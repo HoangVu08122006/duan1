@@ -15,6 +15,12 @@ class Database {
         }
     }
 
+    // Thêm method trả về PDO
+    public function getConnection() {
+        return $this->pdo;
+    }
+
+    // Có thể giữ các method tiện lợi
     public function query($sql) {
         return $this->pdo->query($sql);
     }
