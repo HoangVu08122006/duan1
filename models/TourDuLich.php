@@ -29,18 +29,38 @@ class TourDuLich {
     }
 
     // Lấy 1 tour theo id
-    public function getOne($id) {
-        $sql = "SELECT t.*, 
-                       d.ten_danh_muc, 
-                       tt.trang_thai_tour
-                FROM tour_du_lich t
-                LEFT JOIN danh_muc_tour d ON t.id_danh_muc = d.id_danh_muc
-                LEFT JOIN trang_thai_tour tt ON t.id_trang_thai_tour = tt.id_trang_thai_tour
-                WHERE t.id_tour = :id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    // public function getOne($id) {
+    //     $sql = "SELECT t.*, 
+    //                    d.ten_danh_muc, 
+    //                    tt.trang_thai_tour
+    //             FROM tour_du_lich t
+    //             LEFT JOIN danh_muc_tour d ON t.id_danh_muc = d.id_danh_muc
+    //             LEFT JOIN trang_thai_tour tt ON t.id_trang_thai_tour = tt.id_trang_thai_tour
+    //             WHERE t.id_tour = :id";
+    //     $stmt = $this->pdo->prepare($sql);
+    //     $stmt->execute(['id' => $id]);
+    //     return $stmt->fetch(PDO::FETCH_ASSOC);
+    // }
+    public function getOne($id_tour) {
+    $sql = "SELECT t.*, 
+                   t.gia_co_ban AS gia,
+                   ks.ten_khach_san,
+                   nh.ten_nha_hang,
+                   tt.trang_thai_tour AS trang_thai,
+                   lk.ngay_khoi_hanh,
+                   lk.ngay_ket_thuc
+            FROM tour_du_lich t
+            LEFT JOIN khach_san ks ON t.id_khach_san = ks.id_khach_san
+            LEFT JOIN nha_hang nh ON t.id_nha_hang = nh.id_nha_hang
+            LEFT JOIN trang_thai_tour tt ON t.id_trang_thai_tour = tt.id_trang_thai_tour
+            LEFT JOIN lich_khoi_hanh lk ON t.id_tour = lk.id_tour
+            WHERE t.id_tour = :id
+            LIMIT 1";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute(['id' => $id_tour]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 
     // Thêm tour mới
     public function create($data) {
