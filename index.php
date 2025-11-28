@@ -116,7 +116,9 @@ case 'danhMuc':
         // TRANG TOUR DU LỊCH
 
     // TRANG TOUR DU LỊCH
+
     case 'tour':
+
     $action = $_GET['action'] ?? 'list';
     switch($action){
         case 'add': tourAdd(); break;
@@ -128,24 +130,29 @@ case 'danhMuc':
     }
     break;
 
-
         // TRANG TẠO BOOKING
-    case 'taoBooking':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        taoBooking();
-        break;
+   // ------------------- BOOKING -------------------
+case 'booking':
+    $action = $_GET['action'] ?? 'list';
+    switch($action){
+        case 'add': bookingAdd(); break;
+        case 'edit': bookingEdit(); break;
+        case 'delete': bookingDelete(); break;
+        case 'detail': bookingDetail(); break;
+        case 'list':
+        default: bookingList(); break;
+    }
+    break;
+
 
         // TRANG QUẢN LÝ BOOKING
-    case 'trangThaiBooking':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        quanLyBooking();
-        break;
+    // case 'trangThaiBooking':
+    //     if (!isset($_SESSION['admin'])) {
+    //         header("Location: index.php?act=login");
+    //         exit();
+    //     }
+    //     quanLyBooking();
+    //     break;
 
 
     // TRANG DANH SÁCH NHÂN SỰ
