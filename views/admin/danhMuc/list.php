@@ -66,7 +66,7 @@
         text-align: left;
     }
     #tourTable th {
-        background-color: blue;
+        background-color: #f2f2f2;
     }
     .desc {
         max-width: 300px;
@@ -81,7 +81,7 @@
         cursor: pointer;
     }
     .tour-edit {
-        background-color: #7192b5ff;
+        background-color: #007bff;
         color: white;
         margin-right: 5px;
     }

@@ -6,14 +6,13 @@
         <li><a href="index.php?act=danhMuc">Danh mục tour</a></li>
         <li><a href="index.php?act=tour">Tour du lịch</a></li>
         <!-- Menu Booking có submenu -->
-        <!-- <li class="has-submenu">
+        <li class="has-submenu">
             <a href="javascript:void(0)">Booking </a>
             <ul class="submenu">
                 <li><a href="index.php?act=taoBooking">Tạo booking mới</a></li>
                 <li><a href="index.php?act=trangThaiBooking">Tình trạng booking</a></li>
             </ul>
-        </li> -->
-        <li><a href="index.php?act=booking">Quản lý Booking</a></li>
+        </li>
         <li><a href="index.php?act=nhanSu">Danh sách nhân sự</a></li>
         <li><a href="index.php?act=dieuHanhTour">Quản lý lịch khởi hành</a></li>
         <li><a href="index.php?act=doanKhach">Quản lý đoàn khách</a></li>
