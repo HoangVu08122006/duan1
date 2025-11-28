@@ -4,8 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/edit.css">
+    
 </head>
+<style>
+    /* ================== FORM SỬA HƯỚNG DẪN VIÊN ================== */
+.admin-content h1 {
+    text-align: center;
+    color: #166534;
+    font-size: 22px;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+/* Khung form */
+.admin-content form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #d1fae5;
+}
+
+/* Nhãn */
+.admin-content form label {
+    display: block;
+    font-weight: 600;
+    color: #14532d;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+/* Input, select, textarea */
+.admin-content form input,
+.admin-content form select,
+.admin-content form textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #a7f3d0;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-content form input:focus,
+.admin-content form select:focus,
+.admin-content form textarea:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 4px rgba(22, 163, 74, 0.3);
+}
+
+/* Textarea */
+.admin-content form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Nút hành động */
+.admin-content form button {
+    background-color: #16a34a;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 18px;
+    margin-right: 8px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.admin-content form button:hover {
+    background-color: #15803d;
+    transform: translateY(-2px);
+}
+
+/* Nút hủy */
+.admin-content form button[type="button"] {
+    background-color: #9ca3af;
+}
+
+.admin-content form button[type="button"]:hover {
+    background-color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .admin-content form {
+        padding: 20px;
+    }
+
+    .admin-content form button {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+</style>
 <body>
     <h1>Sửa Hướng dẫn viên</h1>
 

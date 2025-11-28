@@ -8,8 +8,6 @@ require_once './models/BookingModel.php';
 
 
 
-
-
 // ------------------- Trang Admin -------------------
 function adminDashboard() {
     $title = "Trang quản trị";
@@ -101,11 +99,15 @@ function danhMucEdit() {
 function danhMucDelete() {
     $id = $_GET['id'] ?? 0;
     $model = new DanhMucModel();
-    $model->delete($id);
-
-    header("Location: index.php?act=danhMuc"); // đổi redirect
-    exit;
+    try {
+        $model->delete($id);
+        header("Location: index.php?act=danhMuc");
+        exit;
+    } catch (Exception $e) {
+        echo $e->getMessage(); // "Không thể xóa danh mục vì còn tour liên quan!"
+    }
 }
+
 
 
 //require_once './models/TourDuLich.php';
@@ -122,40 +124,6 @@ function tourDuLich() {
     require './views/layout_admin.php';
 }
 
-// function tourAdd() {
-//     $model = new TourDuLich();
-
-//     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//         $data = [
-//             'id_danh_muc' => $_POST['id_danh_muc'],
-//             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
-//             'id_khach_san' => $_POST['id_khach_san'],
-//             'id_nha_hang' => $_POST['id_nha_hang'],
-//             'ten_tour' => $_POST['ten_tour'],
-//             'mo_ta' => $_POST['mo_ta'],
-//             'thoi_luong' => $_POST['thoi_luong'],
-//             'gia_co_ban' => $_POST['gia_co_ban'],
-//             'chinh_sach' => $_POST['chinh_sach']
-//         ];
-
-//         $model->create($data);
-//         header('Location: index.php?act=tour');
-//         exit();
-//     }
-
-//     // Lấy dữ liệu cho dropdown
-//     $danh_muc = $model->getAllDanhMuc();
-//     $trang_thai = $model->getAllTrangThai();
-//     $khach_san = $model->getAllKhachSan();
-//     $nha_hang = $model->getAllNhaHang();
-
-//     ob_start();
-//     require './views/admin/TourDuLich/add.php';
-//     $content = ob_get_clean();
-//     require './views/layout_admin.php';
-// }
-
-
 function tourAdd() {
     $model = new TourDuLich();
 
@@ -165,7 +133,6 @@ function tourAdd() {
             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
             'id_khach_san' => $_POST['id_khach_san'],
             'id_nha_hang' => $_POST['id_nha_hang'],
-            // 'id_hdv' => $_POST['id_hdv'],
             'ten_tour' => $_POST['ten_tour'],
             'mo_ta' => $_POST['mo_ta'],
             'thoi_luong' => $_POST['thoi_luong'],
@@ -183,9 +150,14 @@ function tourAdd() {
     $trangThaiList = $model->getAllTrangThai();
     $khachSanList = $model->getAllKhachSan();
     $nhaHangList = $model->getAllNhaHang();
-   // $hdvList = $model->getAllHdv(); // HDV
-ob_start();
-  require './views/admin/TourDuLich/add.php';
+
+    ob_start();
+    require './views/admin/TourDuLich/add.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}   // ← đóng hàm tourAdd() ở đây
+
+
 function tourEdit() {
     $model = new TourDuLich();
     $id = $_GET['id'] ?? 0;
@@ -228,14 +200,19 @@ function tourEdit() {
 function tourDelete() {
     $model = new TourDuLich();
     $id = $_GET['id'] ?? 0;
-    $model->delete($id);
-    header('Location: index.php?act=tour');
-    exit();
+    try {
+        $model->delete($id);
+        header('Location: index.php?act=tour');
+        exit();
+    } catch (Exception $e) {
+        echo $e->getMessage(); // "Không thể xóa tour vì còn lịch khởi hành liên quan!"
+    }
 }
+
 
 // ================== BOOKING ==================
 
-function bookingList() {
+function booking() {
     $model = new BookingModel();
     $bookings = $model->getAll();
 
@@ -311,10 +288,15 @@ function bookingEdit() {
 function bookingDelete() {
     $id = $_GET['id'] ?? 0;
     $model = new BookingModel();
-    $model->deleteBooking($id);
-    header("Location: index.php?act=booking");
-    exit;
+    try {
+        $model->deleteBooking($id);
+        header("Location: index.php?act=booking");
+        exit;
+    } catch (Exception $e) {
+        echo $e->getMessage(); // "Không thể xóa booking vì còn dữ liệu liên quan!"
+    }
 }
+
 
 function bookingDetail() {
     $id = $_GET['id'] ?? 0;
@@ -386,7 +368,9 @@ function addKhach(){
             'ghi_chu' => $_POST['ghi_chu']
         ];
         $model->addKhach($id_dat_tour, $data);
-        header("Location: index.php?act=viewDoanKhach&id=$id_dat_tour");
+        header("Location: index.php?act=doanKhach&action=view&id=$id_dat_tour");
+
+        // header("Location: index.php?act=viewDoanKhach&id=$id_dat_tour");
         exit;
     }
 
@@ -438,13 +422,15 @@ function deleteKhach() {
     $id_khach = $_GET['id_khach'] ?? 0;
     $model = new DoanKhach();
     $khach = $model->getKhach($id_khach);
-    if($khach){
+    if ($khach) {
         $model->deleteKhach($id_khach);
-        header("Location: index.php?act=viewDoanKhach&id=" . $khach['id_dat_tour']);
+        // Redirect về đúng route chi tiết đoàn khách
+        header("Location: index.php?act=doanKhach&action=view&id=" . $khach['id_dat_tour']);
         exit;
     }
     echo "Khách không tồn tại!";
 }
+
 
 // ------------------- Nhân sự (HDV) -------------------
 function nhanSu() {

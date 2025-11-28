@@ -11,7 +11,7 @@
             background: #f4f6f9;
             color: #333;
             margin: 0;
-            padding: 20px;
+            
         }
 
         /* --- Tiêu đề chính --- */

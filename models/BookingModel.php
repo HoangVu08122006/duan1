@@ -102,9 +102,23 @@ public function getById($id) {
     }
 
     public function deleteBooking($id) {
-        $stmt = $this->pdo->prepare("DELETE FROM dat_tour WHERE id_dat_tour=:id");
-        $stmt->execute(['id'=>$id]);
+    try {
+        // Xóa tất cả khách thuộc booking
+        $stmt1 = $this->pdo->prepare("DELETE FROM khach_trong_dat_tour WHERE id_dat_tour = :id");
+        $stmt1->execute(['id' => $id]);
+
+        // Sau đó xóa booking
+        $stmt2 = $this->pdo->prepare("DELETE FROM dat_tour WHERE id_dat_tour = :id");
+        $stmt2->execute(['id' => $id]);
+
+    } catch (PDOException $e) {
+        if ($e->getCode() == '23000') {
+            throw new Exception("Không thể xóa booking vì còn dữ liệu liên quan!");
+        }
+        throw $e;
     }
+}
+
 
     public function getKhach($id_dat_tour) {
         $stmt = $this->pdo->prepare("SELECT * FROM khach_trong_dat_tour WHERE id_dat_tour=:id");

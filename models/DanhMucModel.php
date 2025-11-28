@@ -66,8 +66,17 @@ class DanhMucModel {
 
     // Xóa danh mục
     public function delete($id) {
+    try {
         $sql = "DELETE FROM danh_muc_tour WHERE id_danh_muc = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute(['id' => $id]);
+    } catch (PDOException $e) {
+        // Kiểm tra mã lỗi 1451 (foreign key constraint)
+        if ($e->getCode() == '23000') {
+            throw new Exception("Không thể xóa danh mục vì còn tour liên quan!");
+        }
+        throw $e; // ném lại lỗi nếu không phải constraint
     }
+}
+
 }

@@ -147,7 +147,8 @@
             <button type="submit">Thêm khách</button>
         </form>
 
-        <a href="index.php?act=viewDoanKhach&id=<?= $_GET['id'] ?>">← Quay lại đoàn</a>
+        <a href="index.php?act=doanKhach&action=view&id=<?= $_GET['id'] ?>">← Quay lại đoàn</a>
+
 
     </div>
 </div>

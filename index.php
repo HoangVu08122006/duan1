@@ -2,274 +2,162 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Common
-require_once './commons/env.php';
-require_once './commons/function.php';
+// ----------------- COMMON -----------------
+require_once __DIR__ . '/commons/env.php';
+require_once __DIR__ . '/commons/function.php';
+
+// ----------------- CONTROLLERS -----------------
+require_once __DIR__ . '/controllers/HomeController.php';
+require_once __DIR__ . '/controllers/AuthController.php';
+require_once __DIR__ . '/controllers/AdminController.php';
+
+// ----------------- MODELS -----------------
+require_once __DIR__ . '/models/TrangThaiLichKhoiHanh.php';
+require_once __DIR__ . '/models/LichKhoiHanh.php';
+require_once __DIR__ . '/models/TourDuLich.php';
+require_once __DIR__ . '/models/nhanSuModel.php';
+require_once __DIR__ . '/models/DanhMucModel.php';
+require_once __DIR__ . '/models/BookingModel.php';
+require_once __DIR__ . '/models/DoanKhach.php';
 
 
-// Controller
-require_once './controllers/HomeController.php';
-require_once './controllers/AuthController.php';
-require_once './controllers/AdminController.php'; // dashboard
-// require_once './controllers/DanhMucController.php';
-
-// Models
-require_once './models/TrangThaiLichKhoiHanh.php';
-require_once './models/LichKhoiHanh.php';
-require_once './models/TourDuLich.php';
-require_once './models/nhanSuModel.php';
-require_once './models/DanhMucModel.php';
-
-
-// Session
+// ----------------- SESSION -----------------
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Route
-$act =$_GET['act'] ?? '/';  
-
-
-
-switch ($act) {
-
-    
-
-    // Trang chủ
-    case '/':
-        homeIndex();
-        break;
-
-    // LOGIN
-    case 'login':
-        showLoginForm();
-        break;
-
-    case 'loginHandle':
-        loginHandle();
-        break;
-
-    case 'logout':
-        logout();
-        break;
-
-    // TRANG ADMIN
-    case 'dashboard':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        adminDashboard();
-        break;
-
-
-
-        //  DANH MỤC TOUR
-    // case 'DanhMucTour':
-    //      if (!isset($_SESSION['admin'])) {
-    //         header("Location: index.php?act=login");
-    //         exit();
-    //     }
-    //     danhMucTour();
-    // $danhMucController = new DanhMucController();
-    // $action = $_GET['action'] ?? 'index';
-    // switch ($action) {
-    //     case 'index': $danhMucController->index(); break;
-    //     case 'addForm': $danhMucController->addForm(); break;
-    //     case 'addSubmit': $danhMucController->addSubmit(); break;
-    //     case 'editForm': $danhMucController->editForm(); break;
-    //     case 'editSubmit': $danhMucController->editSubmit(); break;
-    //     case 'delete': $danhMucController->delete(); break;
-    //     default: require './views/404.php'; break;
-    // }
-    // break;
-
-        // TRANG DANH MỤC TOUR
-// ------------------- DANH MỤC TOUR CRUD -------------------
-case 'danhMuc':
+// ----------------- HELPER -----------------
+function requireAdmin() {
     if (!isset($_SESSION['admin'])) {
         header("Location: index.php?act=login");
         exit();
     }
+}
 
-    $action = $_GET['action'] ?? 'list';
-
-    switch($action){
-        case 'add':
-            danhMucAdd();
-            break;
-        case 'edit':
-            danhMucEdit();
-            break;
-        case 'delete':
-            danhMucDelete();
-            break;
-        case 'list':
-        default:
-            danhMucTour();
-            break;
-    }
-    break;
-
-
-
-        // TRANG TOUR DU LỊCH
-
-    // TRANG TOUR DU LỊCH
-
-    case 'tour':
-
-    $action = $_GET['action'] ?? 'list';
-    switch($action){
-        case 'add': tourAdd(); break;
-        case 'edit': tourEdit(); break;
-        case 'delete': tourDelete(); break;
-        case 'view': tourView(); break;
-        case 'list':
-        default: tourDuLich(); break;
-    }
-    break;
-
-        // TRANG TẠO BOOKING
-   // ------------------- BOOKING -------------------
-case 'booking':
-    $action = $_GET['action'] ?? 'list';
-    switch($action){
-        case 'add': bookingAdd(); break;
-        case 'edit': bookingEdit(); break;
-        case 'delete': bookingDelete(); break;
-        case 'detail': bookingDetail(); break;
-        case 'list':
-        default: bookingList(); break;
-    }
-    break;
-
-
-        // TRANG QUẢN LÝ BOOKING
-    // case 'trangThaiBooking':
-    //     if (!isset($_SESSION['admin'])) {
-    //         header("Location: index.php?act=login");
-    //         exit();
-    //     }
-    //     quanLyBooking();
-    //     break;
-
-
-    // TRANG DANH SÁCH NHÂN SỰ
-    case 'nhanSu':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        nhanSu();
-        break;
-
-        // TRANG ĐIỀU HÀNH TOUR
-    case 'dieuHanhTour':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        dieuHanhTour();
-        break;
-
-        // TRANG QUẢN LÝ ĐOÀN KHÁCH
-    case 'doanKhach':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        doanKhach();
-        break;
-
-        case 'viewDoanKhach':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        viewDoanKhach();
-        break;
-
-        case 'editKhach':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        editKhach();
-        break;
-
-        case 'addKhach':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        addKhach();
-        break;
-
-        case 'deleteKhach':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        deleteKhach();
-        break;
-
-        // TRANG NHẬT KÝ TOUR
-    case 'nhatKy':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        nhatKy();
-        break;
-
-        // TRANG BÁO CÁO VẬN HÀNH
-    case 'vanHanh':
-        if (!isset($_SESSION['admin'])) {
-            header("Location: index.php?act=login");
-            exit();
-        }
-        vanHanh();
-        break;
-
-        case 'nhanSu':
-            nhanSu(); break;
-        case 'viewNhanSu':
-            $id = $_GET['id'] ?? 0;
-            viewNhanSu($id); break;
-        case 'addNhanSu':
-            addNhanSu(); break;
-        case 'editNhanSu':
-            $id = $_GET['id'] ?? 0;
-            editNhanSu($id); break;
-        case 'deleteNhanSu':
-            $id = $_GET['id'] ?? 0;
-            deleteNhanSu($id); break;
-
-        case 'dieuHanhTour': dieuHanhTour(); 
-        break;
-        case 'viewLich':
-            $id = $_GET['id'] ?? 0; 
-            viewLich($id); break;
-        case 'addLich': addLich(); break;
-        case 'editLich':
-            $id = $_GET['id'] ?? 0; editLich($id); break;
-        case 'deleteLich':
-            $id = $_GET['id'] ?? 0; deleteLich($id); break;
-
-            
-        case 'hdvHome':
+function requireHdv() {
     if (!isset($_SESSION['hdv'])) {
         header("Location: index.php?act=login");
         exit();
     }
-    require './views/hdv/home.php'; 
-    break;
+}
 
+// ----------------- ROUTE -----------------
+$act = $_GET['act'] ?? '/';
+$action = $_GET['action'] ?? 'list';
+$id = $_GET['id'] ?? 0;
 
+switch ($act) {
+    // HOME
+    case '/':
+        homeIndex();
+        break;
 
+    // AUTH
+    case 'login':
+        showLoginForm();
+        break;
+    case 'loginHandle':
+        loginHandle();
+        break;
+    case 'logout':
+        logout();
+        break;
 
+    // DASHBOARD
+    case 'dashboard':
+        requireAdmin();
+        adminDashboard();
+        break;
+
+    // DANH MỤC TOUR
+    case 'danhMuc':
+        requireAdmin();
+        switch ($action) {
+            case 'add': danhMucAdd(); break;
+            case 'edit': danhMucEdit(); break;
+            case 'delete': danhMucDelete(); break;
+            default: danhMucTour(); break;
+        }
+        break;
+
+    // TOUR DU LỊCH
+    case 'tour':
+        requireAdmin();
+        switch ($action) {
+            case 'add': tourAdd(); break;
+            case 'edit': tourEdit(); break;
+            case 'delete': tourDelete(); break;
+            case 'view': tourView(); break; // nếu có
+            default: tourDuLich(); break;
+        }
+        break;
+
+    // BOOKING
+    case 'booking':
+        requireAdmin();
+        switch ($action) {
+            case 'add': bookingAdd(); break;
+            case 'edit': bookingEdit(); break;
+            case 'delete': bookingDelete(); break;
+            case 'detail': bookingDetail(); break;
+            default: booking(); break;
+        }
+        break;
+
+    // ĐOÀN KHÁCH
+    case 'doanKhach':
+        requireAdmin();
+        switch ($action) {
+            case 'view': viewDoanKhach($id); break;
+            case 'addKhach': addKhach(); break;
+            case 'editKhach': editKhach(); break;
+            case 'deleteKhach': deleteKhach(); break;
+            default: doanKhach(); break;
+        }
+        break;
+
+    // NHÂN SỰ (HDV)
+    case 'nhanSu':
+        requireAdmin();
+        switch ($action) {
+            case 'view': viewNhanSu($id); break;
+            case 'add': addNhanSu(); break;
+            case 'edit': editNhanSu($id); break;
+            case 'delete': deleteNhanSu($id); break;
+            default: nhanSu(); break;
+        }
+        break;
+
+    // ĐIỀU HÀNH TOUR
+    case 'dieuHanhTour':
+        requireAdmin();
+        switch ($action) {
+            case 'view': viewLich($id); break;
+            case 'add': addLich(); break;
+            case 'edit': editLich($id); break;
+            case 'delete': deleteLich($id); break;
+            default: dieuHanhTour(); break;
+        }
+        break;
+
+    // NHẬT KÝ & BÁO CÁO
+    case 'nhatKy':
+        requireAdmin();
+        nhatKy();
+        break;
+    case 'vanHanh':
+        requireAdmin();
+        vanHanh();
+        break;
+
+    // HDV HOME
+    case 'hdvHome':
+        requireHdv();
+        require __DIR__ . '/views/hdv/home.php';
+        break;
+
+    // 404
     default:
-        require './views/404.php';
+        require __DIR__ . '/views/404.php';
         break;
 }

@@ -38,13 +38,16 @@
                 <td><?= number_format($tour['gia_co_ban'] ?? 0) ?></td>
                 <td><?= htmlspecialchars($tour['chinh_sach'] ?? '') ?></td>
                 <td>
-                    <a class="btn btn-success" href="index.php?act=tour&action=edit&id=<?= $tour['id_tour'] ?>">Sửa</a> | 
+                    <a class="btn btn-info" href="index.php?act=tour&action=view&id=<?= $tour['id_tour'] ?>">Chi tiết</a> |
+                    <a class="btn btn-success" href="index.php?act=tour&action=edit&id=<?= $tour['id_tour'] ?>">Sửa</a>
+
                     <a class="btn btn-danger" href="index.php?act=tour&action=delete&id=<?= $tour['id_tour'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
 
 <style>
 /* Form tìm kiếm */

@@ -133,9 +133,10 @@
     </form>
 
     <a class="back-link" 
-       href="index.php?act=viewDoanKhach&id=<?= $khach['id_dat_tour'] ?? 0 ?>">
-        ← Quay lại đoàn
-    </a>
+   href="index.php?act=doanKhach&action=view&id=<?= $khach['id_dat_tour'] ?? 0 ?>">
+    ← Quay lại đoàn
+</a>
+
 </div>
 
 </body>

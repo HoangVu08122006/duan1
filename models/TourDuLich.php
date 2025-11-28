@@ -92,10 +92,19 @@ class TourDuLich {
 
     // Xóa tour
     public function delete($id) {
+    try {
         $sql = "DELETE FROM tour_du_lich WHERE id_tour = :id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute(['id' => $id]);
+    } catch (PDOException $e) {
+        if ($e->getCode() == '23000') {
+            // Foreign key constraint violation
+            throw new Exception("Không thể xóa tour vì còn lịch khởi hành liên quan!");
+        }
+        throw $e;
     }
+}
+
 
     // Lấy danh sách danh mục tour
     public function getAllDanhMuc() {
