@@ -116,7 +116,9 @@ case 'danhMuc':
         // TRANG TOUR DU LỊCH
 
     // TRANG TOUR DU LỊCH
-case 'tour':
+
+    case 'tour':
+
     $action = $_GET['action'] ?? 'list';
     switch($action){
         case 'add': tourAdd(); break;
