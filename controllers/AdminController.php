@@ -4,6 +4,8 @@ require_once './models/nhanSuModel.php';
 require_once './models/LichKhoiHanh.php';
 require_once './models/TourDuLich.php';
 require_once './models/DanhMucModel.php';
+// require_once './models/BookingModel.php';
+
 
 // ------------------- Trang Admin -------------------
 function adminDashboard() {
@@ -103,27 +105,345 @@ function danhMucDelete() {
 }
 
 
+//require_once './models/TourDuLich.php';
+
+// ------------------- Tour -------------------
 function tourDuLich() {
+    $model = new TourDuLich();
+    $search = $_GET['search'] ?? '';
+    $list = $model->getAll($search);
+
     ob_start();
-    require './views/admin/TourDuLich/tourDuLich.php';
+    require './views/admin/TourDuLich/list.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
 
-// ------------------- Booking -------------------
-function taoBooking() {
+// function tourAdd() {
+//     $model = new TourDuLich();
+
+//     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//         $data = [
+//             'id_danh_muc' => $_POST['id_danh_muc'],
+//             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+//             'id_khach_san' => $_POST['id_khach_san'],
+//             'id_nha_hang' => $_POST['id_nha_hang'],
+//             'ten_tour' => $_POST['ten_tour'],
+//             'mo_ta' => $_POST['mo_ta'],
+//             'thoi_luong' => $_POST['thoi_luong'],
+//             'gia_co_ban' => $_POST['gia_co_ban'],
+//             'chinh_sach' => $_POST['chinh_sach']
+//         ];
+
+//         $model->create($data);
+//         header('Location: index.php?act=tour');
+//         exit();
+//     }
+
+//     // Lấy dữ liệu cho dropdown
+//     $danh_muc = $model->getAllDanhMuc();
+//     $trang_thai = $model->getAllTrangThai();
+//     $khach_san = $model->getAllKhachSan();
+//     $nha_hang = $model->getAllNhaHang();
+
+//     ob_start();
+//     require './views/admin/TourDuLich/add.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+
+
+function tourAdd() {
+    $model = new TourDuLich();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'id_danh_muc' => $_POST['id_danh_muc'],
+            'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+            'id_khach_san' => $_POST['id_khach_san'],
+            'id_nha_hang' => $_POST['id_nha_hang'],
+            // 'id_hdv' => $_POST['id_hdv'],
+            'ten_tour' => $_POST['ten_tour'],
+            'mo_ta' => $_POST['mo_ta'],
+            'thoi_luong' => $_POST['thoi_luong'],
+            'gia_co_ban' => $_POST['gia_co_ban'],
+            'chinh_sach' => $_POST['chinh_sach']
+        ];
+
+        $model->create($data);
+        header('Location: index.php?act=tour');
+        exit();
+    }
+
+    // Lấy dữ liệu để hiển thị trong select
+    $danhMucList = $model->getAllDanhMuc();
+    $trangThaiList = $model->getAllTrangThai();
+    $khachSanList = $model->getAllKhachSan();
+    $nhaHangList = $model->getAllNhaHang();
+   // $hdvList = $model->getAllHdv(); // HDV
+ob_start();
+  require './views/admin/TourDuLich/add.php';
+    $content = ob_get_clean();
+   require './views/layout_admin.php';
+}
+
+// function tourEdit() {
+//     $model = new TourDuLich();
+//     $id = $_GET['id'] ?? 0;
+//     $tour = $model->getOne($id);
+
+//     if (!$tour) {
+//         echo "Tour không tồn tại!";
+//         exit;
+//     }
+
+//     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//         $data = [
+//             'id_danh_muc' => $_POST['id_danh_muc'],
+//             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+//             'id_khach_san' => $_POST['id_khach_san'],
+//             'id_nha_hang' => $_POST['id_nha_hang'],
+//             'ten_tour' => $_POST['ten_tour'],
+//             'mo_ta' => $_POST['mo_ta'],
+//             'thoi_luong' => $_POST['thoi_luong'],
+//             'gia_co_ban' => $_POST['gia_co_ban'],
+//             'chinh_sach' => $_POST['chinh_sach']
+//         ];
+
+//         $model->update($id, $data);
+//         header('Location: index.php?act=tour');
+//         exit();
+//     }
+
+//     $danh_muc = $model->getAllDanhMuc();
+//     $trang_thai = $model->getAllTrangThai();
+//     $khach_san = $model->getAllKhachSan();
+//     $nha_hang = $model->getAllNhaHang();
+
+//     ob_start();
+//     require './views/admin/TourDuLich/edit.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+function tourEdit() {
+    $model = new TourDuLich();
+    $id = $_GET['id'] ?? 0;
+    $tour = $model->getOne($id);
+
+    if (!$tour) {
+        echo "Tour không tồn tại!";
+        exit;
+    }
+
+    // Nếu submit Form
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'id_danh_muc' => $_POST['id_danh_muc'],
+            'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+            'id_khach_san' => $_POST['id_khach_san'],
+            'id_nha_hang' => $_POST['id_nha_hang'],
+            'ten_tour' => $_POST['ten_tour'],
+            'mo_ta' => $_POST['mo_ta'],
+            'thoi_luong' => $_POST['thoi_luong'],
+            'gia_co_ban' => $_POST['gia_co_ban'],
+            'chinh_sach' => $_POST['chinh_sach']
+        ];
+
+        $model->update($id, $data);
+        header('Location: index.php?act=tour');
+        exit;
+    }
+
+    // --- LẤY DỮ LIỆU CHO DROPDOWN ---
+   $danhMucList = $model->getAllDanhMuc();
+    $trangThaiList = $model->getAllTrangThai();
+    $khachSanList = $model->getAllKhachSan();
+    $nhaHangList = $model->getAllNhaHang();
+
+    // Load View
     ob_start();
-    require './views/admin/TaoBooking/taoBooking.php';
+    require './views/admin/TourDuLich/edit.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
 
-function quanLyBooking() {
-    ob_start();
-    require './views/admin/QuanLyBooking/quanLyBooking.php';
-    $content = ob_get_clean();
-    require './views/layout_admin.php';
+function tourDelete() {
+    $model = new TourDuLich();
+    $id = $_GET['id'] ?? 0;
+    $model->delete($id);
+    header('Location: index.php?act=tour');
+    exit();
 }
+
+
+
+
+
+// // ================== BOOKING ==================
+// function bookingList() {
+//     $model = new BookingModel();
+//     $bookings = $model->getAll();
+
+//     ob_start();
+//     require './views/admin/Booking/list.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+
+// function bookingAdd() {
+//     $tourModel = new TourDuLich();
+//     $lichModel = new LichKhoiHanh();
+
+//     $tours = $tourModel->getAll();
+//     $lich = $lichModel->getAll();
+
+//     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//         $data = [
+//             'id_tour' => $_POST['id_tour'],
+//             'id_lich' => $_POST['id_lich'],
+//             'so_luong_khach' => $_POST['so_luong_khach'],
+//             'tong_tien' => $_POST['tong_tien'],
+//              'ngay_dat' => date('Y-m-d H:i:s'),
+//             'trang_thai' => 'Chưa thanh toán',          // mặc định
+//             'ghi_chu' => $_POST['ghi_chu'] ?? null       // nếu form không nhập
+//         ];
+
+//         $bookingModel = new BookingModel();
+//         $newID = $bookingModel->create($data);
+
+//         // Redirect về trang chi tiết booking
+//         header("Location: index.php?act=booking");
+//         exit;
+//     }
+
+//     // Load form add
+//     ob_start();
+//     require './views/admin/Booking/add.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+// function bookingEdit() {
+//     $id = $_GET['id'] ?? 0;
+//     $model = new BookingModel();
+//     $booking = $model->getById($id);
+
+//     if (!$booking) { echo "Booking không tồn tại!"; exit; }
+
+//     $tourModel = new TourDuLich();
+//     $lichModel = new LichKhoiHanh();
+//     $tours = $tourModel->getAll();
+//     $lich = $lichModel->getAll();
+
+//     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//         $data = [
+//             'id_tour' => $_POST['id_tour'],
+//             'id_lich' => $_POST['id_lich'],
+//             'so_luong_khach' => $_POST['so_luong_khach'],
+//             'tong_tien' => $_POST['tong_tien'],
+//             'trang_thai' => $_POST['trang_thai'] ?? 'Chờ xác nhận',
+//         ];
+
+//         $model->updateBooking($id, $data);
+//         header("Location: index.php?act=booking");
+//         exit;
+//     }
+
+//     ob_start();
+//     require './views/admin/Booking/edit.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+
+// function bookingDelete() {
+//     $id = $_GET['id'] ?? 0;
+//     $model = new BookingModel();
+//     $model->deleteBooking($id);
+//     header("Location: index.php?act=booking");
+//     exit;
+// }
+
+// // function bookingDetail() {
+// //     $id = $_GET['id'] ?? 0;
+
+// //     $model = new BookingModel();
+// //     $booking = $model->getById($id);
+// //     $khach = $model->getKhach($id);
+
+// //     ob_start();
+// //     require './views/admin/Booking/detail.php';
+// //     $content = ob_get_clean();
+// //     require './views/layout_admin.php';
+// // }
+// // function bookingDetail() {
+// //     $id = $_GET['id'] ?? 0;
+
+// //     $bookingModel = new BookingModel();
+// //     $booking = $bookingModel->getById($id);  // thông tin booking
+// //     $khach = $bookingModel->getKhach($id);   // danh sách khách
+
+// //     if (!$booking) {
+// //         echo "Booking không tồn tại!";
+// //         exit;
+// //     }
+
+// //     // Lấy thông tin tour tương ứng
+// //     $tourModel = new TourDuLich();
+// //     $tour = $tourModel->getOne($booking['id_tour'] ?? 0);  // id_tour từ booking
+// //     if (!$tour) $tour = []; // đảm bảo $tour luôn là array
+
+// //     // Lấy tên khách sạn, nhà hàng, giá nếu cần
+// //     $tour['ten_khach_san'] = $tour['ten_khach_san'] ?? '';
+// //     $tour['ten_nha_hang'] = $tour['ten_nha_hang'] ?? '';
+// //     $tour['gia'] = $tour['gia'] ?? 0;
+// //     $tour['trang_thai'] = $tour['trang_thai'] ?? '';
+// //     $tour['ngay_khoi_hanh'] = $tour['ngay_khoi_hanh'] ?? null;
+// //     $tour['ngay_ket_thuc'] = $tour['ngay_ket_thuc'] ?? null;
+
+// //     ob_start();
+// //     require './views/admin/Booking/detail.php';
+// //     $content = ob_get_clean();
+// //     require './views/layout_admin.php';
+// // }
+// function bookingDetail() {
+//     $id = $_GET['id'] ?? 0;
+
+//     $bookingModel = new BookingModel();
+//     $booking = $bookingModel->getById($id);  // thông tin booking
+//     $khachList = $bookingModel->getKhach($id);   // danh sách khách
+
+//     if (!$booking) {
+//         echo "Booking không tồn tại!";
+//         exit;
+//     }
+
+//     // Lấy thông tin tour tương ứng
+//     $tourModel = new TourDuLich();
+//     $tour = $tourModel->getOne($booking['id_tour'] ?? 0);
+//     if (!$tour) $tour = [];
+
+//     // Gán giá trị mặc định nếu null
+//     $tour['ten_khach_san'] = $tour['ten_khach_san'] ?? '';
+//     $tour['ten_nha_hang'] = $tour['ten_nha_hang'] ?? '';
+//     $tour['gia_co_ban'] = $tour['gia_co_ban'] ?? 0;
+//     $tour['ngay_khoi_hanh'] = $tour['ngay_khoi_hanh'] ?? null;
+//     $tour['ngay_ket_thuc'] = $tour['ngay_ket_thuc'] ?? null;
+
+//     ob_start();
+//     require './views/admin/Booking/detail.php';
+//     $content = ob_get_clean();
+//     require './views/layout_admin.php';
+// }
+
+
+
+
+
+// // function quanLyBooking() {
+// //     ob_start();
+// //     require './views/admin/QuanLyBooking/quanLyBooking.php';
+// //     $content = ob_get_clean();
+// //     require './views/layout_admin.php';
+// // }
 
 // ------------------- Quản lý đoàn khách -------------------
 function doanKhach() {
