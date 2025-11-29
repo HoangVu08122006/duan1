@@ -22,7 +22,7 @@
 <p><strong>Trạng thái: </strong><?= $lich['trang_thai_lich_khoi_hanh'] ?></p>
 
 <button onclick="location.href='index.php?act=dieuHanhTour'">Quay lại</button>
-<button onclick="location.href='index.php?act=editLich&id=<?= $lich['id_lich'] ?>'">Sửa</button>
+<button class="edit" onclick="location.href='index.php?act=dieuHanhTour&action=edit&id=<?= $lich['id_lich'] ?>'">Sửa</button>
 
 
 </body>

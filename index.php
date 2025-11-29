@@ -140,6 +140,8 @@ switch ($act) {
         }
         break;
 
+    
+
     // NHẬT KÝ & BÁO CÁO
     case 'nhatKy':
         requireAdmin();
@@ -155,6 +157,47 @@ switch ($act) {
         requireHdv();
         require __DIR__ . '/views/hdv/home.php';
         break;
+
+    // Quản lý nhà cung cấp
+    case 'nhaCungCap':
+        requireAdmin();
+        switch ($action) {
+            default: nhaCungCap(); break;
+        }
+        break;
+
+    // Quản lý Khách sạn
+    case 'khachSan':
+    requireAdmin();
+    switch ($action) {
+        case 'add': khachSanAdd(); break;
+        case 'edit': khachSanEdit(); break;
+        case 'delete': khachSanDelete(); break;
+        default: khachSan(); break;
+    }
+    break;
+
+
+    case 'nhaHang':
+    requireAdmin();
+    switch ($action) {
+        case 'add': nhaHangAdd(); break;
+        case 'edit': nhaHangEdit(); break;
+        case 'delete': nhaHangDelete(); break;
+        default: nhaHang(); break;
+    }
+    break;
+
+    case 'nhaXe':
+    requireAdmin();
+    switch ($action) {
+        case 'add': nhaXeAdd(); break;
+        case 'edit': nhaXeEdit(); break;
+        case 'delete': nhaXeDelete(); break;
+        default: nhaXe(); break;
+    }
+    break;
+
 
     // 404
     default:

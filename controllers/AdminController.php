@@ -5,6 +5,9 @@ require_once './models/LichKhoiHanh.php';
 require_once './models/TourDuLich.php';
 require_once './models/DanhMucModel.php';
 require_once './models/BookingModel.php';
+require_once './models/khachSanModel.php';
+require_once './models/nhaHangModel.php';
+require_once './models/nhaXeModel.php';
 
 
 
@@ -631,3 +634,227 @@ function vanHanh(){
     $content = ob_get_clean(); 
     require './views/layout_admin.php'; // load layout admin 
     }
+
+
+// ================== Nhà cung cấp ==================
+
+function nhaCungCap() {
+    // $model = new BookingModel();
+    // $bookings = $model->getAll();
+
+    ob_start();
+    require './views/admin/nhaCungCap/viewNhaCungCap.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+// ==================Khách sạn ==================
+
+function khachSan() {
+    $model = new KhachSanModel();
+    $search = $_GET['search'] ?? '';
+    $khachSanList = $model->getAll($search);
+
+    ob_start();
+    require './views/admin/nhaCungCap/khachSan/khachSanList.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function khachSanAdd() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'ten_khach_san' => $_POST['ten_khach_san'],
+            'mo_ta' => $_POST['mo_ta']
+        ];
+        $model = new KhachSanModel();
+        $model->create($data);
+        header("Location: index.php?act=khachSan");
+        exit;
+    }
+
+    ob_start();
+    require './views/admin/nhaCungCap/khachSan/khachSanAdd.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function khachSanEdit() {
+    $id = $_GET['id'] ?? 0;
+    $model = new KhachSanModel();
+    $ks = $model->getOne($id);
+
+    if (!$ks) {
+        echo "Khách sạn không tồn tại!";
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'ten_khach_san' => $_POST['ten_khach_san'],
+            'mo_ta' => $_POST['mo_ta']
+        ];
+        $model->update($id, $data);
+        header("Location: index.php?act=khachSan");
+        exit;
+    }
+
+    ob_start();
+    require './views/admin/nhaCungCap/khachSan/khachSanEdit.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function khachSanDelete() {
+    $id = $_GET['id'] ?? 0;
+    $model = new KhachSanModel();
+    try {
+        $model->delete($id);
+        header("Location: index.php?act=khachSan");
+        exit;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+
+// ================== Nhà hàng ==================
+
+function nhaHang() {
+    $model = new NhaHangModel();
+    $search = $_GET['search'] ?? '';
+    $nhaHangList = $model->getAll($search);
+
+    ob_start();
+    require './views/admin/nhaCungCap/nhaHang/nhaHangList.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function nhaHangAdd() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'ten_nha_hang' => $_POST['ten_nha_hang'],
+            'mo_ta' => $_POST['mo_ta']
+        ];
+        $model = new NhaHangModel();
+        $model->create($data);
+        header("Location: index.php?act=nhaHang");
+        exit;
+    }
+
+    ob_start();
+    require './views/admin/nhaCungCap/nhaHang/nhaHangAdd.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function nhaHangEdit() {
+    $id = $_GET['id'] ?? 0;
+    $model = new NhaHangModel();
+    $nh = $model->getOne($id);
+
+    if (!$nh) {
+        echo "Nhà hàng không tồn tại!";
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'ten_nha_hang' => $_POST['ten_nha_hang'],
+            'mo_ta' => $_POST['mo_ta']
+        ];
+        $model->update($id, $data);
+        header("Location: index.php?act=nhaHang");
+        exit;
+    }
+
+    ob_start();
+    require './views/admin/nhaCungCap/nhaHang/nhaHangEdit.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function nhaHangDelete() {
+    $id = $_GET['id'] ?? 0;
+    $model = new NhaHangModel();
+    try {
+        $model->delete($id);
+        header("Location: index.php?act=nhaHang");
+        exit;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+
+// ================== Nhà Xe ==================
+
+function nhaXe() {
+    $model = new NhaXeModel();
+    $search = $_GET['search'] ?? '';
+    $nhaXeList = $model->getAll($search);
+
+    ob_start();
+    require './views/admin/nhaCungCap/nhaXe/nhaXeList.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function nhaXeAdd() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'nha_xe' => $_POST['nha_xe'],
+            'mo_ta' => $_POST['mo_ta']
+        ];
+        $model = new NhaXeModel();
+        $model->create($data);
+        header("Location: index.php?act=nhaXe");
+        exit;
+    }
+
+    ob_start();
+    require './views/admin/nhaCungCap/nhaXe/nhaXeAdd.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function nhaXeEdit() {
+    $id = $_GET['id'] ?? 0;
+    $model = new NhaXeModel();
+    $xe = $model->getOne($id);
+
+    if (!$xe) {
+        echo "Nhà xe không tồn tại!";
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'nha_xe' => $_POST['nha_xe'],
+            'mo_ta' => $_POST['mo_ta']
+        ];
+        $model->update($id, $data);
+        header("Location: index.php?act=nhaXe");
+        exit;
+    }
+
+    ob_start();
+    require './views/admin/nhaCungCap/nhaXe/nhaXeEdit.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
+function nhaXeDelete() {
+    $id = $_GET['id'] ?? 0;
+    $model = new NhaXeModel();
+    try {
+        $model->delete($id);
+        header("Location: index.php?act=nhaXe");
+        exit;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+

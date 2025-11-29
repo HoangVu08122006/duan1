@@ -7,187 +7,143 @@
 </head>
 
 <style>
-    /* ================== CHI TIẾT ĐOÀN KHÁCH ================== */
-.admin-content {
-    font-family: "Segoe UI", Arial, sans-serif;
-    color: #334155;
-    background-color: #f9fafb;
-    padding: 20px;
-}
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    color: #333;
+  }
 
-/* Tiêu đề chính */
-.admin-content h2 {
-    color: #0f766e;
+  .hh h2 {
     text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
+    
+    color: #2c3e50;
+  }
 
-/* Thông tin đoàn khách */
-.admin-content p {
-    font-size: 15px;
-    margin: 6px 0;
-}
+  h3 {
+    margin-top: 30px;
+    color: #007bff;
+  }
 
-/* Tổng tiền in đậm, màu đỏ */
-.admin-content p.tong-tien {
-    color: #dc2626;
-    font-weight: 700;
-}
+  .tong-tien {
+    font-size: 18px;
+    color: #e74c3c;
+    font-weight: bold;
+  }
 
-/* Đường kẻ phân cách */
-.admin-content hr {
+  .search-box {
+    text-align: center;
     margin: 20px 0;
-    border: none;
-    border-top: 2px solid #0d9488;
-}
+  }
 
-/* Tiêu đề phụ */
-.admin-content h3 {
-    color: #0f766e;
-    margin-bottom: 10px;
-}
-
-/* Ô tìm kiếm */
-.admin-content .search-box {
-    text-align: right;
-    margin-bottom: 15px;
-}
-
-.admin-content .search-box input {
-    padding: 8px 12px;
-    width: 280px;
+  .search-box input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
     font-size: 14px;
-    border: 1px solid #0d9488;
-    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .search-box input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0,123,255,0.4);
     outline: none;
-    transition: all 0.3s ease;
-}
+  }
 
-.admin-content .search-box input:focus {
-    border-color: #0f766e;
-    box-shadow: 0 0 6px rgba(13, 148, 136, 0.3);
-}
-
-/* Nút thêm khách */
-.admin-content .btn-add {
+  .btn-add {
     display: inline-block;
-    background: linear-gradient(135deg, #0f766e, #0d9488);
-    color: #fff;
-    text-decoration: none;
     padding: 8px 14px;
+    background-color: #28a745;
+    color: #fff;
     border-radius: 6px;
-    font-size: 14px;
+    text-decoration: none;
     font-weight: 500;
-    transition: all 0.3s ease;
-}
+    transition: background-color 0.3s ease;
+  }
 
-.admin-content .btn-add:hover {
-    background: linear-gradient(135deg, #0d9488, #0f766e);
-    transform: translateY(-2px);
-}
+  .btn-add:hover {
+    background-color: #1e7e34;
+  }
 
-/* Bảng danh sách khách */
-.admin-content table {
+  table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #ffffff;
+    background-color: #fff;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
 
-.admin-content table th,
-.admin-content table td {
-    padding: 10px 12px;
+  table th {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px;
     text-align: center;
-    font-size: 14px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.admin-content table th {
-    background: linear-gradient(135deg, #0f766e, #0d9488);
-    color: #fff;
     font-weight: 600;
-}
+  }
 
-.admin-content table tr:nth-child(even) {
-    background-color: #f9fafb;
-}
+  table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
 
-.admin-content table tr:hover {
-    background-color: #ecfdf5;
-    transition: 0.2s;
-}
+  table tr:hover {
+    background-color: #f1f9ff;
+  }
 
-/* Nút hành động: Sửa và Xóa */
-.admin-content .btn-edit,
-.admin-content .btn-delete {
+  .btn-edit, .btn-delete {
     display: inline-block;
-    padding: 6px 10px;
+    padding: 6px 12px;
     border-radius: 6px;
+    text-decoration: none;
     font-size: 13px;
+    margin: 2px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-edit {
+    background-color: #ffc107;
+    color: #000;
+  }
+  .btn-edit:hover {
+    background-color: #e0a800;
+  }
+
+  .btn-delete {
+    background-color: #dc3545;
     color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
+  }
+  .btn-delete:hover {
+    background-color: #a71d2a;
+  }
+
+ .btn-back {
+  display: inline-block;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
-/* Nút Sửa */
-.admin-content .btn-edit {
-    background-color: #22c55e;
-}
-.admin-content .btn-edit:hover {
-    background-color: #16a34a;
+.btn-back:hover {
+  background: linear-gradient(135deg, #5a6268, #343a40);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
 }
 
-/* Nút Xóa */
-.admin-content .btn-delete {
-    background-color: #ef4444;
-}
-.admin-content .btn-delete:hover {
-    background-color: #dc2626;
-}
 
-/* Nút quay lại */
-.admin-content a[href*="doanKhach"] {
-    display: inline-block;
-    margin-top: 20px;
-    color: #0d9488;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.admin-content a[href*="doanKhach"]:hover {
-    color: #0f766e;
-    text-decoration: underline;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .admin-content {
-        padding: 10px;
-    }
-
-    .admin-content .search-box input {
-        width: 100%;
-    }
-
-    .admin-content table {
-        font-size: 13px;
-    }
-
-    .admin-content .btn-add {
-        display: block;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-}
+  
 </style>
+
 
 <body>
 
-<h2>Chi tiết đoàn khách #<?= $doan['id_dat_tour'] ?></h2>
+<h2 class="hh">Chi tiết đoàn khách #<?= $doan['id_dat_tour'] ?></h2>
 
 <p><b>Tour:</b> <?= $doan['ten_tour'] ?></p>
 <p><b>Hướng dẫn viên:</b> <?= $doan['ten_hdv'] ?></p>
@@ -253,7 +209,8 @@
 </table>
 
 <br>
-<a href="index.php?act=doanKhach">← Quay lại</a>
+<a href="index.php?act=doanKhach" class="btn-back">← Quay lại</a>
+
 
 
 
