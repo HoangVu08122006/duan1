@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Không rewrite thư mục assets
+    RewriteCond %{REQUEST_URI} ^/duan1-wd20305-main/mvc-oop-basic-duan1/assets/
+    RewriteRule ^ - [L]
+
+    # Nếu file/folder tồn tại, không rewrite
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Rewrite các request còn lại vào index.php
+    RewriteRule ^(.*)$ index.php?act=$1 [QSA,L]
+</IfModule>
