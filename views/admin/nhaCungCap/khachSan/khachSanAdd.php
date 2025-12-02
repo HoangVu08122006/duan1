@@ -102,6 +102,10 @@
   <form method="post">
     <label>Tên khách sạn:</label>
     <input type="text" name="ten_khach_san" required>
+    <label>SĐT:</label>
+    <textarea name="sdt_khach_san"></textarea>
+    <label>Giá:</label>
+    <textarea name="gia_khach_san"></textarea>
     <label>Mô tả:</label>
     <textarea name="mo_ta"></textarea>
     <button type="submit">💾 Lưu</button>

@@ -122,6 +122,8 @@
         <th>ID</th>
         <th>Tên nhà xe</th>
         <th>Mô tả</th>
+        <th>SĐT</th>
+        <th>Giá</th>
         <th>Hành động</th>
       </tr>
     </thead>
@@ -131,6 +133,8 @@
         <td><?= $xe['id_xe'] ?></td>
         <td><?= htmlspecialchars($xe['nha_xe']) ?></td>
         <td><?= htmlspecialchars($xe['mo_ta']) ?></td>
+        <td><?= htmlspecialchars($xe['sdt_nha_xe']) ?></td>
+        <td><?= htmlspecialchars($xe['gia_nha_xe']) ?></td>
         <td>
           <a href="index.php?act=nhaXe&action=edit&id=<?= $xe['id_xe'] ?>" class="btn btn-success">✏️ Sửa</a>
           <a href="index.php?act=nhaXe&action=delete&id=<?= $xe['id_xe'] ?>" class="btn btn-danger" onclick="return confirm('Xóa nhà xe này?')">🗑️ Xóa</a>

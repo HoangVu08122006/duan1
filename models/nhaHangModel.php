@@ -23,11 +23,13 @@ class NhaHangModel {
 
     public function create($data) {
         $stmt = $this->pdo->prepare("
-            INSERT INTO nha_hang (ten_nha_hang, mo_ta)
-            VALUES (:ten_nha_hang, :mo_ta)
+            INSERT INTO nha_hang (ten_nha_hang, sdt_nha_hang, gia_nha_hang, mo_ta)
+            VALUES (:ten_nha_hang, :sdt_nha_hang, :gia_nha_hang, :mo_ta)
         ");
         $stmt->execute([
             'ten_nha_hang' => $data['ten_nha_hang'],
+            'sdt_nha_hang' => $data['sdt_nha_hang'],
+            'gia_nha_hang' => $data['gia_nha_hang'],
             'mo_ta' => $data['mo_ta'] ?? ''
         ]);
         return $this->pdo->lastInsertId();
@@ -37,14 +39,19 @@ class NhaHangModel {
         $stmt = $this->pdo->prepare("
             UPDATE nha_hang SET
             ten_nha_hang = :ten_nha_hang,
+            sdt_nha_hang = :sdt_nha_hang,
+            gia_nha_hang = :gia_nha_hang,
             mo_ta = :mo_ta
             WHERE id_nha_hang = :id
         ");
         return $stmt->execute([
             'ten_nha_hang' => $data['ten_nha_hang'],
-            'mo_ta' => $data['mo_ta'] ?? '',
-            'id' => $id
+            'sdt_nha_hang' => $data['sdt_nha_hang'], // giữ nguyên dạng chuỗi
+            'gia_nha_hang' => (int)$data['gia_nha_hang'], // giá thì ép kiểu số
+            'mo_ta'        => $data['mo_ta'] ?? '',
+            'id'           => $id
         ]);
+
     }
 
     public function delete($id) {

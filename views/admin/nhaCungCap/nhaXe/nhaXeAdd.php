@@ -104,6 +104,10 @@
     <input type="text" name="nha_xe" required>
     <label>Mô tả:</label>
     <textarea name="mo_ta"></textarea>
+    <label>SĐT:</label>
+    <textarea name="sdt_nha_xe"></textarea>
+    <label>Giá:</label>
+    <textarea name="gia_nha_xe"></textarea>
     <button type="submit">💾 Lưu</button>
   </form>
 

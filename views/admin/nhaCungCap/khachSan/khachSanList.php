@@ -142,6 +142,8 @@
             <tr>
                 <th>ID</th>
                 <th>Tên khách sạn</th>
+                <th>SĐT</th>
+                <th>Giá</th>
                 <th>Mô tả</th>
                 <th>Hành động</th>
             </tr>
@@ -151,6 +153,8 @@
             <tr>
                 <td><?= $ks['id_khach_san'] ?></td>
                 <td><?= htmlspecialchars($ks['ten_khach_san']) ?></td>
+                <td><?= htmlspecialchars($ks['sdt_khach_san']) ?></td>
+                <td><?= htmlspecialchars($ks['gia_khach_san']) ?></td>
                 <td><?= htmlspecialchars($ks['mo_ta']) ?></td>
                 <td>
                     <a href="index.php?act=khachSan&action=edit&id=<?= $ks['id_khach_san'] ?>" class="btn btn-success">✏️ Sửa</a>

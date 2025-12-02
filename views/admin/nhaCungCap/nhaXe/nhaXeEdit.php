@@ -104,6 +104,10 @@
     <input type="text" name="nha_xe" value="<?= htmlspecialchars($xe['nha_xe']) ?>" required>
     <label>Mô tả:</label>
     <textarea name="mo_ta"><?= htmlspecialchars($xe['mo_ta']) ?></textarea>
+    <label>SĐT:</label>
+    <textarea name="sdt_nha_xe"><?= htmlspecialchars($xe['sdt_nha_xe']) ?></textarea>
+    <label>Giá:</label>
+    <textarea name="gia_nha_xe"><?= htmlspecialchars($xe['gia_nha_xe']) ?></textarea>
     <button type="submit">🔄 Cập nhật</button>
   </form>
 

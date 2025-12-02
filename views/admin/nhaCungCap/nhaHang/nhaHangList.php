@@ -121,6 +121,8 @@
       <tr>
         <th>ID</th>
         <th>Tên nhà hàng</th>
+        <th>SĐT</th>
+        <th>Giá</th>
         <th>Mô tả</th>
         <th>Hành động</th>
       </tr>
@@ -130,6 +132,8 @@
       <tr>
         <td><?= $nh['id_nha_hang'] ?></td>
         <td><?= htmlspecialchars($nh['ten_nha_hang']) ?></td>
+        <td><?= htmlspecialchars($nh['sdt_nha_hang']) ?></td>
+        <td><?= htmlspecialchars($nh['gia_nha_hang']) ?></td>
         <td><?= htmlspecialchars($nh['mo_ta']) ?></td>
         <td>
           <a href="index.php?act=nhaHang&action=edit&id=<?= $nh['id_nha_hang'] ?>" class="btn btn-success">✏️ Sửa</a>

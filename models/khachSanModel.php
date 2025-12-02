@@ -26,11 +26,13 @@ class KhachSanModel {
     // Thêm khách sạn mới
     public function create($data) {
         $stmt = $this->pdo->prepare("
-            INSERT INTO khach_san (ten_khach_san, mo_ta)
-            VALUES (:ten_khach_san, :mo_ta)
+            INSERT INTO khach_san (ten_khach_san, sdt_khach_san, gia_khach_san, mo_ta)
+            VALUES (:ten_khach_san, :sdt_khach_san, :gia_khach_san, :mo_ta)
         ");
         $stmt->execute([
             'ten_khach_san' => $data['ten_khach_san'],
+            'sdt_khach_san' => $data['sdt_khach_san'],
+            'gia_khach_san' => $data['gia_khach_san'],
             'mo_ta' => $data['mo_ta'] ?? ''
         ]);
         return $this->pdo->lastInsertId();
@@ -41,11 +43,15 @@ class KhachSanModel {
         $stmt = $this->pdo->prepare("
             UPDATE khach_san SET
             ten_khach_san = :ten_khach_san,
+            sdt_khach_san = :sdt_khach_san,
+            gia_khach_san = :gia_khach_san,
             mo_ta = :mo_ta
             WHERE id_khach_san = :id
         ");
         return $stmt->execute([
             'ten_khach_san' => $data['ten_khach_san'],
+            'sdt_khach_san' => $data['sdt_khach_san'],
+            'gia_khach_san' => $data['gia_khach_san'],
             'mo_ta' => $data['mo_ta'] ?? '',
             'id' => $id
         ]);

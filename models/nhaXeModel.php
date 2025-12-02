@@ -22,28 +22,62 @@ class NhaXeModel {
     }
 
     public function create($data) {
+        // Kiểm tra dữ liệu bắt buộc
+        if (empty($data['nha_xe'])) {
+            throw new Exception("Tên nhà xe không được để trống");
+        }
+        if (empty($data['sdt_nha_xe'])) {
+            throw new Exception("Số điện thoại không được để trống");
+        }
+        if (!isset($data['gia_nha_xe']) || $data['gia_nha_xe'] === '') {
+            throw new Exception("Giá nhà xe không được để trống");
+        }
+        if (!is_numeric($data['gia_nha_xe'])) {
+            throw new Exception("Giá nhà xe phải là số");
+        }
+
         $stmt = $this->pdo->prepare("
-            INSERT INTO nha_xe (nha_xe, mo_ta)
-            VALUES (:nha_xe, :mo_ta)
+            INSERT INTO nha_xe (nha_xe, sdt_nha_xe, gia_nha_xe, mo_ta)
+            VALUES (:nha_xe, :sdt_nha_xe, :gia_nha_xe, :mo_ta)
         ");
         $stmt->execute([
-            'nha_xe' => $data['nha_xe'],
-            'mo_ta' => $data['mo_ta'] ?? ''
+            'nha_xe'     => $data['nha_xe'],
+            'sdt_nha_xe' => $data['sdt_nha_xe'],
+            'gia_nha_xe' => (int)$data['gia_nha_xe'],
+            'mo_ta'      => $data['mo_ta'] ?? ''
         ]);
         return $this->pdo->lastInsertId();
     }
 
     public function update($id, $data) {
+        // Kiểm tra dữ liệu bắt buộc
+        if (empty($data['nha_xe'])) {
+            throw new Exception("Tên nhà xe không được để trống");
+        }
+        if (empty($data['sdt_nha_xe'])) {
+            throw new Exception("Số điện thoại không được để trống");
+        }
+        if (!isset($data['gia_nha_xe']) || $data['gia_nha_xe'] === '') {
+            throw new Exception("Giá nhà xe không được để trống");
+        }
+        if (!is_numeric($data['gia_nha_xe'])) {
+            throw new Exception("Giá nhà xe phải là số");
+        }
+
         $stmt = $this->pdo->prepare("
             UPDATE nha_xe SET
             nha_xe = :nha_xe,
+            sdt_nha_xe = :sdt_nha_xe,
+            gia_nha_xe = :gia_nha_xe,
             mo_ta = :mo_ta
             WHERE id_xe = :id
         ");
         return $stmt->execute([
-            'nha_xe' => $data['nha_xe'],
-            'mo_ta' => $data['mo_ta'] ?? '',
-            'id' => $id
+            'nha_xe'     => $data['nha_xe'],
+            'sdt_nha_xe' => $data['sdt_nha_xe'],
+            'gia_nha_xe' => (int)$data['gia_nha_xe'],
+            'mo_ta'      => $data['mo_ta'] ?? '',
+            'id'         => $id
         ]);
     }
 

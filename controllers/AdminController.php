@@ -665,6 +665,8 @@ function khachSanAdd() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = [
             'ten_khach_san' => $_POST['ten_khach_san'],
+            'sdt_khach_san' => $_POST['sdt_khach_san'],
+            'gia_khach_san' => $_POST['gia_khach_san'],
             'mo_ta' => $_POST['mo_ta']
         ];
         $model = new KhachSanModel();
@@ -692,6 +694,8 @@ function khachSanEdit() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = [
             'ten_khach_san' => $_POST['ten_khach_san'],
+            'sdt_khach_san' => $_POST['sdt_khach_san'],
+            'gia_khach_san' => $_POST['gia_khach_san'],
             'mo_ta' => $_POST['mo_ta']
         ];
         $model->update($id, $data);
@@ -735,6 +739,8 @@ function nhaHangAdd() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = [
             'ten_nha_hang' => $_POST['ten_nha_hang'],
+            'sdt_nha_hang' => $_POST['sdt_nha_hang'],
+            'gia_nha_hang' => $_POST['gia_nha_hang'],
             'mo_ta' => $_POST['mo_ta']
         ];
         $model = new NhaHangModel();
@@ -762,6 +768,8 @@ function nhaHangEdit() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = [
             'ten_nha_hang' => $_POST['ten_nha_hang'],
+            'sdt_nha_hang' => $_POST['sdt_nha_hang'],
+            'gia_nha_hang' => $_POST['gia_nha_hang'],
             'mo_ta' => $_POST['mo_ta']
         ];
         $model->update($id, $data);
@@ -803,21 +811,53 @@ function nhaXe() {
 
 function nhaXeAdd() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Lấy dữ liệu từ form, dùng ?? để tránh lỗi undefined
+        $nha_xe     = $_POST['nha_xe']     ?? '';
+        $sdt_nha_xe = $_POST['sdt_nha_xe'] ?? '';
+        $gia_nha_xe = $_POST['gia_nha_xe'] ?? null;
+        $mo_ta      = $_POST['mo_ta']      ?? '';
+
+        // Validate dữ liệu bắt buộc
+        if (empty($nha_xe)) {
+            die("Lỗi: Bạn chưa nhập tên nhà xe.");
+        }
+        if (empty($sdt_nha_xe)) {
+            die("Lỗi: Bạn chưa nhập số điện thoại.");
+        }
+        if ($gia_nha_xe === null || $gia_nha_xe === '') {
+            die("Lỗi: Bạn chưa nhập giá nhà xe.");
+        }
+        if (!is_numeric($gia_nha_xe)) {
+            die("Lỗi: Giá nhà xe phải là số.");
+        }
+
+        // Chuẩn bị dữ liệu để insert
         $data = [
-            'nha_xe' => $_POST['nha_xe'],
-            'mo_ta' => $_POST['mo_ta']
+            'nha_xe'     => $nha_xe,
+            'sdt_nha_xe' => $sdt_nha_xe,
+            'gia_nha_xe' => (int)$gia_nha_xe,
+            'mo_ta'      => $mo_ta
         ];
+
+        // Gọi model để thêm mới
         $model = new NhaXeModel();
-        $model->create($data);
-        header("Location: index.php?act=nhaXe");
-        exit;
+        try {
+            $model->create($data);
+            // Redirect về danh sách nhà xe
+            header("Location: index.php?act=nhaXe");
+            exit;
+        } catch (Exception $e) {
+            die("Lỗi khi thêm nhà xe: " . $e->getMessage());
+        }
     }
 
+    // Nếu không phải POST thì hiển thị form thêm
     ob_start();
     require './views/admin/nhaCungCap/nhaXe/nhaXeAdd.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
 
 function nhaXeEdit() {
     $id = $_GET['id'] ?? 0;
@@ -832,6 +872,8 @@ function nhaXeEdit() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = [
             'nha_xe' => $_POST['nha_xe'],
+            'sdt_nha_xe' => $_POST['sdt_nha_xe'],
+            'gia_nha_xe' => $_POST['gia_nha_xe'],
             'mo_ta' => $_POST['mo_ta']
         ];
         $model->update($id, $data);

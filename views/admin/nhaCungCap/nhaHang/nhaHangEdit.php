@@ -102,6 +102,10 @@
   <form method="post">
     <label>Tên nhà hàng:</label>
     <input type="text" name="ten_nha_hang" value="<?= htmlspecialchars($nh['ten_nha_hang']) ?>" required>
+    <label>SĐT:</label>
+    <textarea name="sdt_nha_hang"><?= htmlspecialchars($nh['sdt_nha_hang']) ?></textarea>
+    <label>giá:</label>
+    <textarea name="gia_nha_hang"><?= htmlspecialchars($nh['gia_nha_hang']) ?></textarea>
     <label>Mô tả:</label>
     <textarea name="mo_ta"><?= htmlspecialchars($nh['mo_ta']) ?></textarea>
     <button type="submit">🔄 Cập nhật</button>
