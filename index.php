@@ -87,10 +87,11 @@ switch ($act) {
             case 'add': tourAdd(); break;
             case 'edit': tourEdit(); break;
             case 'delete': tourDelete(); break;
-            case 'view': tourView(); break; // nếu có
+            case 'view': tourDetail(); break; // nếu có
             default: tourDuLich(); break;
         }
         break;
+
 
     // BOOKING
     case 'booking':

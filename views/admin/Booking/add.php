@@ -29,25 +29,38 @@
     </div>
 
     <div class="mb-3">
-        <label for="tong_tien">Tổng tiền:</label>
-        <input type="number" name="tong_tien" id="tong_tien" class="form-control" min="0" step="1000" required>
+        <label for="ho_ten">Tên khách đặt:</label>
+        <input type="text" name="ho_ten" id="ho_ten" class="form-control" required>
     </div>
 
     <div class="mb-3">
-        <label for="ngay_dat">Ngày đặt:</label>
-        <input type="date" name="ngay_dat" id="ngay_dat" class="form-control" value="<?= date('Y-m-d') ?>" required>
+        <label for="so_dien_thoai">Số điện thoại:</label>
+        <input type="text" name="so_dien_thoai" id="so_dien_thoai" class="form-control" required>
     </div>
 
-    <!-- <div class="mb-3">
+    <div class="mb-3">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label for="gioi_tinh">Giới tính:</label>
+        <select name="gioi_tinh" id="gioi_tinh" class="form-control" required>
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
         <label for="ghi_chu">Ghi chú:</label>
         <textarea name="ghi_chu" id="ghi_chu" class="form-control" rows="3"></textarea>
-    </div> -->
+    </div>
 
     <button type="submit" class="btn btn-success">Thêm Booking</button>
-    <a href="index.php?act=booking" class="btn btn-secondary">Hủy</a>
+    <a href="index.php?act=booking" class="btn btn-secondary">Quay lại</a>
 </form>
+
 <style>
-/* --- Bao toàn bộ form --- */
 form {
     max-width: 700px;
     margin: 40px auto;
@@ -58,7 +71,6 @@ form {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* --- Tiêu đề --- */
 h1 {
     text-align: center;
     margin-bottom: 30px;
@@ -66,7 +78,6 @@ h1 {
     font-weight: 600;
 }
 
-/* --- Label --- */
 form label {
     font-weight: 500;
     margin-bottom: 6px;
@@ -74,7 +85,6 @@ form label {
     color: #333;
 }
 
-/* --- Input / Select / Textarea --- */
 form input,
 form select,
 form textarea {
@@ -92,7 +102,6 @@ form textarea:focus {
     outline: none;
 }
 
-/* --- Button --- */
 form button,
 form a.btn {
     border-radius: 8px;
@@ -110,12 +119,10 @@ form a.btn-secondary:hover {
     color: #fff;
 }
 
-/* --- Margin giữa các field --- */
 .mb-3 {
     margin-bottom: 20px !important;
 }
 
-/* --- Responsive --- */
 @media (max-width: 768px) {
     form {
         padding: 20px;

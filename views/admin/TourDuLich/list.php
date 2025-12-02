@@ -2,7 +2,8 @@
 
 <form method="GET" action="">
     <input type="hidden" name="act" value="tour">
-    <input type="text" name="search" placeholder="Tìm theo tên tour" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+    <input type="text" name="search" placeholder="Tìm theo tên tour"
+        value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
     <button type="submit">Search</button>
 </form>
 
@@ -14,40 +15,35 @@
             <th>ID</th>
             <th>Tên tour</th>
             <th>Loại tour</th>
-            <th>Trạng thái</th>
-            <th>Khách sạn</th>
-            <th>Nhà hàng</th>
-            <th>Mô tả</th>
             <th>Thời lượng</th>
             <th>Giá</th>
+            <th>Mô tả</th>
             <th>Chính sách</th>
+            <th>Trạng thái</th>
             <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach($list as $tour): ?>
+        <?php foreach ($list as $tour): ?>
             <tr>
                 <td><?= $tour['id_tour'] ?></td>
                 <td><?= htmlspecialchars($tour['ten_tour']) ?></td>
                 <td><?= htmlspecialchars($tour['ten_danh_muc']) ?></td>
-                <td><?= htmlspecialchars($tour['trang_thai_tour']) ?></td>
-                <td><?= htmlspecialchars($tour['ten_khach_san'] ?? '') ?></td>
-                <td><?= htmlspecialchars($tour['ten_nha_hang'] ?? '') ?></td>
-                <td><?= htmlspecialchars($tour['mo_ta'] ?? '') ?></td>
                 <td><?= htmlspecialchars($tour['thoi_luong'] ?? '') ?></td>
                 <td><?= number_format($tour['gia_co_ban'] ?? 0) ?></td>
+                <td><?= htmlspecialchars($tour['mo_ta'] ?? '') ?></td>
                 <td><?= htmlspecialchars($tour['chinh_sach'] ?? '') ?></td>
-                <td>
-                    <a class="btn btn-info" href="index.php?act=tour&action=view&id=<?= $tour['id_tour'] ?>">Chi tiết</a> |
-                    <a class="btn btn-success" href="index.php?act=tour&action=edit&id=<?= $tour['id_tour'] ?>">Sửa</a>
-
-                    <a class="btn btn-danger" href="index.php?act=tour&action=delete&id=<?= $tour['id_tour'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+                <td><?= htmlspecialchars($tour['trang_thai_tour']) ?></td>
+                <td class="action-buttons">
+                    <a class="btn btn-info btn-sm" href="index.php?act=tour&action=view&id=<?= $tour['id_tour'] ?>">Chi tiết</a>
+                    <a class="btn btn-success btn-sm" href="index.php?act=tour&action=edit&id=<?= $tour['id_tour'] ?>">Sửa</a>
+                    <a class="btn btn-danger btn-sm" href="index.php?act=tour&action=delete&id=<?= $tour['id_tour'] ?>"
+                        onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
-
 
 <style>
 /* Form tìm kiếm */
@@ -102,7 +98,8 @@ table {
     background-color: #fff;
 }
 
-table th, table td {
+table th,
+table td {
     padding: 10px 12px;
     border: 1px solid #dee2e6;
     text-align: left;
@@ -131,6 +128,7 @@ table a {
 table a:hover {
     text-decoration: underline;
 }
+
 .btn-danger {
     background-color: #dc3545 !important;
 }
@@ -139,4 +137,20 @@ table a:hover {
     background-color: #b52a37 !important;
 }
 
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.action-buttons .btn-sm {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 4px;
+}
+
+.action-buttons a {
+    margin: 0 !important;
+}
 </style>
