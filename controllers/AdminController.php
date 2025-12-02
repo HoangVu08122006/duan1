@@ -175,8 +175,8 @@ function tourEdit() {
         $data = [
             'id_danh_muc' => $_POST['id_danh_muc'],
             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
-            'id_khach_san' => $_POST['id_khach_san'],
-            'id_nha_hang' => $_POST['id_nha_hang'],
+            // 'id_khach_san' => $_POST['id_khach_san'],
+            // 'id_nha_hang' => $_POST['id_nha_hang'],
             'ten_tour' => $_POST['ten_tour'],
             'mo_ta' => $_POST['mo_ta'],
             'thoi_luong' => $_POST['thoi_luong'],
@@ -191,8 +191,8 @@ function tourEdit() {
 
     $danhMucList = $model->getAllDanhMuc();
     $trangThaiList = $model->getAllTrangThai();
-    $khachSanList = $model->getAllKhachSan();
-    $nhaHangList = $model->getAllNhaHang();
+    // $khachSanList = $model->getAllKhachSan();
+    // $nhaHangList = $model->getAllNhaHang();
 
     ob_start();
     require './views/admin/TourDuLich/edit.php';
@@ -211,6 +211,31 @@ function tourDelete() {
         echo $e->getMessage(); // "Không thể xóa tour vì còn lịch khởi hành liên quan!"
     }
 }
+function tourDetail() {
+    $id = $_GET['id'] ?? 0;
+    $model = new TourDuLich();
+    $tour = $model->getOne($id);
+
+    if (!$tour) {
+        echo "Tour không tồn tại!";
+        exit;
+    }
+
+    // Lấy lịch trình từng ngày
+    $lichTrinh = $model->getLichTrinh($id);
+
+    // Lấy lịch khởi hành
+    $lichKhoiHanh = $model->getLichKhoiHanh($id);
+   // Lấy ảnh từ folder thay vì DB
+    $anhTour = $model->getAnhTourFolder($id);
+
+
+    ob_start();
+    require './views/admin/TourDuLich/detail.php';
+    $content = ob_get_clean();
+    require './views/layout_admin.php';
+}
+
 
 
 // ================== BOOKING ==================
@@ -375,6 +400,8 @@ function bookingDetail() {
 
     // Lấy danh sách khách
     $khachList = $booking['khachList'] ?? [];
+
+
 
     // Hiển thị view
     ob_start();
