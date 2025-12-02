@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+<?php
+// Nếu file này được include từ controller, $booking, $tour, $khachList đã có giá trị
+?>
+
+>>>>>>> main
 <div class="container-fluid px-4" style="max-width: 1200px; margin: 40px auto;">
     <h3 class="page-title mb-4">Chi tiết Booking</h3>
 
@@ -7,11 +14,30 @@
         <div class="col-lg-4 col-md-6">
             <div class="card shadow-sm p-4 h-100">
                 <h2 class="card-title-section">Thông tin Booking</h2>
+<<<<<<< HEAD
 
                 <p><strong>Số lượng khách:</strong> <?= $booking['so_luong_khach'] ?></p>
                 <p><strong>Tổng tiền:</strong> <?= number_format($booking['tong_tien'], 0, ',', '.') ?> VNĐ</p>
                 <p><strong>Ngày đặt:</strong> <?= $booking['ngay_dat'] ?></p>
                 <p><strong>Trạng thái:</strong> <?= $booking['trang_thai'] ?></p>
+=======
+                <p><strong>Số lượng khách:</strong> <?= $booking['so_luong_khach'] ?? '-' ?></p>
+                <p><strong>Tổng tiền:</strong> <?= number_format($booking['tong_tien'] ?? 0, 0, ',', '.') ?> VNĐ</p>
+                <p><strong>Ngày đặt:</strong> <?= $booking['ngay_dat'] ?? '-' ?></p>
+                <p><strong>Trạng thái:</strong> 
+                    <?php
+                        $status = $booking['trang_thai'] ?? '-';
+                        $badgeClass = match($status) {
+                            'Chưa thanh toán' => 'badge-warning',
+                            'Đã thanh toán' => 'badge-success',
+                            'Đã hủy' => 'badge-danger',
+                            'Chờ xác nhận' => 'badge-info',
+                            default => 'badge-secondary',
+                        };
+                    ?>
+                    <span class="badge <?= $badgeClass ?>"><?= $status ?></span>
+                </p>
+>>>>>>> main
                 <p><strong>Ghi chú:</strong> <?= htmlspecialchars($booking['ghi_chu'] ?? '-') ?></p>
             </div>
         </div>
@@ -20,24 +46,36 @@
         <div class="col-lg-4 col-md-6">
             <div class="card shadow-sm p-4 h-100">
                 <h3 class="card-title-section">Thông tin Tour</h3>
+<<<<<<< HEAD
 
                 <p><strong>Tên Tour:</strong> <?= htmlspecialchars($tour['ten_tour'] ?? '-') ?></p>
                 <p><strong>Danh mục:</strong> <?= htmlspecialchars($tour['ten_danh_muc'] ?? '-') ?></p>
                 <p><strong>Mô tả:</strong> <?= nl2br(htmlspecialchars($tour['mo_ta'] ?? '-')) ?></p>
 
+=======
+                <p><strong>Tên Tour:</strong> <?= htmlspecialchars($tour['ten_tour'] ?? '-') ?></p>
+                <p><strong>Mô tả:</strong> <?= nl2br(htmlspecialchars($tour['mo_ta'] ?? '-')) ?></p>
+>>>>>>> main
                 <p><strong>Thời gian:</strong>
                     <?= $tour['ngay_khoi_hanh'] ? date('d/m/Y', strtotime($tour['ngay_khoi_hanh'])) : '-' ?> -
                     <?= $tour['ngay_ket_thuc'] ? date('d/m/Y', strtotime($tour['ngay_ket_thuc'])) : '-' ?>
                 </p>
+<<<<<<< HEAD
 
                 <p><strong>Khách sạn:</strong> <?= htmlspecialchars($tour['ten_khach_san']) ?></p>
                 <p><strong>Nhà hàng:</strong> <?= htmlspecialchars($tour['ten_nha_hang']) ?></p>
                 <p><strong>Giá cơ bản:</strong> <?= number_format($tour['gia_co_ban'], 0, ',', '.') ?> VNĐ</p>
                 <p><strong>Trạng thái tour:</strong> <?= htmlspecialchars($tour['trang_thai_tour'] ?? '-') ?></p>
+=======
+                <p><strong>Khách sạn:</strong> <?= htmlspecialchars($tour['ten_khach_san'] ?? '-') ?></p>
+                <p><strong>Nhà hàng:</strong> <?= htmlspecialchars($tour['ten_nha_hang'] ?? '-') ?></p>
+                <p><strong>Giá cơ bản:</strong> <?= number_format($tour['gia_co_ban'] ?? 0, 0, ',', '.') ?> VNĐ</p>
+>>>>>>> main
             </div>
         </div>
 
         <!-- Danh sách khách -->
+<<<<<<< HEAD
         <div class="col-lg-4 col-md-12">
             <div class="card shadow-sm p-4 h-100">
                 <h4 class="card-title-section">Danh sách khách</h4>
@@ -69,6 +107,22 @@
                             </tbody>
                         </table>
                     </div>
+=======
+        <div class="col-lg-4 col-md-6">
+            <div class="card shadow-sm p-4 h-100">
+                <h2 class="card-title-section">Danh sách khách</h2>
+                <?php if(!empty($khachList)): ?>
+                    <?php foreach($khachList as $i => $nguoiDat): ?>
+                        <h5>Khách <?= $i + 1 ?>:</h5>
+                        <p><strong>Họ tên:</strong> <?= htmlspecialchars($nguoiDat['ho_ten']) ?></p>
+                        <p><strong>Điện thoại:</strong> <?= htmlspecialchars($nguoiDat['so_dien_thoai']) ?></p>
+                        <p><strong>Giới tính:</strong> <?= htmlspecialchars($nguoiDat['gioi_tinh']) ?></p>
+                        <p><strong>Ngày sinh:</strong> <?= $nguoiDat['ngay_sinh'] ?? '-' ?></p>
+                        <p><strong>CMND/CCCD:</strong> <?= htmlspecialchars($nguoiDat['so_cmnd_cccd'] ?? '-') ?></p>
+                        <p><strong>Ghi chú:</strong> <?= htmlspecialchars($nguoiDat['ghi_chu'] ?? '-') ?></p>
+                        <?php if($i < count($khachList)-1) echo "<hr>"; ?>
+                    <?php endforeach; ?>
+>>>>>>> main
                 <?php else: ?>
                     <p>Chưa có khách nào.</p>
                 <?php endif; ?>
@@ -82,10 +136,15 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 
 <!-- ================= CSS CHUẨN THEO MẪU ================= -->
 <style>
 /* Tiêu đề trang */
+=======
+<!-- ================= CSS CHUẨN ================= -->
+<style>
+>>>>>>> main
 .page-title {
     font-size: 26px;
     font-weight: 700;
@@ -102,8 +161,11 @@
     background: #0d6efd;
     border-radius: 5px;
 }
+<<<<<<< HEAD
 
 /* Card */
+=======
+>>>>>>> main
 .card {
     border-radius: 14px !important;
     background: #ffffff;
@@ -115,8 +177,11 @@
     transform: translateY(-4px);
     box-shadow: 0 10px 28px rgba(0,0,0,0.15);
 }
+<<<<<<< HEAD
 
 /* Tiêu đề trong Card */
+=======
+>>>>>>> main
 .card-title-section {
     font-size: 22px;
     font-weight: 600;
@@ -126,12 +191,16 @@
     padding-left: 10px;
     color: #1e293b;
 }
+<<<<<<< HEAD
 
 /* Text */
+=======
+>>>>>>> main
 p, td, th {
     font-size: 15px;
     color: #333;
 }
+<<<<<<< HEAD
 
 /* Table */
 .table th {
@@ -166,6 +235,8 @@ h2{
     background-color: greenyellow;
 } */
  /* BUTTON QUAY LẠI */
+=======
+>>>>>>> main
 .btn-secondary { 
     display: inline-block;
     border-radius: 12px; 
@@ -178,12 +249,34 @@ h2{
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     transition: all 0.25s ease-in-out;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 .btn-secondary:hover { 
     background: #5a6268; 
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.20);
     color: #fff;
 }
+<<<<<<< HEAD
 
+=======
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+}
+.badge-warning { background-color: #ffc107; color:#212529; }
+.badge-success { background-color: #28a745; }
+.badge-danger { background-color: #dc3545; }
+.badge-info { background-color: #17a2b8; }
+.badge-secondary { background-color: #6c757d; }
+@media (max-width: 991px) {
+    .col-lg-4 { margin-bottom: 20px; }
+}
+>>>>>>> main
 </style>

@@ -31,6 +31,7 @@
         </div>
 
         <!-- Khách sạn -->
+<<<<<<< HEAD
         <div class="mb-3">
             <label class="form-label">Khách sạn</label>
             <select name="id_khach_san" class="form-select" required>
@@ -45,19 +46,45 @@
         </div>
 
         <!-- Nhà hàng -->
+=======
+        <!-- <div class="mb-3">
+            <label class="form-label">Khách sạn</label>
+            <select name="id_khach_san" class="form-select" required>
+                <option value="">--Chọn khách sạn--</option>
+                <!-- <?php foreach($khachSanList as $ks): ?>
+                    <option value="<?= $ks['id_khach_san'] ?>" 
+                        <?= ($ks['id_khach_san'] == $tour['id_khach_san']) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($ks['ten_khach_san']) ?>
+                   </option> -->
+                <!-- <?php endforeach; ?> -->
+            <!-- </select>
+        </div> --> 
+
+        <!-- Nhà hàng
+>>>>>>> main
         <div class="mb-3">
             <label class="form-label">Nhà hàng</label>
             <select name="id_nha_hang" class="form-select" required>
                 <option value="">--Chọn nhà hàng--</option>
+<<<<<<< HEAD
                 <?php foreach($nhaHangList as $nh): ?>
+=======
+                <!-- <?php foreach($nhaHangList as $nh): ?>
+>>>>>>> main
                     <option value="<?= $nh['id_nha_hang'] ?>" 
                         <?= ($nh['id_nha_hang'] == $tour['id_nha_hang']) ? 'selected' : '' ?>>
                         <?= htmlspecialchars($nh['ten_nha_hang']) ?>
                     </option>
+<<<<<<< HEAD
                 <?php endforeach; ?>
             </select>
         </div>
 
+=======
+                <?php endforeach; ?>-->
+            <!-- </select>
+        </div> --> 
+>>>>>>> main
         <!-- Tên tour -->
         <div class="mb-3">
             <label class="form-label">Tên tour</label>
@@ -89,6 +116,10 @@
         </div>
 
         <button type="submit" class="btn btn-success">Cập nhật tour</button>
+<<<<<<< HEAD
+=======
+          <a href="index.php?act=tour" class="btn btn-secondary">Quay lại</a>
+>>>>>>> main
     </form>
 </div>
 
@@ -145,4 +176,35 @@ button.btn-success:hover {
         padding: 15px;
     }
 }
+<<<<<<< HEAD
+=======
+/* Nút quay lại */
+.btn-secondary {
+    display: inline-block;
+    background-color: #6c757d; /* màu xám chuẩn bootstrap secondary */
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 25px; /* tăng padding để to hơn */
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+     margin-top: 20px;
+}
+
+/* Hover */
+.btn-secondary:hover {
+    background-color: #5a6268; /* tối hơn khi hover */
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* Focus */
+.btn-secondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(108,117,125,0.4);
+}
+>>>>>>> main
 </style>

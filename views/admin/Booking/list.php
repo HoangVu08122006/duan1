@@ -5,26 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Booking</title>
     <style>
+<<<<<<< HEAD
         /* --- Toàn bộ body --- */
+=======
+>>>>>>> main
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f6f9;
             color: #333;
             margin: 0;
+<<<<<<< HEAD
             
         }
 
         /* --- Tiêu đề chính --- */
+=======
+        }
+
+>>>>>>> main
         h1 {
             text-align: center;
             font-size: 36px;
             font-weight: 700;
             color: #0d6efd;
+<<<<<<< HEAD
             text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
             margin-bottom: 15px;
         }
 
         /* --- Nút Thêm Booking --- */
+=======
+            margin-bottom: 15px;
+        }
+
+>>>>>>> main
         .add-new {
             display: inline-block;
             margin: 10px auto 30px auto;
@@ -34,9 +48,15 @@
             text-decoration: none;
             border-radius: 8px;
             font-weight: 500;
+<<<<<<< HEAD
             transition: all 0.3s;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+=======
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+>>>>>>> main
         }
 
         .add-new:hover {
@@ -44,7 +64,10 @@
             transform: translateY(-2px);
         }
 
+<<<<<<< HEAD
         /* --- Table --- */
+=======
+>>>>>>> main
         table {
             width: 100%;
             border-collapse: collapse;
@@ -78,7 +101,10 @@
             background-color: rgba(13, 110, 253, 0.05);
         }
 
+<<<<<<< HEAD
         /* --- Buttons trong table --- */
+=======
+>>>>>>> main
         table a {
             text-decoration: none;
             padding: 6px 12px;
@@ -88,6 +114,7 @@
             transition: all 0.3s;
         }
 
+<<<<<<< HEAD
         table a[href*="edit"] {
             background-color: #ffc107;
             color: #212529;
@@ -128,6 +155,20 @@
                 display: block;
                 text-align: center;
             }
+=======
+        table a[href*="edit"] { background-color: #ffc107; color: #212529; }
+        table a[href*="edit"]:hover { background-color: #e0a800; color: #fff; }
+
+        table a[href*="detail"] { background-color: #0d6efd; color: #fff; }
+        table a[href*="detail"]:hover { background-color: #0b5ed7; }
+
+        table a[href*="delete"] { background-color: #dc3545; color: #fff; }
+        table a[href*="delete"]:hover { background-color: #bb2d3b; }
+
+        @media (max-width: 768px) {
+            table th, table td { padding: 10px; font-size: 14px; }
+            .add-new { width: 100%; display: block; text-align: center; }
+>>>>>>> main
         }
     </style>
 </head>
@@ -142,10 +183,16 @@
             <th>Lịch khởi hành</th>
             <th>Số lượng</th>
             <th>Tổng tiền</th>
+<<<<<<< HEAD
+=======
+            <th>Tên khách</th>
+            <th>SĐT khách</th>
+>>>>>>> main
             <th>Trạng thái</th>
             <th>Thao tác</th>
         </tr>
 
+<<<<<<< HEAD
     <?php foreach($bookings as $b): ?>
 <tr>
     <td><?= $b['id_dat_tour'] ?></td>
@@ -162,6 +209,27 @@
 </tr>
 <?php endforeach; ?>
 
+=======
+        <?php foreach($bookings as $b): 
+            $khachChinh = $b['khachList'][0] ?? null;
+        ?>
+        <tr>
+            <td><?= $b['id_dat_tour'] ?></td>
+            <td><?= htmlspecialchars($b['ten_tour'] ?? '') ?></td>
+            <td><?= !empty($b['ngay_khoi_hanh']) ? date('d/m/Y', strtotime($b['ngay_khoi_hanh'])) : '' ?></td>
+            <td><?= $b['so_luong_khach'] ?></td>
+            <td><?= number_format($b['tong_tien'] ?? 0) ?> đ</td>
+            <td><?= htmlspecialchars($khachChinh['ho_ten'] ?? '-') ?></td>
+            <td><?= htmlspecialchars($khachChinh['so_dien_thoai'] ?? '-') ?></td>
+            <td><?= htmlspecialchars($b['trang_thai'] ?? '') ?></td>
+            <td>
+                <a href="index.php?act=booking&action=edit&id=<?= $b['id_dat_tour'] ?>">Sửa</a>
+                <a href="index.php?act=booking&action=detail&id=<?= $b['id_dat_tour'] ?>">Xem</a>
+                <a href="index.php?act=booking&action=delete&id=<?= $b['id_dat_tour'] ?>" onclick="return confirm('Bạn có chắc?')">Xóa</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+>>>>>>> main
     </table>
 </body>
 </html>

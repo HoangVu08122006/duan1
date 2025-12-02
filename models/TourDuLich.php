@@ -78,8 +78,11 @@ class TourDuLich {
         $sql = "UPDATE tour_du_lich SET 
                     id_danh_muc = :id_danh_muc,
                     id_trang_thai_tour = :id_trang_thai_tour,
+<<<<<<< HEAD
                     id_khach_san = :id_khach_san,
                     id_nha_hang = :id_nha_hang,
+=======
+>>>>>>> main
                     ten_tour = :ten_tour,
                     mo_ta = :mo_ta,
                     thoi_luong = :thoi_luong,
@@ -129,4 +132,41 @@ class TourDuLich {
         $stmt = $this->pdo->query("SELECT * FROM nha_hang ORDER BY ten_nha_hang");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+<<<<<<< HEAD
+=======
+public function getLichKhoiHanh($id_tour)
+{
+    $sql = "SELECT * FROM lich_khoi_hanh WHERE id_tour = ?";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$id_tour]);
+    return $stmt->fetchAll();
+}
+// TourDuLich.php - model
+public function getLichTrinh($id_tour) {
+    $sql = "SELECT * FROM lich_trinh WHERE id_tour = :id_tour ORDER BY ngay_thu ASC";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute(['id_tour' => $id_tour]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+public function getAnhTourFolder($id_tour)
+{
+    $folder = __DIR__ . '/../uploads/img/' . $id_tour; // đường dẫn vật lý
+    $images = [];
+
+    if (is_dir($folder)) {
+        $files = scandir($folder);
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') continue;
+            // Kiểm tra là ảnh
+            if (preg_match('/\.(jpg|jpeg|png|gif)$/i', $file)) {
+                $images[] = 'uploads/img/' . $id_tour . '/' . $file; // đường dẫn dùng trong HTML
+            }
+        }
+    }
+
+    return $images;
+}
+
+
+>>>>>>> main
 }
