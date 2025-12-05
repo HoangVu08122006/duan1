@@ -31,12 +31,13 @@ function loginHandle() {
 
 
     if ($hdv && $hdv['pass'] == $password) {
-        $_SESSION['hdv'] = $hdv['ho_ten'];
-        $_SESSION['id_hdv'] = $hdv['id_hdv'];
+    $_SESSION['hdv'] = $hdv; // ✅ lưu cả mảng dữ liệu HDV
+    $_SESSION['id_hdv'] = $hdv['id_hdv'];
 
-        header("Location: index.php?act=hdvHome"); // tạo route này
-        exit();
-    }
+    header("Location: index.php?act=hdvHome");
+    exit();
+}
+
 
     // Sai tài khoản
     $error = "Sai tài khoản hoặc mật khẩu!";
