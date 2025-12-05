@@ -10,6 +10,8 @@ require_once __DIR__ . '/commons/function.php';
 require_once __DIR__ . '/controllers/HomeController.php';
 require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/AdminController.php';
+require_once __DIR__ . './controllers/HdvController.php';
+
 
 // ----------------- MODELS -----------------
 require_once __DIR__ . '/models/TrangThaiLichKhoiHanh.php';
@@ -20,8 +22,7 @@ require_once __DIR__ . '/models/DanhMucModel.php';
 require_once __DIR__ . '/models/BookingModel.php';
 require_once __DIR__ . '/models/DoanKhach.php';
 require_once __DIR__ . '/models/LichTrinhModel.php';
-
-
+require_once __DIR__ .'./models/HdvModel.php';
 
 
 // ----------------- SESSION -----------------
@@ -202,9 +203,92 @@ switch ($act) {
     }
     break;
 
-
-    // 404
+    // HDV Routes
+    case 'hdvHome':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        header("Location: index.php?act=hdv_dashboard");
+        exit();
+    case 'hdv_dashboard':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        $hdv = new HdvController();
+        $hdv->dashboard();
+        break;
+    case 'hdv_lich_trinh':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        $hdv = new HdvController();
+        $hdv->lichTrinh();
+        break;
+    case 'hdv_khach':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        $hdv = new HdvController();
+        $hdv->danhSachKhach();
+        break;
+    case 'hdv_diem_danh':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        $hdv = new HdvController();
+        $hdv->diemDanh();
+        break;
+    case 'hdv_nhat_ky':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        $hdv = new HdvController();
+        $hdv->nhatKy();
+        break;
+    case 'hdv_nhat_ky_delete':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        require_once __DIR__ . '/models/HdvModel.php';
+        $model = new HdvModel();
+        $id = $_GET['id'] ?? 0;
+        if ($id) {
+            $model->deleteNhatKy($id);
+        }
+        header("Location: index.php?act=hdv_nhat_ky");
+        exit;
+    case 'hdv_update_yeucau':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        $hdv = new HdvController();
+        $hdv->updateYeuCau();
+        break;
+    case 'hdv_tour_detail':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        $hdv = new HdvController();
+        $hdv->tourDetail();
+        break;
+    case 'hdv_lich_su_tour':
+        if (!isset($_SESSION['hdv'])) {
+            header("Location: index.php?act=login");
+            exit();
+        }
+        $hdv = new HdvController();
+        $hdv->tourHistory();
+        break;
     default:
-        require __DIR__ . '/views/404.php';
+        require './views/404.php';
         break;
 }
