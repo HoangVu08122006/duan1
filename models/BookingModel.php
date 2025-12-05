@@ -128,9 +128,10 @@ public function getAllTours() {
 
 // Lấy tất cả lịch khởi hành
 public function getAllLich() {
-    $stmt = $this->pdo->query("SELECT * FROM lich_khoi_hanh");
+    $stmt = $this->pdo->query("SELECT id_lich, id_tour, ngay_khoi_hanh, ngay_ket_thuc FROM lich_khoi_hanh");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 
     // Cập nhật booking
@@ -240,5 +241,32 @@ public function getAllLich() {
 
         return $booking;
     }
+
+    public function countBookingsToday() {
+    $today = date('Y-m-d');
+    $sql = "SELECT COUNT(*) FROM dat_tour WHERE DATE(ngay_dat) = :today";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([':today' => $today]);
+    return $stmt->fetchColumn();
+}
+
+
+public function countBookingsThisWeek() {
+    $start = date('Y-m-d', strtotime('monday this week'));
+    $end = date('Y-m-d', strtotime('sunday this week'));
+    $sql = "SELECT COUNT(*) FROM dat_tour WHERE DATE(ngay_dat) BETWEEN :start AND :end";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([':start' => $start, ':end' => $end]);
+    return $stmt->fetchColumn();
+}
+public function getMonthlyRevenue() {
+    $sql = "SELECT MONTH(ngay_dat) AS thang, SUM(tong_tien) AS doanh_thu
+            FROM dat_tour
+            GROUP BY MONTH(ngay_dat)
+            ORDER BY thang ASC";
+    $stmt = $this->pdo->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
 ?>

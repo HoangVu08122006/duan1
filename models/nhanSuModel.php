@@ -33,9 +33,9 @@ class HuongDanVien {
     // Thêm mới HDV
     public function create($data) {
         $sql = "INSERT INTO huong_dan_vien 
-            (avatar, ho_ten, gioi_tinh, ngay_sinh, so_cccd, email, so_dien_thoai, id_loai_hdv, so_nam_kinh_nghiem, dia_chi, pass, id_trang_thai_lam_viec_hdv, mo_ta)
+            (avatar, ho_ten, gioi_tinh, ngay_sinh, so_cccd, email, so_dien_thoai, id_loai_hdv, so_nam_kinh_nghiem, dia_chi, pass, id_trang_thai_lam_viec_hdv, luong_hdv, mo_ta)
             VALUES
-            (:avatar, :ho_ten, :gioi_tinh, :ngay_sinh, :so_cccd, :email, :so_dien_thoai, :id_loai_hdv, :so_nam_kinh_nghiem, :dia_chi, :pass, :id_trang_thai_lam_viec_hdv, :mo_ta)";
+            (:avatar, :ho_ten, :gioi_tinh, :ngay_sinh, :so_cccd, :email, :so_dien_thoai, :id_loai_hdv, :so_nam_kinh_nghiem, :dia_chi, :pass, :id_trang_thai_lam_viec_hdv, :luong_hdv, :mo_ta)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($data);
     }
@@ -55,6 +55,7 @@ class HuongDanVien {
                     dia_chi=:dia_chi,
                     pass=:pass,
                     id_trang_thai_lam_viec_hdv=:id_trang_thai_lam_viec_hdv,
+                    luong_hdv=:luong_hdv
                     mo_ta=:mo_ta
                 WHERE id_hdv=:id";
         $data['id'] = $id;

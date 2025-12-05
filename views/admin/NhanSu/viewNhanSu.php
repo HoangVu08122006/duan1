@@ -105,6 +105,7 @@
     <p><strong>Chuyên môn:</strong> <?= $hdv['loai_hdv'] ?></p>
     <p><strong>Số năm kinh nghiệm:</strong> <?= $hdv['so_nam_kinh_nghiem'] ?></p>
     <p><strong>Tình trạng làm việc:</strong> <?= $hdv['trang_thai_lam_viec_hdv'] ?></p>
+    <p><strong>Lương:</strong> <?= $hdv['luong_hdv'] ?></p>
     <p><strong>Ghi chú:</strong> <?= $hdv['mo_ta'] ?></p>
 
     <button onclick="location.href='index.php?act=nhanSu'">Quay lại</button>

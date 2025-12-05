@@ -19,6 +19,9 @@ require_once __DIR__ . '/models/nhanSuModel.php';
 require_once __DIR__ . '/models/DanhMucModel.php';
 require_once __DIR__ . '/models/BookingModel.php';
 require_once __DIR__ . '/models/DoanKhach.php';
+require_once __DIR__ . '/models/LichTrinhModel.php';
+
+
 
 
 // ----------------- SESSION -----------------

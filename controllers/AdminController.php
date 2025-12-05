@@ -8,17 +8,35 @@ require_once './models/BookingModel.php';
 require_once './models/khachSanModel.php';
 require_once './models/nhaHangModel.php';
 require_once './models/nhaXeModel.php';
+require_once './models/LichTrinhModel.php';
 
 
 
 // ------------------- Trang Admin -------------------
 function adminDashboard() {
     $title = "Trang quản trị";
+
+    $tourModel = new TourDuLich();
+    $bookingModel = new BookingModel();
+    $lichModel = new LichKhoiHanh();
+
+    $data = [
+        'activeTours' => $tourModel->countActiveTours(),
+        'bookingStats' => [
+            'today' => $bookingModel->countBookingsToday(),
+            'week'  => $bookingModel->countBookingsThisWeek(),
+        ],
+        'upcomingDepartures' => $lichModel->getUpcomingDepartures(7),
+        'monthlyRevenue' => $bookingModel->getMonthlyRevenue(),
+        'tourAlerts' => $tourModel->getTourAlerts()
+    ];
+
     ob_start();
     require './views/admin/dashboard.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
 
 // ------------------- Tour -------------------
 // function danhMucTour() {
@@ -126,54 +144,65 @@ function tourDuLich() {
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
-
-function tourAdd() {
+function tourAdd()
+{
     $model = new TourDuLich();
-    $danhMucModel = new DanhMucModel();
-    
-    $khachSanModel = new KhachSanModel();
-    $nhaHangModel = new NhaHangModel();
-    $xeModel = new NhaXeModel();
-
-    $danhMucList = $danhMucModel->getAll();
-    $trangThaiList = $model->getAllTrangThai();
-    $khachSanList = $khachSanModel->getAll();
-    $nhaHangList = $nhaHangModel->getAll();
-    $xeList = $xeModel->getAll();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $data = [
-            'id_danh_muc'       => $_POST['id_danh_muc'] ?? null,
-            'id_trang_thai_tour'=> $_POST['id_trang_thai_tour'] ?? null,
-            'id_khach_san'      => $_POST['id_khach_san'] ?? null,
-            'id_nha_hang'       => $_POST['id_nha_hang'] ?? null,
-            'id_xe'             => $_POST['id_xe'] ?? null,
-            'ten_tour'          => $_POST['ten_tour'] ?? '',
-            'mo_ta'             => $_POST['mo_ta'] ?? '',
-            'thoi_luong'        => $_POST['thoi_luong'] ?? '',
-            'gia_co_ban'        => $_POST['gia_co_ban'] ?? 0,
-            'chinh_sach'        => $_POST['chinh_sach'] ?? ''
-        ];
+        $id_khach_san = $_POST['id_khach_san'] ?? null;
+        $id_nha_hang = $_POST['id_nha_hang'] ?? null;
+        $id_xe = $_POST['id_xe'] ?? null;
 
-        // Validate bắt buộc
-        if (empty($data['id_danh_muc']) || empty($data['id_trang_thai_tour']) ||
-            empty($data['id_khach_san']) || empty($data['id_nha_hang']) || empty($data['id_xe'])) {
-            die("Lỗi: Bạn phải chọn đầy đủ danh mục, trạng thái, khách sạn, nhà hàng và xe.");
+        if (!$id_khach_san || !$id_nha_hang || !$id_xe) {
+            die("Vui lòng chọn khách sạn, nhà hàng và xe!");
         }
 
+        $data = [
+            'id_danh_muc' => $_POST['id_danh_muc'],
+            'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
+            'id_khach_san' => $id_khach_san,
+            'id_nha_hang' => $id_nha_hang,
+            'id_xe' => $id_xe,
+            'ten_tour' => $_POST['ten_tour'],
+            'mo_ta' => $_POST['mo_ta'],
+            'thoi_luong' => $_POST['thoi_luong'],
+            'gia_co_ban' => $_POST['gia_co_ban'],
+            'chinh_sach' => $_POST['chinh_sach']
+        ];
+
+        // Tạo tour
         $model->create($data);
-        header("Location: index.php?act=tour");
-        exit;
+        $id_tour = $model->getLastInsertId();
+
+        // Tạo lịch khởi hành
+        $model->createLichKhoiHanh([
+            'id_tour' => $id_tour,
+            'id_hdv' => null,
+            'dia_diem_khoi_hanh' => '',
+            'dia_diem_den' => '',
+            'ngay_khoi_hanh' => $_POST['ngay_khoi_hanh'],
+            'ngay_ket_thuc' => $_POST['ngay_ket_thuc'],
+            'thong_tin_xe' => '',
+            'id_trang_thai_lich_khoi_hanh' => 1,
+            'ghi_chu' => ''
+        ]);
+
+        header('Location: index.php?act=tour');
+        exit();
     }
+
+    // Lấy dữ liệu cho form
+    $danhMucList = $model->getAllDanhMuc();
+    $trangThaiList = $model->getAllTrangThai();
+    $khachSanList = $model->getAllKhachSan();
+    $nhaHangList = $model->getAllNhaHang();
+    $xeList = $model->getAllXe();
 
     ob_start();
     require './views/admin/TourDuLich/add.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
-
-
-
 
 function tourEdit() {
     $model = new TourDuLich();
@@ -189,8 +218,9 @@ function tourEdit() {
         $data = [
             'id_danh_muc' => $_POST['id_danh_muc'],
             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
-            // 'id_khach_san' => $_POST['id_khach_san'],
-            // 'id_nha_hang' => $_POST['id_nha_hang'],
+            'id_khach_san' => $_POST['id_khach_san'],
+            'id_nha_hang' => $_POST['id_nha_hang'],
+            'id_xe' => $_POST['id_xe'],
             'ten_tour' => $_POST['ten_tour'],
             'mo_ta' => $_POST['mo_ta'],
             'thoi_luong' => $_POST['thoi_luong'],
@@ -199,14 +229,27 @@ function tourEdit() {
         ];
 
         $model->update($id, $data);
+
+        // cập nhật lịch khởi hành nếu cần
+        $lich = $model->getLichKhoiHanhByTour($id);
+        if ($lich) {
+            $model->updateLichKhoiHanh($lich['id_lich'], [
+                'ngay_khoi_hanh' => $_POST['ngay_khoi_hanh'],
+                'ngay_ket_thuc' => $_POST['ngay_ket_thuc'],
+                'id_lich' => $lich['id_lich']
+            ]);
+        }
+
         header('Location: index.php?act=tour');
         exit;
     }
 
+    // lấy dữ liệu cho form
     $danhMucList = $model->getAllDanhMuc();
     $trangThaiList = $model->getAllTrangThai();
-    // $khachSanList = $model->getAllKhachSan();
-    // $nhaHangList = $model->getAllNhaHang();
+    $khachSanList = $model->getAllKhachSan();
+    $nhaHangList = $model->getAllNhaHang();
+    $xeList = $model->getAllXe();
 
     ob_start();
     require './views/admin/TourDuLich/edit.php';
@@ -214,7 +257,8 @@ function tourEdit() {
     require './views/layout_admin.php';
 }
 
-function tourDelete() {
+function tourDelete()
+{
     $model = new TourDuLich();
     $id = $_GET['id'] ?? 0;
     try {
@@ -225,6 +269,7 @@ function tourDelete() {
         echo $e->getMessage(); // "Không thể xóa tour vì còn lịch khởi hành liên quan!"
     }
 }
+
 function tourDetail() {
     $id = $_GET['id'] ?? 0;
     $model = new TourDuLich();
@@ -383,6 +428,7 @@ function bookingDelete() {
         echo $e->getMessage(); // "Không thể xóa booking vì còn dữ liệu liên quan!"
     }
 }
+
 
 
 // ================== Booking Detail ==================
@@ -572,6 +618,7 @@ function addNhanSu() {
             'dia_chi' => $_POST['dia_chi'],
             'pass' => $_POST['pass'],
             'id_trang_thai_lam_viec_hdv' => $_POST['id_trang_thai_lam_viec_hdv'],
+            'luong_hdv' => $_POST['luong_hdv'],
             'mo_ta' => $_POST['mo_ta']
         ];
         $hdvModel->create($data);
@@ -606,6 +653,7 @@ function editNhanSu($id) {
             'dia_chi' => $_POST['dia_chi'],
             'pass' => $_POST['pass'],
             'id_trang_thai_lam_viec_hdv' => $_POST['id_trang_thai_lam_viec_hdv'],
+            'luong_hdv' => $_POST['luong_hdv'],
             'mo_ta' => $_POST['mo_ta']
         ];
         $hdvModel->update($id, $data);
@@ -625,10 +673,11 @@ function deleteNhanSu($id) {
     header("Location: index.php?act=nhanSu");
 }
 
-// ------------------- Lịch khởi hành -------------------
+// ------------------- Lịch khởi hành -------------------// ================== Lịch khởi hành ==================
 function dieuHanhTour() {
     $lichModel = new LichKhoiHanh();
     $lichKhoiHanhList = $lichModel->getAll();
+
     ob_start();
     require './views/admin/DieuHanhTour/dieuHanhTour.php';
     $content = ob_get_clean();
@@ -642,6 +691,11 @@ function viewLich($id){
         echo "Lịch khởi hành không tồn tại!";
         exit;
     }
+
+    // Lấy lịch trình theo tour
+    $lichTrinhModel = new LichTrinh();
+    $lichTrinh = $lichTrinhModel->getByTour($lich['id_tour']);
+
     ob_start();
     require './views/admin/DieuHanhTour/viewLich.php';
     $content = ob_get_clean();
@@ -650,22 +704,42 @@ function viewLich($id){
 
 function addLich(){
     $lichModel = new LichKhoiHanh();
+    $lichTrinhModel = new LichTrinh();
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $data = [
-            'id_tour'=>$_POST['id_tour'],
-            'id_hdv'=>$_POST['id_hdv'],
-            'dia_diem_khoi_hanh'=>$_POST['dia_diem_khoi_hanh'],
-            'dia_diem_den'=>$_POST['dia_diem_den'],
-            'ngay_khoi_hanh'=>$_POST['ngay_khoi_hanh'],
-            'ngay_ket_thuc'=>$_POST['ngay_ket_thuc'],
-            'thong_tin_xe'=>$_POST['thong_tin_xe'],
-            'id_trang_thai'=>$_POST['id_trang_thai'],
-            'ghi_chu'=>$_POST['ghi_chu']
+            'id_tour'            => $_POST['id_tour'],
+            'id_hdv'             => $_POST['id_hdv'],
+            'dia_diem_khoi_hanh' => $_POST['dia_diem_khoi_hanh'],
+            'dia_diem_den'       => $_POST['dia_diem_den'],
+            'ngay_khoi_hanh'     => $_POST['ngay_khoi_hanh'],
+            'ngay_ket_thuc'      => $_POST['ngay_ket_thuc'],
+            'thong_tin_xe'       => $_POST['thong_tin_xe'],
+            'id_trang_thai'      => $_POST['id_trang_thai'],
+            'ghi_chu'            => $_POST['ghi_chu']
         ];
         $lichModel->create($data);
+
+       $idLich = $lichModel->create($data); // trả về id_lich mới
+$idTour = $_POST['id_tour'];         // lấy id_tour từ form
+
+if (!empty($_POST['lich_trinh'])) {
+    foreach ($_POST['lich_trinh'] as $ngay => $lt) {
+        $lichTrinhModel->create($idTour, [
+            'ngay_thu'   => $ngay,
+            'tieu_de'    => $lt['tieu_de'],
+            'hoat_dong'  => $lt['hoat_dong'],
+            'dia_diem'   => $lt['dia_diem']
+        ]);
+    }
+}
+
+
+
         header("Location: index.php?act=dieuHanhTour");
         exit;
     }
+
     ob_start();
     require './views/admin/DieuHanhTour/addLich.php';
     $content = ob_get_clean();
@@ -673,11 +747,13 @@ function addLich(){
 }
 
 function editLich($id){
-    $lichModel = new LichKhoiHanh();
-    $tourModel = new TourDuLich();
-    $hdvModel = new HuongDanVien();
-    $ttModel = new TrangThaiLichKhoiHanh();
+    $lichModel       = new LichKhoiHanh();
+    $tourModel       = new TourDuLich();
+    $hdvModel        = new HuongDanVien();
+    $ttModel         = new TrangThaiLichKhoiHanh();
+    $lichTrinhModel  = new LichTrinh();
 
+    // Lấy lịch khởi hành theo id
     $lich = $lichModel->getById($id);
     if(!$lich){
         echo "Lịch khởi hành không tồn tại!";
@@ -685,31 +761,44 @@ function editLich($id){
     }
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        // cập nhật lịch khởi hành
         $data = [
-            'id_tour'=>$_POST['id_tour'],
-            'id_hdv'=>$_POST['id_hdv'],
-            'dia_diem_khoi_hanh'=>$_POST['dia_diem_khoi_hanh'],
-            'dia_diem_den'=>$_POST['dia_diem_den'],
-            'ngay_khoi_hanh'=>$_POST['ngay_khoi_hanh'],
-            'ngay_ket_thuc'=>$_POST['ngay_ket_thuc'],
-            'thong_tin_xe'=>$_POST['thong_tin_xe'],
-            'id_trang_thai'=>$_POST['id_trang_thai'],
-            'ghi_chu'=>$_POST['ghi_chu']
+            'id_tour'            => $_POST['id_tour'],
+            'id_hdv'             => $_POST['id_hdv'],
+            'dia_diem_khoi_hanh' => $_POST['dia_diem_khoi_hanh'],
+            'dia_diem_den'       => $_POST['dia_diem_den'],
+            'ngay_khoi_hanh'     => $_POST['ngay_khoi_hanh'],
+            'ngay_ket_thuc'      => $_POST['ngay_ket_thuc'],
+            'thong_tin_xe'       => $_POST['thong_tin_xe'],
+            'id_trang_thai'      => $_POST['id_trang_thai'],
+            'ghi_chu'            => $_POST['ghi_chu']
         ];
         $lichModel->update($id, $data);
+
+        // cập nhật lịch trình từng ngày
+        if (!empty($_POST['lich_trinh'])) {
+            foreach ($_POST['lich_trinh'] as $ngay => $lt) {
+                // SỬA: truyền id_tour thay vì id_lich
+                $lichTrinhModel->updateOrCreate($data['id_tour'], $ngay, $lt);
+            }
+        }
+
         header("Location: index.php?act=dieuHanhTour");
         exit;
     }
 
-    $tours = $tourModel->getAll();
-    $hdvs = $hdvModel->getAll();
-    $ttList = $ttModel->getAll();
+    // lấy dữ liệu cho form
+    $tours      = $tourModel->getAll();
+    $hdvs       = $hdvModel->getAll();
+    $ttList     = $ttModel->getAll();
+    $lichTrinh  = $lichTrinhModel->getByTour($lich['id_tour']);
 
     ob_start();
     require './views/admin/DieuHanhTour/editLich.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
 
 function deleteLich($id){
     $lichModel = new LichKhoiHanh();

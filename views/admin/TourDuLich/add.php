@@ -1,193 +1,242 @@
-<div class="col-md-8 offset-md-2 p-4">
+<div class="tour-form-container">
     <h3>Thêm Tour Mới</h3>
     <form method="POST">
+        <div class="form-group">
+            <label>Danh mục tour</label>
+            <select name="id_danh_muc" required>
+                <option value="">--Chọn danh mục--</option>
+                <?php foreach ($danhMucList as $dm): ?>
+                    <option value="<?= $dm['id_danh_muc'] ?>"><?= htmlspecialchars($dm['ten_danh_muc']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-    <!-- Danh mục tour -->
-    <div class="mb-3">
-        <label class="form-label">Danh mục tour</label>
-        <select name="id_danh_muc" class="form-select" required>
-            <option value="">--Chọn danh mục--</option>
-            <?php foreach($danhMucList as $dm): ?>
-                <option value="<?= $dm['id_danh_muc'] ?>"><?= htmlspecialchars($dm['ten_danh_muc']) ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+        <div class="form-group">
+            <label>Trạng thái tour</label>
+            <select name="id_trang_thai_tour" required>
+                <option value="">--Chọn trạng thái--</option>
+                <?php foreach ($trangThaiList as $tt): ?>
+                    <option value="<?= $tt['id_trang_thai_tour'] ?>"><?= htmlspecialchars($tt['trang_thai_tour']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-    <!-- Trạng thái tour -->
-    <div class="mb-3">
-        <label class="form-label">Trạng thái tour</label>
-        <select name="id_trang_thai_tour" class="form-select" required>
-            <option value="">--Chọn trạng thái--</option>
-            <?php foreach($trangThaiList as $tt): ?>
-                <option value="<?= $tt['id_trang_thai_tour'] ?>"><?= htmlspecialchars($tt['trang_thai_tour']) ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+        <div class="form-group">
+            <label>Khách sạn</label>
+            <select name="id_khach_san" required>
+                <option value="">--Chọn khách sạn--</option>
+                <?php foreach ($khachSanList as $ks): ?>
+                    <option value="<?= $ks['id_khach_san'] ?>"><?= htmlspecialchars($ks['ten_khach_san']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-    <!-- Khách sạn -->
-    <div class="mb-3">
-        <label class="form-label">Khách sạn</label>
-        <select name="id_khach_san" class="form-select" required>
-            <option value="">--Chọn khách sạn--</option>
-            <?php foreach($khachSanList as $ks): ?>
-                <option value="<?= $ks['id_khach_san'] ?>"><?= htmlspecialchars($ks['ten_khach_san']) ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+        <div class="form-group">
+            <label>Nhà hàng</label>
+            <select name="id_nha_hang" required>
+                <option value="">--Chọn nhà hàng--</option>
+                <?php foreach ($nhaHangList as $nh): ?>
+                    <option value="<?= $nh['id_nha_hang'] ?>"><?= htmlspecialchars($nh['ten_nha_hang']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-    <!-- Nhà hàng -->
-    <div class="mb-3">
-        <label class="form-label">Nhà hàng</label>
-        <select name="id_nha_hang" class="form-select" required>
-            <option value="">--Chọn nhà hàng--</option>
-            <?php foreach($nhaHangList as $nh): ?>
-                <option value="<?= $nh['id_nha_hang'] ?>"><?= htmlspecialchars($nh['ten_nha_hang']) ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-
-    <!-- Xe vận chuyển -->
-    <div class="mb-3">
-        <label class="form-label">Xe vận chuyển</label>
-        <select name="id_xe" class="form-select" required>
-            <option value="">--Chọn xe--</option>
-            <?php foreach($xeList as $xe): ?>
-                <option value="<?= $xe['id_xe'] ?>"><?= htmlspecialchars($xe['nha_xe']) ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-
-    <!-- Tên tour -->
-    <div class="mb-3">
-        <label class="form-label">Tên tour</label>
-        <input type="text" name="ten_tour" class="form-control" required>
-    </div>
-
-    <!-- Mô tả -->
-    <div class="mb-3">
-        <label class="form-label">Mô tả</label>
-        <textarea name="mo_ta" class="form-control" rows="3"></textarea>
-    </div>
-
-    <!-- Thời lượng -->
-    <div class="mb-3">
-        <label class="form-label">Thời lượng</label>
-        <input type="text" name="thoi_luong" class="form-control">
-    </div>
-
-    <!-- Giá cơ bản -->
-    <div class="mb-3">
-        <label class="form-label">Giá cơ bản</label>
-        <input type="number" name="gia_co_ban" class="form-control" step="0.01">
-    </div>
-
-    <!-- Chính sách -->
-    <div class="mb-3">
-        <label class="form-label">Chính sách</label>
-        <textarea name="chinh_sach" class="form-control" rows="3"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-success">Thêm tour</button>
-    <a href="index.php?act=tour" class="btn btn-secondary">Quay lại</a>
-</form>
+                    <div class="form-group">
+    <label>Xe</label>
+    <select name="id_xe" required>
+        <option value="">--Chọn xe--</option>
+        <?php foreach ($xeList as $xe): ?>
+            <option value="<?= $xe['id_xe'] ?>"><?= htmlspecialchars($xe['nha_xe']) ?></option>
+        <?php endforeach; ?>
+    </select>
 </div>
+
+
+        <div class="form-group">
+            <label>Tên tour</label>
+            <input type="text" name="ten_tour" required>
+        </div>
+
+        <div class="form-group">
+            <label>Mô tả</label>
+            <textarea name="mo_ta" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Thời lượng</label>
+            <input type="text" name="thoi_luong">
+        </div>
+
+        <div class="form-group">
+            <label>Ngày khởi hành</label>
+            <input type="date" name="ngay_khoi_hanh" required>
+        </div>
+
+        <div class="form-group">
+            <label>Ngày kết thúc</label>
+            <input type="date" name="ngay_ket_thuc" required>
+        </div>
+
+        <div class="form-group">
+            <label>Giá cơ bản</label>
+            <input type="number" name="gia_co_ban" step="0.01">
+        </div>
+
+        <div class="form-group">
+            <label>Chính sách</label>
+            <textarea name="chinh_sach" rows="3"></textarea>
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-success">Thêm tour</button>
+<a href="index.php?act=tour" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const startInput = document.querySelector("input[name='ngay_khoi_hanh']");
+    const endInput = document.querySelector("input[name='ngay_ket_thuc']");
+    const durationInput = document.querySelector("input[name='thoi_luong']");
+
+    function calculateDuration() {
+        const startDate = new Date(startInput.value);
+        const endDate = new Date(endInput.value);
+
+        if (startInput.value && endInput.value && endDate >= startDate) {
+            // Tính số ngày (bao gồm cả ngày khởi hành)
+            const diffTime = endDate - startDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            durationInput.value = diffDays + " ngày";
+        } else {
+            durationInput.value = "";
+        }
+    }
+
+    startInput.addEventListener("change", calculateDuration);
+    endInput.addEventListener("change", calculateDuration);
+});
+</script>
 
 
 <style>
 /* Container chính */
-.col-md-8 {
+.tour-form-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px 40px;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Tiêu đề */
-h3 {
+.tour-form-container h3 {
     text-align: center;
     margin-bottom: 30px;
-    color: #333;
-    font-weight: 600;
+    color: #1e1e2f;
+    font-weight: 700;
+    font-size: 28px;
+}
+
+/* Nhóm form */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Nhãn form */
-.form-label {
-    font-weight: 500;
-    color: #555;
+.form-group label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
 }
 
 /* Input, select, textarea */
-.form-control, .form-select {
-    border-radius: 5px;
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 12px;
+    border-radius: 8px;
     border: 1px solid #ccc;
-    padding: 8px 10px;
-    transition: 0.3s;
+    font-size: 15px;
+    transition: all 0.3s;
 }
 
-.form-control:focus, .form-select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0,123,255,0.3);
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
     outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
 /* Textarea */
-textarea.form-control {
+textarea {
     resize: vertical;
 }
 
-/* Button thêm tour */
-button.btn-success {
-    display: block;
-    width: 100%;
-    padding: 10px;
+/* Nút */
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-success {
+    flex: 1;
+    padding: 12px 0;
+    background-color: #28a745;
+    border: none;
+    font-weight: 600;
     font-size: 16px;
-    font-weight: 500;
-    border-radius: 5px;
-    transition: 0.3s;
+    border-radius: 8px;
+    transition: all 0.3s;
 }
 
-button.btn-success:hover {
+.btn-success:hover {
     background-color: #218838;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Margin giữa các field */
-.mb-3 {
-    margin-bottom: 1rem !important;
+.btn-secondary {
+    flex: 1;
+    padding: 12px 0;
+    background-color: #6c757d;
+    text-align: center;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* Responsive nhỏ hơn 768px */
 @media (max-width: 767px) {
-    .col-md-8.offset-md-2 {
-        margin: 10px;
-        padding: 15px;
+    .tour-form-container {
+        padding: 20px;
+        margin: 20px;
     }
-}
-/* Nút quay lại */
-.btn-secondary {
-    display: inline-block;
-    background-color: #6c757d; /* màu xám chuẩn bootstrap secondary */
-    color: #fff;
-    text-decoration: none;
-    padding: 12px 25px; /* tăng padding để to hơn */
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-     margin-top: 20px;
-}
 
-/* Hover */
-.btn-secondary:hover {
-    background-color: #5a6268; /* tối hơn khi hover */
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
+    .form-buttons {
+        flex-direction: column;
+    }
 
-/* Focus */
-.btn-secondary:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(108,117,125,0.4);
+    .form-buttons .btn-success,
+    .form-buttons .btn-secondary {
+        width: 100%;
+    }
 }
 </style>

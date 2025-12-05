@@ -173,6 +173,7 @@
             <th>SĐT</th>
             <th>Chuyên môn</th>
             <th>Tình trạng</th>
+            <th>Lương</th>
             <th>Ghi chú</th>
             <th>Hành động</th>
         </tr>
@@ -188,6 +189,7 @@
             <td data-label="SĐT"><?= $hdv['so_dien_thoai'] ?></td>
             <td data-label="Chuyên môn"><?= $hdv['loai_hdv'] ?></td>
             <td data-label="Tình trạng"><?= $hdv['trang_thai_lam_viec_hdv'] ?></td>
+            <td data-label="Lương"><?= $hdv['luong_hdv'] ?></td>
             <td data-label="Ghi chú"><?= $hdv['mo_ta'] ?></td>
             <td data-label="Hành động">
                 <button class="view" 

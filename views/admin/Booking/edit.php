@@ -4,24 +4,34 @@
     <div class="mb-3">
         <label for="id_tour">Tour:</label>
         <select name="id_tour" id="id_tour" class="form-control" required>
-            <option value="">-- Chọn Tour --</option>
-            <?php foreach($tours as $t): ?>
-                <option value="<?= $t['id_tour'] ?>" <?= ($booking['id_tour'] == $t['id_tour']) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($t['ten_tour']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+    <option value="">-- Chọn Tour --</option>
+    <?php foreach($tours as $t): ?>
+        <option 
+            value="<?= $t['id_tour'] ?>" 
+            data-gia="<?= $t['gia_co_ban'] ?>" 
+            <?= ($booking['id_tour'] == $t['id_tour']) ? 'selected' : '' ?>>
+            <?= htmlspecialchars($t['ten_tour']) ?> (<?= number_format($t['gia_co_ban']) ?> VNĐ/người)
+        </option>
+    <?php endforeach; ?>
+</select>
+
+
     </div>
 
     <div class="mb-3">
         <label for="id_lich">Lịch khởi hành:</label>
         <select name="id_lich" id="id_lich" class="form-control" required>
             <option value="">-- Chọn Lịch --</option>
-            <?php foreach($lich as $l): ?>
-                <option value="<?= $l['id_lich'] ?>" <?= ($booking['id_lich'] == $l['id_lich']) ? 'selected' : '' ?>>
-                    <?= date('d/m/Y', strtotime($l['ngay_khoi_hanh'])) ?> - <?= date('d/m/Y', strtotime($l['ngay_ket_thuc'])) ?>
-                </option>
-            <?php endforeach; ?>
+           <?php foreach($lich as $l): ?>
+    <option 
+        value="<?= $l['id_lich'] ?>" 
+        data-tour="<?= $l['id_tour'] ?>"
+        <?= ($booking['id_lich'] == $l['id_lich']) ? 'selected' : '' ?>>
+        <?= date('d/m/Y', strtotime($l['ngay_khoi_hanh'])) ?> - <?= date('d/m/Y', strtotime($l['ngay_ket_thuc'])) ?>
+    </option>
+<?php endforeach; ?>
+
+
         </select>
     </div>
 
@@ -83,6 +93,47 @@
     <button type="submit" class="btn btn-success">Cập nhật Booking</button>
     <a href="index.php?act=booking" class="btn btn-secondary">Quay lại</a>
 </form>
+<script>
+const tourSelect = document.getElementById('id_tour');
+const soLuongInput = document.getElementById('so_luong_khach');
+const tongTienInput = document.getElementById('tong_tien');
+
+function tinhTongTien() {
+    const selectedTour = tourSelect.options[tourSelect.selectedIndex];
+    const giaCoBan = selectedTour ? parseFloat(selectedTour.dataset.gia || 0) : 0;
+    const soLuong = parseInt(soLuongInput.value) || 0;
+    const tongTien = giaCoBan * soLuong;
+    tongTienInput.value = tongTien;
+}
+
+tourSelect.addEventListener('change', tinhTongTien);
+soLuongInput.addEventListener('input', tinhTongTien);
+
+// Tính lại khi trang vừa load
+window.addEventListener('DOMContentLoaded', tinhTongTien);
+</script>
+<script>
+const tourSelect = document.getElementById('id_tour');
+const lichSelect = document.getElementById('id_lich');
+const allLichOptions = Array.from(lichSelect.options); // lưu tất cả option lịch
+
+function filterLich() {
+    const idTour = tourSelect.value;
+    lichSelect.innerHTML = '<option value="">-- Chọn Lịch --</option>';
+
+    allLichOptions.forEach(opt => {
+        if (opt.dataset.tour == idTour) {
+            lichSelect.appendChild(opt);
+        }
+    });
+}
+
+// chạy khi chọn tour
+tourSelect.addEventListener('change', filterLich);
+
+// chạy khi trang load để hiển thị đúng lịch của tour đã chọn
+window.addEventListener('DOMContentLoaded', filterLich);
+</script>
 
 <style>
 form {

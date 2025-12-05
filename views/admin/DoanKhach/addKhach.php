@@ -128,16 +128,6 @@
                 <input type="text" name="so_cmnd_cccd">
             </p>
 
-            <p>
-                <label>Trạng thái khách:</label>
-                <select name="id_trang_thai_khach" required>
-                    <?php foreach($trangThaiList as $tt): ?>
-                        <option value="<?= $tt['id_trang_thai_khach'] ?>">
-                            <?= htmlspecialchars($tt['trang_thai_khach']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
 
             <p>
                 <label>Ghi chú:</label>

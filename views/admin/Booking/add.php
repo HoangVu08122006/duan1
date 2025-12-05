@@ -4,12 +4,19 @@
     <div class="mb-3">
         <label for="id_tour">Tour:</label>
         <select name="id_tour" id="id_tour" class="form-control" required>
-            <option value="">-- Chọn Tour --</option>
-            <?php foreach($tours as $t): ?>
-                <option value="<?= $t['id_tour'] ?>"><?= htmlspecialchars($t['ten_tour']) ?></option>
-            <?php endforeach; ?>
-        </select>
+    <option value="">-- Chọn Tour --</option>
+    <?php foreach($tours as $t): ?>
+        <option 
+            value="<?= $t['id_tour'] ?>" 
+            data-gia="<?= $t['gia_co_ban'] ?>">
+            <?= htmlspecialchars($t['ten_tour']) ?> (<?= number_format($t['gia_co_ban']) ?> VNĐ/người)
+        </option>
+    <?php endforeach; ?>
+</select>
+
     </div>
+
+    
 
     <div class="mb-3">
         <label for="id_lich">Lịch khởi hành:</label>
@@ -27,6 +34,10 @@
         <label for="so_luong_khach">Số lượng khách:</label>
         <input type="number" name="so_luong_khach" id="so_luong_khach" class="form-control" min="1" required>
     </div>
+<div class="mb-3">
+    <label for="tong_tien">Tổng tiền:</label>
+    <input type="text" id="tong_tien" name="tong_tien" class="form-control" readonly>
+</div>
 
     <div class="mb-3">
         <label for="ho_ten">Tên khách đặt:</label>
@@ -59,6 +70,50 @@
     <button type="submit" class="btn btn-success">Thêm Booking</button>
     <a href="index.php?act=booking" class="btn btn-secondary">Quay lại</a>
 </form>
+
+<script>
+const tourSelects = document.getElementById('id_tour');
+const soLuongInput = document.getElementById('so_luong_khach');
+const tongTienInput = document.getElementById('tong_tien');
+
+function tinhTongTien() {
+    const selectedTour = tourSelects.options[tourSelects.selectedIndex];
+    const giaCoBan = selectedTour ? parseFloat(selectedTour.dataset.gia || 0) : 0;
+    const soLuong = parseInt(soLuongInput.value) || 0;
+    const tongTien = giaCoBan * soLuong;
+    tongTienInput.value = tongTien.toLocaleString('vi-VN') + ' VNĐ';
+}
+
+tourSelects.addEventListener('change', tinhTongTien);
+soLuongInput.addEventListener('input', tinhTongTien);
+</script>
+
+
+<script>
+    // dữ liệu lịch khởi hành từ PHP
+    const lichTheoTour = <?= json_encode($lich) ?>;
+
+    const tourSelect = document.getElementById('id_tour');
+    const lichSelect = document.getElementById('id_lich');
+
+    tourSelect.addEventListener('change', function() {
+        const idTour = this.value;
+        lichSelect.innerHTML = '<option value="">-- Chọn Lịch --</option>';
+
+        lichTheoTour.forEach(l => {
+            if (l.id_tour == idTour) {
+                const option = document.createElement('option');
+                option.value = l.id_lich;
+                option.textContent =
+                    new Date(l.ngay_khoi_hanh).toLocaleDateString('vi-VN') +
+                    ' - ' +
+                    new Date(l.ngay_ket_thuc).toLocaleDateString('vi-VN');
+                lichSelect.appendChild(option);
+            }
+        });
+    });
+</script>
+
 
 <style>
 form {

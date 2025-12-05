@@ -163,6 +163,9 @@
         ?>
     </select><br>
 
+    <label>Lương:</label>
+    <textarea name="luong_hdv"><?= $hdv['luong_hdv'] ?></textarea><br>
+
     <label>Ghi chú:</label>
     <textarea name="mo_ta"><?= $hdv['mo_ta'] ?></textarea><br>
 
