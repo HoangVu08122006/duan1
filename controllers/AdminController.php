@@ -712,13 +712,31 @@ function deleteNhanSu($id) {
 // ------------------- Lịch khởi hành -------------------// ================== Lịch khởi hành ==================
 function dieuHanhTour() {
     $lichModel = new LichKhoiHanh();
-    $lichKhoiHanhList = $lichModel->getAll();
+    $lichSapKhoiHanh = $lichModel->getUpcomingAll();   // lịch chưa kết thúc
+    $lichDaKetThuc   = $lichModel->getFinishedDepartures(); // lịch đã kết thúc
 
     ob_start();
     require './views/admin/DieuHanhTour/dieuHanhTour.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
+function getUpcomingAll() {
+    $today = date('Y-m-d');
+    $sql = "SELECT * FROM lich_khoi_hanh WHERE ngay_ket_thuc >= :today ORDER BY ngay_khoi_hanh ASC";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':today' => $today]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+ function getFinishedDepartures() {
+    $today = date('Y-m-d');
+    $sql = "SELECT * FROM lich_khoi_hanh WHERE ngay_ket_thuc < :today ORDER BY ngay_ket_thuc DESC";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':today' => $today]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 function viewLich($id){
     $lichModel = new LichKhoiHanh();

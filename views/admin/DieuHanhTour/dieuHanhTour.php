@@ -196,42 +196,41 @@ button.delete:hover {
 </style>
 <body>
     <h1>Quản lý lịch khởi hành & phân bổ nhân sự</h1>
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Tìm theo Tour/HDV...">
-    </div>
-    <button class="add-btn" onclick="location.href='index.php?act=dieuHanhTour&action=add'">Thêm lịch mới</button>
 
-    <table id="lichTable">
-        <thead>
-            <tr>
-                <th>Tour</th>
-                <th>Ngày KH</th>
-                <th>Ngày KT</th>
-                <th>HDV chính</th>
-                <th>Điểm khởi hành</th>
-                <th>Điểm đến</th>
-                <th>Ghi chú</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php 
-                $today = date('Y-m-d');
-                foreach($lichKhoiHanhList as $lich): 
-                    if (strtotime($lich['ngay_ket_thuc']) < strtotime($today)) {
-                        continue; // bỏ qua lịch đã kết thúc
-                    }
-                ?>
+<!-- Ô tìm kiếm -->
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Tìm theo Tour/HDV...">
+</div>
+<button class="add-btn" onclick="location.href='index.php?act=dieuHanhTour&action=add'">Thêm lịch mới</button>
+
+<!-- ================== SẮP KHỞI HÀNH ================== -->
+<h2 style="text-align:center; color:#00796b;">🟢 Sắp khởi hành</h2>
+<table id="lichTable">
+    <thead>
+        <tr>
+            <th>Tour</th>
+            <th>Ngày KH</th>
+            <th>Ngày KT</th>
+            <th>HDV chính</th>
+            <th>Điểm khởi hành</th>
+            <th>Điểm đến</th>
+            <th>Ghi chú</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($lichSapKhoiHanh)): ?>
+            <?php foreach($lichSapKhoiHanh as $lich): ?>
                 <tr>
                     <td><?= $lich['ten_tour'] ?></td>
                     <td><?= $lich['ngay_khoi_hanh'] ?></td>
                     <td><?= $lich['ngay_ket_thuc'] ?></td>
-                    <td><?= $lich['hdv_chinh'] ?></td>
+                    <td><?= $lich['hdv_chinh'] ?? '' ?></td>
                     <td><?= $lich['dia_diem_khoi_hanh'] ?></td>
                     <td><?= $lich['dia_diem_den'] ?></td>
                     <td><?= $lich['ghi_chu'] ?></td>
-                    <td><?= $lich['trang_thai_lich_khoi_hanh'] ?></td>
+                    <td><?= $lich['trang_thai_lich_khoi_hanh'] ?? '' ?></td>
                     <td>
                         <button onclick="location.href='index.php?act=dieuHanhTour&action=view&id=<?= $lich['id_lich'] ?>'" class="view"><i class="fa fa-eye"></i></button>
                         <button onclick="location.href='index.php?act=dieuHanhTour&action=edit&id=<?= $lich['id_lich'] ?>'" class="edit"><i class="fa fa-edit"></i></button>
@@ -239,19 +238,66 @@ button.delete:hover {
                     </td>
                 </tr>
             <?php endforeach; ?>
+        <?php else: ?>
+            <tr><td colspan="9" style="text-align:center;">Không có lịch sắp khởi hành</td></tr>
+        <?php endif; ?>
+    </tbody>
+</table>
 
-        </tbody>
-    </table>
+<!-- ================== ĐÃ KẾT THÚC ================== -->
+<h2 style="text-align:center; color:#b71c1c; margin-top:40px;">🔴 Đã kết thúc</h2>
+<table id="lichTable">
+    <thead>
+        <tr>
+            <th>Tour</th>
+            <th>Ngày KH</th>
+            <th>Ngày KT</th>
+            <th>HDV chính</th>
+            <th>Điểm khởi hành</th>
+            <th>Điểm đến</th>
+            <th>Ghi chú</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($lichDaKetThuc)): ?>
+            <?php foreach($lichDaKetThuc as $lich): ?>
+                <tr>
+                    <td><?= $lich['ten_tour'] ?></td>
+                    <td><?= $lich['ngay_khoi_hanh'] ?></td>
+                    <td><?= $lich['ngay_ket_thuc'] ?></td>
+                    <td><?= $lich['hdv_chinh'] ?? '' ?></td>
+                    <td><?= $lich['dia_diem_khoi_hanh'] ?></td>
+                    <td><?= $lich['dia_diem_den'] ?></td>
+                    <td><?= $lich['ghi_chu'] ?></td>
+                    <td><?= $lich['trang_thai_lich_khoi_hanh'] ?? '' ?></td>
+                    <td>
+                        <button onclick="location.href='index.php?act=dieuHanhTour&action=view&id=<?= $lich['id_lich'] ?>'" class="view"><i class="fa fa-eye"></i></button>
+                        <button onclick="location.href='index.php?act=dieuHanhTour&action=edit&id=<?= $lich['id_lich'] ?>'" class="edit"><i class="fa fa-edit"></i></button>
+                        <button onclick="if(confirm('Bạn có chắc muốn xóa?')) location.href='index.php?act=dieuHanhTour&action=delete&id=<?= $lich['id_lich'] ?>'" class="delete"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr><td colspan="9" style="text-align:center;">Không có lịch đã kết thúc</td></tr>
+        <?php endif; ?>
+    </tbody>
+</table>
 
-    <script>
-    document.getElementById('searchInput').addEventListener('keyup', function(){
-        const filter = this.value.toLowerCase();
-        document.querySelectorAll('#lichTable tbody tr').forEach(row=>{
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(filter)?'':'none';
-        });
+<!-- Script tìm kiếm -->
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function(){
+    const filter = this.value.toLowerCase();
+    document.querySelectorAll('#lichTable tbody tr').forEach(row=>{
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter)?'':'none';
     });
-    </script>
+});
+</script>
+
+
+    
 </body>
 </html>
 

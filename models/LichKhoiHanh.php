@@ -179,6 +179,55 @@ public function checkHdvTrungLich($id_hdv, $ngay_khoi_hanh, $ngay_ket_thuc, $exc
     $stmt->execute($params);
     return $stmt->fetchColumn() > 0;
 }
+// Lấy lịch đã kết thúc
+public function getFinishedDepartures() {
+    $today = date('Y-m-d');
+    $sql = "SELECT 
+                lk.id_lich,
+                t.ten_tour,
+                lk.ngay_khoi_hanh,
+                lk.ngay_ket_thuc,
+                hdv.ho_ten AS hdv_chinh,
+                lk.dia_diem_khoi_hanh,
+                lk.dia_diem_den,
+                lk.ghi_chu,
+                tt.trang_thai_lich_khoi_hanh
+            FROM lich_khoi_hanh lk
+            JOIN tour_du_lich t ON lk.id_tour = t.id_tour
+            JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
+            JOIN trang_thai_lich_khoi_hanh tt 
+                ON lk.id_trang_thai_lich_khoi_hanh = tt.id_trang_thai_lich_khoi_hanh
+            WHERE lk.ngay_ket_thuc < :today
+            ORDER BY lk.ngay_ket_thuc DESC";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':today' => $today]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Lấy lịch sắp khởi hành (chưa kết thúc)
+public function getUpcomingAll() {
+    $today = date('Y-m-d');
+    $sql = "SELECT 
+                lk.id_lich,
+                t.ten_tour,
+                lk.ngay_khoi_hanh,
+                lk.ngay_ket_thuc,
+                hdv.ho_ten AS hdv_chinh,
+                lk.dia_diem_khoi_hanh,
+                lk.dia_diem_den,
+                lk.ghi_chu,
+                tt.trang_thai_lich_khoi_hanh
+            FROM lich_khoi_hanh lk
+            JOIN tour_du_lich t ON lk.id_tour = t.id_tour
+            JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
+            JOIN trang_thai_lich_khoi_hanh tt 
+                ON lk.id_trang_thai_lich_khoi_hanh = tt.id_trang_thai_lich_khoi_hanh
+            WHERE lk.ngay_ket_thuc >= :today
+            ORDER BY lk.ngay_khoi_hanh ASC";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':today' => $today]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 
 }
