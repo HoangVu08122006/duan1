@@ -1,152 +1,159 @@
-<link rel="stylesheet" href="public/css/dashboard.css">
+<h1 style="text-align:center; color:#00796b;">📊 Dashboard Quản trị</h1>
 
-<h1>Dashboard</h1>
-<p>Chào mừng bạn đến trang quản trị hệ thống tour du lịch.</p>
-
-<!-- Thống kê nhanh -->
+<!-- Cards -->
 <div class="cards">
-  <div class="card">
-    <h3>Tours đang hoạt động</h3>
-    <div class="value">
-      <?= isset($data['activeTours']) ? $data['activeTours'] : 0 ?>
+  <a href="index.php?act=tour" class="card-link">
+    <div class="card">
+      <i class="fas fa-map"></i>
+      <h2><?= count($data['totalTours']) ?></h2>
+      <p>Tổng số tour</p>
     </div>
-  </div>
-  <div class="card">
-    <h3>Booking hôm nay / tuần này</h3>
-    <div class="value">
-      <?= isset($data['bookingStats']['today']) ? $data['bookingStats']['today'] : 0 ?>
-      /
-      <?= isset($data['bookingStats']['week']) ? $data['bookingStats']['week'] : 0 ?>
+  </a>
+  <a href="index.php?act=tour&status=active" class="card-link">
+    <div class="card">
+      <i class="fas fa-check-circle"></i>
+      <h2><?= $data['activeTours'] ?></h2>
+      <p>Tour đang hoạt động</p>
     </div>
-  </div>
+  </a>
+  <a href="index.php?act=booking" class="card-link">
+    <div class="card">
+      <i class="fas fa-ticket-alt"></i>
+      <h2><?= count($data['totalBookings']) ?></h2>
+      <p>Tổng số booking</p>
+    </div>
+  </a>
+  <a href="index.php?act=nhanSu" class="card-link">
+    <div class="card">
+      <i class="fas fa-user-tie"></i>
+      <h2><?= count($data['totalHDV']) ?></h2>
+      <p>Hướng dẫn viên</p>
+    </div>
+  </a>
+  <a href="index.php?act=khachSan" class="card-link">
+    <div class="card">
+      <i class="fas fa-hotel"></i>
+      <h2><?= count($data['totalKhachSan']) ?></h2>
+      <p>Khách sạn</p>
+    </div>
+  </a>
+  <a href="index.php?act=nhaHang" class="card-link">
+    <div class="card">
+      <i class="fas fa-utensils"></i>
+      <h2><?= count($data['totalNhaHang']) ?></h2>
+      <p>Nhà hàng</p>
+    </div>
+  </a>
+  <a href="index.php?act=nhaXe" class="card-link">
+    <div class="card">
+      <i class="fas fa-bus"></i>
+      <h2><?= count($data['totalNhaXe']) ?></h2>
+      <p>Nhà xe</p>
+    </div>
+  </a>
 </div>
 
-<!-- Lịch khởi hành -->
-<div class="schedule">
-  <h3>Lịch khởi hành sắp tới</h3>
-  <ul>
-    <?php if (!empty($data['upcomingDepartures'])): ?>
-      <?php foreach ($data['upcomingDepartures'] as $tour): ?>
-        <li><?= $tour['ten_tour'] ?> - <?= date('d/m/Y', strtotime($tour['ngay_khoi_hanh'])) ?></li>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <li>Không có lịch khởi hành nào</li>
-    <?php endif; ?>
-  </ul>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+<!-- Biểu đồ doanh thu -->
+<div style="margin:20px; background:#fff; padding:20px; border-radius:10px;">
+  <h3 style="color:#00796b;">Doanh thu theo tháng</h3>
+  <canvas id="chartRevenue"></canvas>
 </div>
 
-<!-- Doanh thu -->
-<div class="chart">
-  <h3>Doanh thu theo tháng</h3>
-  <ul>
-    <?php if (!empty($data['monthlyRevenue'])): ?>
-      <?php foreach ($data['monthlyRevenue'] as $rev): ?>
-        <li>Tháng <?= $rev['thang'] ?>: <?= number_format($rev['doanh_thu'], 0, ',', '.') ?> VND</li>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <li>Chưa có dữ liệu doanh thu</li>
-    <?php endif; ?>
-  </ul>
-</div>
-
-<!-- Cảnh báo tour -->
-<div class="alerts">
-  <h3>Cảnh báo tour</h3>
-  <?php if (!empty($data['tourAlerts'])): ?>
-    <?php foreach ($data['tourAlerts'] as $alert): ?>
-      <div class="warning">
-  ⚠️ Tour <?= $alert['ten_tour'] ?> 
-  (<?= $alert['trang_thai_tour'] ?>)
-</div>
-
+<!-- Lịch khởi hành sắp tới -->
+<div style="margin:20px; background:#fff; padding:20px; border-radius:10px;">
+  <h3 style="color:#00796b;">Lịch khởi hành 7 ngày tới</h3>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="background:#009688; color:#fff;">
+      <th>Tour</th><th>HDV</th><th>Ngày khởi hành</th><th>Ngày kết thúc</th>
+    </tr>
+    <?php foreach($data['upcomingDepartures'] as $lich): ?>
+    <tr>
+      <td><?= $lich['ten_tour'] ?? '-' ?></td>
+      <td><?= $lich['ho_ten'] ?? 'Chưa phân công' ?></td>
+      <td><?= $lich['ngay_khoi_hanh'] ?? '-' ?></td>
+      <td><?= $lich['ngay_ket_thuc'] ?? '-' ?></td>
+    </tr>
     <?php endforeach; ?>
-  <?php else: ?>
-    <p>Không có cảnh báo nào</p>
-  <?php endif; ?>
+  </table>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('chartRevenue').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: <?= json_encode(array_keys($data['monthlyRevenue'])) ?>,
+      datasets: [{
+        label: 'Doanh thu',
+        data: <?= json_encode(array_values($data['monthlyRevenue'])) ?>,
+        borderColor: '#00796b',
+        fill: false
+      }]
+    }
+  });
+</script>
 <style>
-    body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f6f8;
-  margin: 0;
-}
-
-h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 16px;
-  color: #555;
-}
-
-.cards {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center; /* căn giữa nội dung */
+  }
+  th {
+    background-color: #009688;
+    color: #fff;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #f9f9f9; /* màu xen kẽ cho dễ nhìn */
+  }
+  tr:hover {
+    background-color: #f1f1f1; /* hover highlight */
+  }
+  .cards {
   display: flex;
+  justify-content: space-around;
+  margin: 20px;
   gap: 20px;
-  margin: 20px 0;
+  flex-wrap: nowrap; /* tất cả nằm trên 1 hàng */
+  overflow-x: auto;  /* nếu màn hình nhỏ thì cuộn ngang */
 }
 
 .card {
-  flex: 1;
-  background-color: #fff;
-  border-left: 6px solid #3498db;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+  width:180px;
+  text-align:center;
+  flex-shrink:0; /* không co lại khi cuộn */
 }
 
-.card h3 {
-  margin: 0 0 10px;
-  font-size: 18px;
-  color: #333;
-}
-
-.card .value {
-  font-size: 32px;
-  font-weight: bold;
-  color: #3498db;
-}
-
-.schedule, .chart, .alerts {
-  background-color: #fff;
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.schedule h3, .chart h3, .alerts h3 {
-  font-size: 20px;
+.card i {
+  font-size: 30px;
+  color:#009688;
   margin-bottom: 10px;
-  color: #2c3e50;
 }
 
-.schedule ul, .chart ul {
-  list-style: none;
-  padding-left: 0;
+.card-link {
+  text-decoration: none;
+  color: inherit;
 }
 
-.schedule li, .chart li {
-  padding: 6px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 15px;
-}
-
-.warning {
-  background-color: #f39c12;
-  color: white;
-  padding: 12px 16px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-@media (max-width: 768px) {
-  .cards {
-    flex-direction: column;
-  }
+.card-link:hover .card {
+  transform: translateY(-5px);
+  transition: 0.3s;
+  box-shadow:0 6px 12px rgba(0,0,0,0.15);
+  cursor: pointer;
 }
 
 </style>

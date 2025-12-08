@@ -146,102 +146,106 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <style>
-    /* Container */
+ /* Container */
 .col-md-8 {
-    background: linear-gradient(145deg, #fdfbfb, #ebedee);
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    padding: 30px;
+    background: #fdfdfd;
+    border-radius: 16px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+    padding: 35px;
+    transition: all 0.3s ease;
+    border: 1px solid #eaeaea;
 }
 
-/* Title */
+/* Tiêu đề */
 h3 {
     text-align: center;
-    margin-bottom: 30px;
-    color: #222;
     font-weight: 700;
-    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    position: relative;
 }
 
-/* Labels */
+h3::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #3498db;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* Label */
 .form-label {
     font-weight: 600;
-    color: #444;
+    color: #34495e;
+    margin-bottom: 8px;
 }
 
-/* Inputs & Selects */
-.form-control,
-.form-select {
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    padding: 10px 12px;
-    transition: all 0.3s ease;
-    background-color: #f8f9fa;
+/* Input & Select */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #dcdcdc;
+    padding: 12px 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 15px;
 }
 
-.form-control:focus,
-.form-select:focus {
-    border-color: #ff6b6b;
-    box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
-    outline: none;
+.form-control:focus, .form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.25);
 }
 
+/* Textarea */
 textarea.form-control {
-    resize: vertical;
+    resize: none;
 }
 
 /* Buttons */
-button.btn-success {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
+.btn {
+    border-radius: 10px;
+    padding: 12px 24px;
     font-weight: 600;
-    border-radius: 8px;
-    background-color: #ff6b6b;
+    transition: all 0.3s ease;
+    font-size: 15px;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
     border: none;
     color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
 }
 
-button.btn-success:hover {
-    background-color: #ff3b3b;
-    box-shadow: 0 4px 12px rgba(255, 59, 59, 0.4);
+.btn-success:hover {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
 }
 
-/* Quay lại button */
 .btn-secondary {
-    display: inline-block;
-    background-color: #6c757d;
+    background: #95a5a6;
+    border: none;
     color: #fff;
-text-decoration: none;
-    padding: 12px 25px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
 }
 
 .btn-secondary:hover {
-    background-color: #5a6268;
+    background: #7f8c8d;
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 16px rgba(127, 140, 141, 0.4);
 }
 
-/* Margin giữa các input */
+/* Khoảng cách giữa các phần */
 .mb-3 {
-    margin-bottom: 1.2rem !important;
+    margin-bottom: 22px;
 }
 
-/* Responsive */
-@media (max-width: 767px) {
-    .col-md-8.offset-md-2 {
-        margin: 10px;
-        padding: 20px;
-    }
+/* Hiệu ứng hover container */
+.col-md-8:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    transform: translateY(-3px);
 }
 
 </style>

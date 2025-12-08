@@ -143,11 +143,17 @@ public function getUpcomingDepartures($days = 7) {
     $today = date('Y-m-d');
     $future = date('Y-m-d', strtotime("+$days days"));
 
-    $sql = "SELECT t.ten_tour, lk.ngay_khoi_hanh, lk.ngay_ket_thuc
-            FROM lich_khoi_hanh lk
-            JOIN tour_du_lich t ON lk.id_tour = t.id_tour
-            WHERE lk.ngay_khoi_hanh BETWEEN :today AND :future
-            ORDER BY lk.ngay_khoi_hanh ASC";
+    $sql = "SELECT 
+            t.ten_tour, 
+            lk.ngay_khoi_hanh, 
+            lk.ngay_ket_thuc,
+            hdv.ho_ten
+        FROM lich_khoi_hanh lk
+        JOIN tour_du_lich t ON lk.id_tour = t.id_tour
+        LEFT JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
+        WHERE lk.ngay_khoi_hanh BETWEEN :today AND :future
+        ORDER BY lk.ngay_khoi_hanh ASC";
+
 
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -156,6 +162,22 @@ public function getUpcomingDepartures($days = 7) {
     ]);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+public function checkHdvTrungLich($id_hdv, $ngay_khoi_hanh, $ngay_ket_thuc, $exclude_id = null){
+    $sql = "SELECT COUNT(*) 
+            FROM lich_khoi_hanh 
+            WHERE id_hdv = ? 
+              AND (
+                  (ngay_khoi_hanh <= ? AND ngay_ket_thuc >= ?)
+              )";
+    $params = [$id_hdv, $ngay_khoi_hanh, $ngay_ket_thuc]; // đúng thứ tự
+    if ($exclude_id) {
+        $sql .= " AND id_lich != ?";
+        $params[] = $exclude_id;
+    }
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchColumn() > 0;
 }
 
 

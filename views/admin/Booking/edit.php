@@ -14,8 +14,6 @@
         </option>
     <?php endforeach; ?>
 </select>
-
-
     </div>
 
     <div class="mb-3">
@@ -113,12 +111,12 @@ soLuongInput.addEventListener('input', tinhTongTien);
 window.addEventListener('DOMContentLoaded', tinhTongTien);
 </script>
 <script>
-const tourSelect = document.getElementById('id_tour');
+const tourSelects = document.getElementById('id_tour');
 const lichSelect = document.getElementById('id_lich');
 const allLichOptions = Array.from(lichSelect.options); // lưu tất cả option lịch
 
 function filterLich() {
-    const idTour = tourSelect.value;
+    const idTour = tourSelects.value;
     lichSelect.innerHTML = '<option value="">-- Chọn Lịch --</option>';
 
     allLichOptions.forEach(opt => {
@@ -129,79 +127,106 @@ function filterLich() {
 }
 
 // chạy khi chọn tour
-tourSelect.addEventListener('change', filterLich);
+tourSelects.addEventListener('change', filterLich);
 
 // chạy khi trang load để hiển thị đúng lịch của tour đã chọn
 window.addEventListener('DOMContentLoaded', filterLich);
 </script>
 
 <style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    
+}
+
 form {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 30px;
     background: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 30px;
+    max-width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #0d6efd;
+/* Nhóm form */
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+label {
     font-weight: 600;
-}
-
-form label {
-    font-weight: 500;
-    margin-bottom: 6px;
+    color: #2d3748;
+    margin-bottom: 8px;
     display: block;
-    color: #333;
 }
 
-form input,
-form select,
-form textarea {
+/* Input & Select */
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e2e8f0;
     border-radius: 8px;
-    border: 1px solid #ced4da;
-    padding: 10px 12px;
-    transition: all 0.3s;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #fff;
+    color: #2d3748;
 }
 
-form input:focus,
-form select:focus,
-form textarea:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 2px rgba(13,110,253,0.2);
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
     outline: none;
 }
 
-form button,
-form a.btn {
+.form-control:hover {
+    border-color: #cbd5e0;
+}
+
+/* Textarea */
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Buttons */
+.btn {
     border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 500;
-    transition: all 0.3s;
+    padding: 12px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
 }
 
-form button.btn-success:hover {
-    background-color: #198754;
-}
-
-form a.btn-secondary:hover {
-    background-color: #6c757d;
+.btn-success {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    border: none;
     color: #fff;
 }
 
-.mb-3 {
-    margin-bottom: 20px !important;
+.btn-success:hover {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    transform: translateY(-2px);
 }
 
-@media (max-width: 768px) {
+.btn-secondary {
+    background: #e2e8f0;
+    border: none;
+    color: #4a5568;
+}
+
+.btn-secondary:hover {
+    background: #cbd5e0;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
     form {
         padding: 20px;
-        margin: 20px;
     }
 }
+
 </style>

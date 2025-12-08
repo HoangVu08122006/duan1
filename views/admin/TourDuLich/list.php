@@ -1,15 +1,26 @@
-<h1>Danh sách tour</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<form method="GET" action="">
+<h1 class="page-title"><i class="fa-solid fa-map-location-dot"></i> Danh sách Tour</h1>
+
+<form method="GET" action="" class="search-box">
     <input type="hidden" name="act" value="tour">
-    <input type="text" name="search" placeholder="Tìm theo tên tour"
-        value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
-    <button type="submit">Search</button>
+
+    <input type="text" 
+           name="search" 
+           placeholder="🔎 Tìm theo tên tour..." 
+           value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
+           class="search-input">
+
+    <button type="submit" class="search-btn">
+        <i class="fa-solid fa-magnifying-glass"></i> Tìm
+    </button>
 </form>
 
-<a href="index.php?act=tour&action=add" class="btn btn-primary mb-3">Thêm tour mới</a>
+<a href="index.php?act=tour&action=add" class="btn-add">
+    <i class="fa-solid fa-circle-plus"></i> Thêm tour mới
+</a>
 
-<table class="table table-bordered table-striped">
+<table class="modern-table">
     <thead>
         <tr>
             <th>ID</th>
@@ -23,134 +34,135 @@
             <th>Hành động</th>
         </tr>
     </thead>
+
     <tbody>
         <?php foreach ($list as $tour): ?>
-            <tr>
-                <td><?= $tour['id_tour'] ?></td>
-                <td><?= htmlspecialchars($tour['ten_tour']) ?></td>
-                <td><?= htmlspecialchars($tour['ten_danh_muc']) ?></td>
-                <td><?= htmlspecialchars($tour['thoi_luong'] ?? '') ?></td>
-                <td><?= number_format($tour['gia_co_ban'] ?? 0) ?></td>
-                <td><?= htmlspecialchars($tour['mo_ta'] ?? '') ?></td>
-                <td><?= htmlspecialchars($tour['chinh_sach'] ?? '') ?></td>
-                <td><?= htmlspecialchars($tour['trang_thai_tour']) ?></td>
-                <td class="action-buttons">
-                    <a class="btn btn-info btn-sm" href="index.php?act=tour&action=view&id=<?= $tour['id_tour'] ?>">Chi tiết</a>
-                    <a class="btn btn-success btn-sm" href="index.php?act=tour&action=edit&id=<?= $tour['id_tour'] ?>">Sửa</a>
-                    <a class="btn btn-danger btn-sm" href="index.php?act=tour&action=delete&id=<?= $tour['id_tour'] ?>"
-                        onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
-                </td>
-            </tr>
+        <tr>
+            <td><?= $tour['id_tour'] ?></td>
+            <td><?= htmlspecialchars($tour['ten_tour']) ?></td>
+            <td><?= htmlspecialchars($tour['ten_danh_muc']) ?></td>
+            <td><?= htmlspecialchars($tour['thoi_luong'] ?? '') ?></td>
+            <td><?= number_format($tour['gia_co_ban'] ?? 0) ?>đ</td>
+            <td><?= htmlspecialchars($tour['mo_ta'] ?? '') ?></td>
+            <td><?= htmlspecialchars($tour['chinh_sach'] ?? '') ?></td>
+            <td><?= htmlspecialchars($tour['trang_thai_tour']) ?></td>
+
+            <td class="action-buttons">
+                <a class="btn-view" href="index.php?act=tour&action=view&id=<?= $tour['id_tour'] ?>">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+
+                <a class="btn-edit" href="index.php?act=tour&action=edit&id=<?= $tour['id_tour'] ?>">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+
+                <a class="btn-delete" 
+                   href="index.php?act=tour&action=delete&id=<?= $tour['id_tour'] ?>"
+                   onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </td>
+        </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 
+
 <style>
-/* Form tìm kiếm */
-form {
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
     margin-bottom: 20px;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Search */
+.search-box {
     display: flex;
     gap: 10px;
-    align-items: center;
+    margin-bottom: 15px;
 }
 
-form input[type="text"] {
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.search-input {
     flex: 1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.2s;
 }
 
-form button {
-    padding: 6px 15px;
-    background-color: #007bff;
+.search-input:focus {
+    border-color: #3498db;
+}
+
+.search-btn {
+    background: #2980b9;
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 10px 18px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
-form button:hover {
-    background-color: #0056b3;
-}
-
-/* Thêm tour mới */
-a.btn {
+.btn-add {
     display: inline-block;
-    padding: 6px 15px;
-    background-color: #28a745;
-    color: white;
+    margin-bottom: 15px;
+    background: #27ae60;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 500;
     text-decoration: none;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    transition: 0.3s;
 }
 
-a.btn:hover {
-    background-color: #218838;
-}
-
-/* Bảng danh sách */
-table {
+.modern-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #fff;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-table th,
-table td {
-    padding: 10px 12px;
-    border: 1px solid #dee2e6;
+.modern-table thead {
+    background: #34495e;
+    color: white;
+}
+
+.modern-table th, 
+.modern-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
     text-align: left;
 }
 
-table th {
-    background-color: #5d5dd2ff;
-    font-weight: 600;
-}
-
-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-table tbody tr:hover {
-    background-color: #e9ecef;
-}
-
-/* Hành động */
-table a {
-    color: #007bff;
-    text-decoration: none;
-    margin-right: 5px;
-}
-
-table a:hover {
-    text-decoration: underline;
-}
-
-.btn-danger {
-    background-color: #dc3545 !important;
-}
-
-.btn-danger:hover {
-    background-color: #b52a37 !important;
+.modern-table tbody tr:hover {
+    background: #f5f6fa;
 }
 
 .action-buttons {
     display: flex;
     align-items: center;
-    gap: 4px;
-    white-space: nowrap;
-}
-
-.action-buttons .btn-sm {
-    padding: 6px 10px;
-    font-size: 13px;
-    border-radius: 4px;
+    gap: 8px;             /* khoảng cách giữa các nút */
 }
 
 .action-buttons a {
-    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;          /* tất cả nút vuông đều nhau */
+    height: 36px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
 }
+
+
+.btn-view { background: #3498db; }
+.btn-edit { background: #f1c40f; color: black; }
+.btn-delete { background: #e74c3c; }
+
 </style>

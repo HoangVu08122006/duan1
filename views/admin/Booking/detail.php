@@ -91,95 +91,125 @@
 
 <!-- ================= CSS CHUẨN ================= -->
 <style>
-.page-title {
-    font-size: 26px;
-    font-weight: 700;
-    color: #0d6efd;
-    position: relative;
-    padding-left: 14px;
-}
-.page-title::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 4px;
-    height: 26px;
-    background: #0d6efd;
-    border-radius: 5px;
+/* Nền tổng thể */
+body {
+    font-family: 'Inter', 'Poppins', sans-serif;
+    background: #f0f2f5;
+    color: #2c3e50;
+    margin: 0;
+    padding: 0;
 }
 
-.card {
-    border-radius: 14px !important;
-    background: #ffffff;
-    border: none;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    transition: 0.25s ease;
+/* Tiêu đề trang */
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+    position: relative;
 }
+
+.page-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    margin: 12px auto 0;
+    border-radius: 2px;
+}
+
+/* Card phong cách neumorphism */
+.card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 8px 8px 20px rgba(0,0,0,0.08),
+                -8px -8px 20px rgba(255,255,255,0.9);
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 12px 12px 28px rgba(0,0,0,0.12),
+                -12px -12px 28px rgba(255,255,255,1);
 }
 
 .card-title-section {
-    font-size: 22px;
+    font-size: 1.4rem;
     font-weight: 600;
-    margin-bottom: 16px;
-    padding-bottom: 6px;
-    border-left: 4px solid #0d6efd;
+    color: #007bff;
+    margin-bottom: 1rem;
+    border-left: 5px solid #00c6ff;
     padding-left: 10px;
-    color: #1e293b;
 }
 
-p, td, th {
-    font-size: 15px;
-    color: #333;
-}
-
-.table th {
-    background: #f1f3f5;
-    font-weight: 600;
-    color: #222;
-    text-align: center;
-}
-.table td {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.btn-secondary { 
-    display: inline-block;
-    border-radius: 12px; 
-    padding: 12px 28px; 
-    font-size: 17px;
-    font-weight: 600;
-    background: #6c757d;
-    color: #fff;
-    border: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: all 0.25s ease-in-out;
-}
-.btn-secondary:hover { 
-    background: #5a6268; 
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.20);
-    color: #fff;
-}
-
+/* Badge trạng thái */
 .badge {
-    display: inline-block;
-    padding: 5px 12px;
-    border-radius: 12px;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 0.9rem;
     font-weight: 600;
-    font-size: 14px;
-    color: #fff;
+    box-shadow: inset 2px 2px 6px rgba(0,0,0,0.1),
+                inset -2px -2px 6px rgba(255,255,255,0.7);
 }
-.badge-warning { background-color: #ffc107; color:#212529; }
-.badge-success { background-color: #28a745; }
-.badge-danger { background-color: #dc3545; }
-.badge-info { background-color: #17a2b8; }
-.badge-secondary { background-color: #6c757d; }
 
-@media (max-width: 991px) {
-    .col-lg-4 { margin-bottom: 20px; }
+.badge-warning { background: #ff9800; color: #fff; }
+.badge-success { background: #4caf50; color: #fff; }
+.badge-danger  { background: #f44336; color: #fff; }
+.badge-info    { background: #2196f3; color: #fff; }
+.badge-secondary { background: #9e9e9e; color: #fff; }
+
+/* Bảng danh sách khách */
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+
+.table thead {
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    color: #fff;
+    font-weight: 600;
+}
+
+.table th, .table td {
+    padding: 14px;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f9fbfd;
+}
+
+.table-striped tbody tr:hover {
+    background-color: #eaf4ff;
+    transition: background 0.2s ease;
+}
+
+/* Nút quay lại */
+.btn {
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    border: none;
+    color: #fff;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.2),
+                -4px -4px 12px rgba(255,255,255,0.1);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #495057, #343a40);
+    transform: scale(1.08);
+}
+
 </style>

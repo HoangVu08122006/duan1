@@ -7,77 +7,124 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/chiTiet.css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f9f9f9;
-            margin: 0;
-        }
-        h1 {
-            text-align: center;
-            color: #0d6efd;
-            margin-bottom: 30px;
-        }
-        .info, .schedule {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        .info p {
-            margin: 8px 0;
-            font-size: 16px;
-        }
-        .info strong {
-            color: #333;
-        }
-        .actions {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .actions button {
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            margin: 0 10px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .actions button:hover { opacity: 0.85; }
-        .back { background: #6c757d; color: #fff; }
-        .edit { background: #0d6efd; color: #fff; }
-        .schedule h2 { margin-bottom: 15px; color: #198754; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-        table th { background: #f1f1f1; }
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    
+}
+
+h1 {
+    text-align: center;
+    color: #0d6efd;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.info, .schedule {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 20px;
+    font-size: 15px;
+}
+
+.info-grid div {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.info-grid strong {
+    color: #0d6efd;
+}
+
+.schedule h2 {
+    margin-bottom: 15px;
+    color: #198754;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+table th {
+    background: #0d6efd;
+    color: #fff;
+    font-weight: 600;
+}
+
+table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.actions button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    margin: 0 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.actions button:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.back {
+    background: #6c757d;
+    color: #fff;
+}
+
+.edit {
+    background: #0d6efd;
+    color: #fff;
+}
+
     </style>
 </head>
 <body>
     <h1>Chi tiết Lịch Khởi Hành</h1>
 
-    <?php if (empty($lich['ngay_khoi_hanh']) || empty($lich['ngay_ket_thuc'])): ?>
     <div class="info">
-        <p><strong>Tour: </strong><?= htmlspecialchars($lich['ten_tour']) ?></p>
-        <p><strong>Hướng dẫn viên chính: </strong><?= htmlspecialchars($lich['hdv_chinh']) ?></p>
-        <?php if (!empty($lich['ngay_khoi_hanh'])): ?>
-            <p><strong>Ngày khởi hành: </strong><?= date('d/m/Y', strtotime($lich['ngay_khoi_hanh'])) ?></p>
-        <?php endif; ?>
-        <?php if (!empty($lich['ngay_ket_thuc'])): ?>
-            <p><strong>Ngày kết thúc: </strong><?= date('d/m/Y', strtotime($lich['ngay_ket_thuc'])) ?></p>
-        <?php endif; ?>
-        <p><strong>Điểm khởi hành: </strong><?= htmlspecialchars($lich['dia_diem_khoi_hanh']) ?></p>
-        <p><strong>Điểm đến: </strong><?= htmlspecialchars($lich['dia_diem_den']) ?></p>
-        <p><strong>Phương tiện: </strong><?= htmlspecialchars($lich['thong_tin_xe']) ?></p>
-        <p><strong>Khách sạn chính: </strong><?= htmlspecialchars($lich['ten_khach_san']) ?></p>
-        <p><strong>Nhà hàng chính: </strong><?= htmlspecialchars($lich['ten_nha_hang']) ?></p>
-        <p><strong>Ghi chú: </strong><?= htmlspecialchars($lich['ghi_chu']) ?></p>
-        <p><strong>Trạng thái: </strong><?= htmlspecialchars($lich['trang_thai_lich_khoi_hanh']) ?></p>
+        <div class="info-grid">
+            <div><strong>Tour:</strong> <?= htmlspecialchars($lich['ten_tour']) ?></div>
+            <div><strong>HDV chính:</strong> <?= htmlspecialchars($lich['hdv_chinh']) ?></div>
+            <div><strong>Ngày khởi hành:</strong> <?= date('d/m/Y', strtotime($lich['ngay_khoi_hanh'])) ?></div>
+            <div><strong>Ngày kết thúc:</strong> <?= date('d/m/Y', strtotime($lich['ngay_ket_thuc'])) ?></div>
+            <div><strong>Điểm khởi hành:</strong> <?= htmlspecialchars($lich['dia_diem_khoi_hanh']) ?></div>
+            <div><strong>Điểm đến:</strong> <?= htmlspecialchars($lich['dia_diem_den']) ?></div>
+            <div><strong>Phương tiện:</strong> <?= htmlspecialchars($lich['thong_tin_xe']) ?></div>
+            <div><strong>Khách sạn:</strong> <?= htmlspecialchars($lich['ten_khach_san']) ?></div>
+            <div><strong>Nhà hàng:</strong> <?= htmlspecialchars($lich['ten_nha_hang']) ?></div>
+            <div><strong>Ghi chú:</strong> <?= htmlspecialchars($lich['ghi_chu']) ?></div>
+            <div><strong>Trạng thái:</strong> <?= htmlspecialchars($lich['trang_thai_lich_khoi_hanh']) ?></div>
+        </div>
     </div>
-    <?php endif; ?>
 
     <?php if (!empty($lichTrinh)): ?>
     <div class="schedule">
@@ -109,6 +156,6 @@
         <button class="back" onclick="location.href='index.php?act=dieuHanhTour'">Quay lại</button>
         <button class="edit" onclick="location.href='index.php?act=dieuHanhTour&action=edit&id=<?= $lich['id_lich'] ?>'">Sửa</button>
     </div>
-
 </body>
+
 </html>

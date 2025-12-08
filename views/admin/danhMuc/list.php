@@ -43,50 +43,104 @@
     </tbody>
 </table>
 <style>
-    .tour-title {
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-    .add-tour-btn {
-        background-color: #28a745;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-bottom: 15px;
-    }
-    #tourTable {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    #tourTable th, #tourTable td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
-    #tourTable th {
-        background-color: blue;
-    }
-    .desc {
-        max-width: 300px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .tour-edit, .tour-delete {
-        padding: 5px 10px;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-    .tour-edit {
-        background-color: #7192b5ff;
-        color: white;
-        margin-right: 5px;
-    }
-    .tour-delete {
-        background-color: #dc3545;
-        color: white;
-    }
+   /* ===== FONT ===== */
+* {
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* ===== TIÊU ĐỀ ===== */
+.tour-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: #2c3e50; /* xanh xám dễ nhìn */
+}
+
+/* ===== NÚT THÊM ===== */
+.add-tour-btn {
+    padding: 10px 16px;
+    background-color: #3498db; /* xanh nhẹ */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 18px;
+    transition: 0.2s ease;
+}
+
+.add-tour-btn:hover {
+    background-color: #2980b9;
+}
+
+/* ===== BẢNG ===== */
+#tourTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #dfe6e9; /* viền mỏng */
+}
+
+#tourTable thead {
+    background-color: #ecf0f1; /* xám sáng, dịu mắt */
+    color: #2c3e50;
+}
+
+#tourTable thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 14px;
+}
+
+#tourTable tbody tr {
+    border-bottom: 1px solid #ecf0f1;
+}
+
+#tourTable tbody tr:hover {
+    background-color: #f7f9fa; /* hover rất nhẹ */
+}
+
+#tourTable td {
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+.desc {
+    color: #636e72;
+}
+
+/* ===== NÚT SỬA – XÓA ===== */
+.tour-edit,
+.tour-delete {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.tour-edit {
+    background-color: #27ae60;
+    color: white;
+}
+
+.tour-edit:hover {
+    background-color: #1e8449;
+}
+
+.tour-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.tour-delete:hover {
+    background-color: #c0392b;
+}
+
 </style>

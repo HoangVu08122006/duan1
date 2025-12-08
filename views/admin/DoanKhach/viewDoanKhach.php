@@ -7,135 +7,166 @@
 </head>
 
 <style>
-  body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #f4f6f9;
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(to bottom right, #e0f7fa, #ffffff);
     margin: 0;
     color: #333;
-  }
+}
 
-  .hh h2 {
+.hh {
     text-align: center;
-    
-    color: #2c3e50;
-  }
+    font-size: 2rem;
+    color: #00796b;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-  h3 {
-    margin-top: 30px;
-    color: #007bff;
-  }
+p {
+    font-size: 15px;
+    margin: 6px 0;
+}
 
-  .tong-tien {
-    font-size: 18px;
-    color: #e74c3c;
+.tong-tien {
+    font-size: 16px;
     font-weight: bold;
-  }
+    color: #d32f2f;
+}
 
-  .search-box {
-    text-align: center;
+hr {
     margin: 20px 0;
-  }
+    border: none;
+    border-top: 2px dashed #ccc;
+}
 
-  .search-box input {
-    width: 300px;
-    padding: 10px;
-    border: 1px solid #ccc;
+/* Tiêu đề danh sách khách */
+h3 {
+    color: #198754;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+/* Ô tìm kiếm */
+.search-box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    width: 320px;
+    padding: 10px 15px;
+    border: 2px solid #009688;
     border-radius: 25px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-
-  .search-box input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0,123,255,0.4);
     outline: none;
-  }
+    transition: 0.3s;
+    font-size: 14px;
+}
 
-  .btn-add {
+#searchInput:focus {
+    border-color: #004d40;
+    box-shadow: 0 0 8px rgba(0, 150, 136, 0.4);
+}
+
+/* Nút thêm khách */
+.btn-add {
     display: inline-block;
-    padding: 8px 14px;
-    background-color: #28a745;
+    background: linear-gradient(45deg, #009688, #26a69a);
     color: #fff;
-    border-radius: 6px;
+    padding: 8px 18px;
+    border-radius: 25px;
     text-decoration: none;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-  }
+    font-size: 14px;
+    transition: 0.3s;
+}
 
-  .btn-add:hover {
-    background-color: #1e7e34;
-  }
+.btn-add:hover {
+    background: linear-gradient(45deg, #00796b, #004d40);
+    transform: translateY(-2px);
+}
 
-  table {
+/* Bảng danh sách khách */
+table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #fff;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
+}
 
-  table th {
-    background-color: #007bff;
+table th {
+    background: linear-gradient(45deg, #009688, #26a69a);
     color: #fff;
     padding: 12px;
     text-align: center;
     font-weight: 600;
-  }
+}
 
-  table td {
+table td {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #eee;
-  }
+    font-size: 14px;
+}
 
-  table tr:hover {
-    background-color: #f1f9ff;
-  }
+table tr:nth-child(even) {
+    background: #f9f9f9;
+}
 
-  .btn-edit, .btn-delete {
+table tr:hover {
+    background: #e0f2f1;
+    transition: 0.3s;
+}
+
+/* Nút hành động */
+.btn-edit, .btn-delete {
     display: inline-block;
     padding: 6px 12px;
     border-radius: 6px;
     text-decoration: none;
     font-size: 13px;
-    margin: 2px;
-    transition: background-color 0.3s ease;
-  }
+    margin: 0 4px;
+    transition: 0.3s;
+}
 
-  .btn-edit {
-    background-color: #ffc107;
-    color: #000;
-  }
-  .btn-edit:hover {
-    background-color: #e0a800;
-  }
+.btn-edit {
+    background-color: #fbc02d;
+    color: #333;
+}
 
-  .btn-delete {
-    background-color: #dc3545;
+.btn-edit:hover {
+    background-color: #f9a825;
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    background-color: #e53935;
     color: #fff;
-  }
-  .btn-delete:hover {
-    background-color: #a71d2a;
-  }
+}
 
- .btn-back {
-  display: inline-block;
-  padding: 10px 18px;
-  background: linear-gradient(135deg, #6c757d, #495057);
-  color: #fff;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.btn-delete:hover {
+    background-color: #b71c1c;
+    transform: scale(1.05);
+}
+
+/* Nút quay lại */
+.btn-back {
+    display: inline-block;
+    margin-top: 20px;
+    background: #6c757d;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
 }
 
 .btn-back:hover {
-  background: linear-gradient(135deg, #5a6268, #343a40);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transform: translateY(-2px);
+    background: #495057;
+    transform: translateY(-2px);
 }
-
 
   
 </style>
@@ -149,8 +180,9 @@
 <p><b>Hướng dẫn viên:</b> <?= $doan['ten_hdv'] ?></p>
 <p><b>Ngày khởi hành:</b> <?= $doan['ngay_khoi_hanh'] ?></p>
 <p><b>Ngày kết thúc:</b> <?= $doan['ngay_ket_thuc'] ?></p>
-<p><b>Số khách:</b> <?= $doan['so_luong_khach'] ?></p>
-<p class="tong-tien"><b>Tổng tiền:</b> <?= number_format($doan['tong_tien']) ?> đ</p>
+<p><b>Số khách: </b><strong>( <?= $soKhachThucTe ?> / <?= $doan['so_luong_khach'] ?> )</strong></p>
+<p class="tong-tien"><b>Tổng tiền:</b> <?= number_format($tongTien) ?> đ</p>
+
 
 <hr>
 
@@ -182,9 +214,18 @@
         <th>Hành động</th>
     </tr>
 
+
     <?php foreach($khachList as $k): ?>
     <tr>
-        <td><?= $k['ho_ten'] ?></td>
+        <td>
+    <?= $k['ho_ten'] ?>
+    <?php if (!empty($k['is_nguoi_dat']) && $k['is_nguoi_dat'] == 1): ?>
+        <span style="color:#00796b; font-weight:bold;">(Người đặt)</span>
+    <?php endif; ?>
+</td>
+
+
+
         <td><?= $k['gioi_tinh'] ?></td>
         <td><?= $k['so_dien_thoai'] ?></td>
         <td><?= $k['ngay_sinh'] ?></td>

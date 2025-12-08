@@ -13,22 +13,26 @@ require_once './models/LichTrinhModel.php';
 
 
 // ------------------- Trang Admin -------------------
-function adminDashboard() {
-    $title = "Trang quản trị";
 
-    $tourModel = new TourDuLich();
-    $bookingModel = new BookingModel();
-    $lichModel = new LichKhoiHanh();
+function adminDashboard() {
+    $tourModel     = new TourDuLich();
+    $bookingModel  = new BookingModel();
+    $lichModel     = new LichKhoiHanh();
+    $hdvModel      = new HuongDanVien();
+    $ksModel       = new KhachSanModel();
+    $nhModel       = new NhaHangModel();
+    $xeModel       = new NhaXeModel();
 
     $data = [
-        'activeTours' => $tourModel->countActiveTours(),
-        'bookingStats' => [
-            'today' => $bookingModel->countBookingsToday(),
-            'week'  => $bookingModel->countBookingsThisWeek(),
-        ],
-        'upcomingDepartures' => $lichModel->getUpcomingDepartures(7),
-        'monthlyRevenue' => $bookingModel->getMonthlyRevenue(),
-        'tourAlerts' => $tourModel->getTourAlerts()
+        'totalTours'         => $tourModel->getAll() ?? [],
+        'activeTours'        => $tourModel->countActiveTours() ?? 0,
+        'totalBookings'      => $bookingModel->getAll() ?? [],
+        'monthlyRevenue'     => $bookingModel->getMonthlyRevenue() ?? [],
+        'upcomingDepartures' => $lichModel->getUpcomingDepartures(7) ?? [],
+        'totalHDV'           => $hdvModel->getAll() ?? [],
+        'totalKhachSan'      => $ksModel->getAll() ?? [],
+        'totalNhaHang'       => $nhModel->getAll() ?? [],
+        'totalNhaXe'         => $xeModel->getAll() ?? [],
     ];
 
     ob_start();
@@ -488,16 +492,35 @@ function viewDoanKhach() {
     $id = $_GET['id'] ?? 0;
     $model = new DoanKhach();
     $doan = $model->getOne($id);
+    $soKhachThucTe = $model->countKhachThucTe($id);
+
     if(!$doan){
         echo "Đoàn khách không tồn tại!";
         exit;
     }
+
+    // Lấy số lượng đề ra và giá cơ bản
+    $soKhachDeRa = $doan['so_luong_khach'];
+    $giaCoBan = $doan['gia_co_ban']; // cần join thêm từ bảng tour_du_lich trong getOne()
+
+    // Tính tổng tiền
+    if ($soKhachThucTe <= $soKhachDeRa) {
+        $tongTien = $doan['tong_tien'];
+    } else {
+        $soDu = $soKhachThucTe - $soKhachDeRa;
+        $tongTien = $doan['tong_tien'] + ($soDu * $giaCoBan);
+    }
+
+    // Lấy danh sách khách
     $khachList = $model->getKhachByDoan($id);
+
+    // Truyền thêm biến ra view
     ob_start();
     require './views/admin/DoanKhach/viewDoanKhach.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
 
 function addKhach(){
     $id_dat_tour = $_GET['id'] ?? 0;
@@ -514,6 +537,12 @@ function addKhach(){
             'id_trang_thai_khach' => $_POST['id_trang_thai_khach'],
             'ghi_chu' => $_POST['ghi_chu']
         ];
+        // ✅ Kiểm tra trùng toàn bộ hoặc trùng CCCD
+    if ($model->checkKhachTonTai($id_dat_tour, $data)) {
+        echo "<script>alert('Khách đã tồn tại trong đoàn này!');history.back();</script>";
+        exit;
+    }
+
         $model->addKhach($id_dat_tour, $data);
         header("Location: index.php?act=doanKhach&action=view&id=$id_dat_tour");
 
@@ -553,7 +582,7 @@ function editKhach(){
             'ghi_chu' => $_POST['ghi_chu']
         ];
         $model->updateKhach($id_khach, $data);
-        header("Location: index.php?act=viewDoanKhach&id=$id_dat_tour");
+        header("Location: index.php?act=doanKhach&action=view&id=$id_dat_tour");
         exit;
     }
 
@@ -668,10 +697,17 @@ function editNhanSu($id) {
 }
 
 function deleteNhanSu($id) {
-    $hdvModel = new HuongDanVien();
-    $hdvModel->delete($id);
+    try {
+        $model = new HuongDanVien();
+        $model->delete($id);
+        $_SESSION['success'] = "Xóa HDV thành công!";
+    } catch (Exception $e) {
+        $_SESSION['error'] = $e->getMessage();
+    }
     header("Location: index.php?act=nhanSu");
+    exit;
 }
+
 
 // ------------------- Lịch khởi hành -------------------// ================== Lịch khởi hành ==================
 function dieuHanhTour() {
@@ -701,7 +737,6 @@ function viewLich($id){
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
-
 function addLich(){
     $lichModel = new LichKhoiHanh();
     $lichTrinhModel = new LichTrinh();
@@ -718,23 +753,28 @@ function addLich(){
             'id_trang_thai'      => $_POST['id_trang_thai'],
             'ghi_chu'            => $_POST['ghi_chu']
         ];
-        $lichModel->create($data);
 
-       $idLich = $lichModel->create($data); // trả về id_lich mới
-$idTour = $_POST['id_tour'];         // lấy id_tour từ form
+        // ✅ Kiểm tra trùng lịch HDV trước khi thêm
+        if ($lichModel->checkHdvTrungLich($data['id_hdv'], $data['ngay_khoi_hanh'], $data['ngay_ket_thuc'])) {
+            echo "<script>alert('HDV này đã có lịch trùng!');history.back();</script>";
+            exit;
+        }
 
-if (!empty($_POST['lich_trinh'])) {
-    foreach ($_POST['lich_trinh'] as $ngay => $lt) {
-        $lichTrinhModel->create($idTour, [
-            'ngay_thu'   => $ngay,
-            'tieu_de'    => $lt['tieu_de'],
-            'hoat_dong'  => $lt['hoat_dong'],
-            'dia_diem'   => $lt['dia_diem']
-        ]);
-    }
-}
+        // Thêm lịch khởi hành
+        $idLich = $lichModel->create($data);
+        $idTour = $data['id_tour'];
 
-
+        // Thêm lịch trình nếu có
+        if (!empty($_POST['lich_trinh'])) {
+            foreach ($_POST['lich_trinh'] as $ngay => $lt) {
+                $lichTrinhModel->create($idTour, [
+                    'ngay_thu'   => $ngay,
+                    'tieu_de'    => $lt['tieu_de'],
+                    'hoat_dong'  => $lt['hoat_dong'],
+                    'dia_diem'   => $lt['dia_diem']
+                ]);
+            }
+        }
 
         header("Location: index.php?act=dieuHanhTour");
         exit;
@@ -745,6 +785,7 @@ if (!empty($_POST['lich_trinh'])) {
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
 
 function editLich($id){
     $lichModel       = new LichKhoiHanh();
@@ -773,6 +814,11 @@ function editLich($id){
             'id_trang_thai'      => $_POST['id_trang_thai'],
             'ghi_chu'            => $_POST['ghi_chu']
         ];
+        // ✅ Kiểm tra trùng lịch HDV (loại trừ chính lịch này)
+    if ($lichModel->checkHdvTrungLich($data['id_hdv'], $data['ngay_khoi_hanh'], $data['ngay_ket_thuc'], $id)) {
+        echo "<script>alert('HDV này đã có lịch trùng!');history.back();</script>";
+        exit;
+    }
         $lichModel->update($id, $data);
 
         // cập nhật lịch trình từng ngày

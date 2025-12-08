@@ -60,82 +60,105 @@ public function getKhach($id_khach){
 }
 
 
-    // Lấy 1 đoàn
     public function getOne($id){
-        $sql = "
-            SELECT 
-                dt.*,
-                t.ten_tour,
-                hdv.ho_ten AS ten_hdv,
-                lk.ngay_khoi_hanh,
-                lk.ngay_ket_thuc
-            FROM dat_tour dt
-            JOIN tour_du_lich t ON dt.id_tour = t.id_tour
-            JOIN lich_khoi_hanh lk ON dt.id_lich = lk.id_lich
-            JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
-            WHERE dt.id_dat_tour = ?
-        ";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    $sql = "
+        SELECT 
+            dt.*,
+            t.ten_tour,
+            t.gia_co_ban,   -- thêm dòng này để lấy giá cơ bản
+            hdv.ho_ten AS ten_hdv,
+            lk.ngay_khoi_hanh,
+            lk.ngay_ket_thuc
+        FROM dat_tour dt
+        JOIN tour_du_lich t ON dt.id_tour = t.id_tour
+        JOIN lich_khoi_hanh lk ON dt.id_lich = lk.id_lich
+        JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
+        WHERE dt.id_dat_tour = ?
+    ";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function checkKhachTonTai($id_dat_tour, $data){
+    $sql = "SELECT COUNT(*) 
+            FROM khach_trong_dat_tour 
+            WHERE id_dat_tour = ?
+              AND (
+                   (ho_ten = ? AND gioi_tinh = ? AND so_dien_thoai = ? 
+                    AND ngay_sinh = ? AND so_cmnd_cccd = ? AND ghi_chu = ?)
+                   OR so_cmnd_cccd = ?
+              )";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        $id_dat_tour,
+        $data['ho_ten'],
+        $data['gioi_tinh'],
+        $data['so_dien_thoai'],
+        $data['ngay_sinh'],
+        $data['so_cmnd_cccd'],
+        $data['ghi_chu'] ?? '',
+        $data['so_cmnd_cccd']
+    ]);
+    return $stmt->fetchColumn() > 0;
+}
+
 
     // Thêm khách vào đoàn
-    public function addKhach($id_dat_tour, $data) {
-        $sql = "INSERT INTO khach_trong_dat_tour
-                (id_dat_tour, ho_ten, so_dien_thoai, gioi_tinh, ngay_sinh, so_cmnd_cccd, id_trang_thai_khach, ghi_chu)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            $id_dat_tour,
-            $data['ho_ten'],
-            $data['so_dien_thoai'],
-            $data['gioi_tinh'],
-            $data['ngay_sinh'],
-            $data['so_cmnd_cccd'],
-            $data['id_trang_thai_khach'],
-            $data['ghi_chu'] ?? ''
-        ]);
+public function addKhach($id_dat_tour, $data) {
+   $sql = "INSERT INTO khach_trong_dat_tour
+    (id_dat_tour, ho_ten, so_dien_thoai, gioi_tinh, ngay_sinh, so_cmnd_cccd, id_trang_thai_khach, ghi_chu)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        $id_dat_tour,
+        $data['ho_ten'],
+        $data['so_dien_thoai'],
+        $data['gioi_tinh'],
+        $data['ngay_sinh'],
+        $data['so_cmnd_cccd'],
+        $data['id_trang_thai_khach'],
+        $data['ghi_chu'] ?? '',
+    ]);
 
-        $this->recalcTongTien($id_dat_tour);
-    }
+    // ❌ Không gọi recalcTongTien nữa
+}
 
-    // Sửa khách
-    public function updateKhach($id_khach, $data){
-        // Lấy id_dat_tour trước khi update
-        $khach = $this->getKhach($id_khach);
-        if(!$khach) return;
+// Sửa khách
+public function updateKhach($id_khach, $data){
+    $sql = "UPDATE khach_trong_dat_tour
+            SET ho_ten = ?, gioi_tinh = ?, so_dien_thoai = ?, ngay_sinh = ?, so_cmnd_cccd = ?, id_trang_thai_khach = ?,  ghi_chu = ?
+            WHERE id_khach = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        $data['ho_ten'],
+        $data['gioi_tinh'],
+        $data['so_dien_thoai'],
+        $data['ngay_sinh'],
+        $data['so_cmnd_cccd'],
+        $data['id_trang_thai_khach'],
+        $data['ghi_chu'] ?? '',
+        $id_khach
+    ]);
 
-        $sql = "UPDATE khach_trong_dat_tour
-                SET ho_ten = ?, gioi_tinh = ?, so_dien_thoai = ?, ngay_sinh = ?, so_cmnd_cccd = ?, id_trang_thai_khach = ?, ghi_chu = ?
-                WHERE id_khach = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            $data['ho_ten'],
-            $data['gioi_tinh'],
-            $data['so_dien_thoai'],
-            $data['ngay_sinh'],
-            $data['so_cmnd_cccd'],
-            $data['id_trang_thai_khach'],
-            $data['ghi_chu'] ?? '',
-            $id_khach
-        ]);
+    // ❌ Không gọi recalcTongTien nữa
+}
 
-        $this->recalcTongTien($khach['id_dat_tour']);
-    }
+// Xóa khách
+public function deleteKhach($id_khach){
+    $sqlDel = "DELETE FROM khach_trong_dat_tour WHERE id_khach = ?";
+    $stmtDel = $this->conn->prepare($sqlDel);
+    $stmtDel->execute([$id_khach]);
 
-    // Xóa khách
-    public function deleteKhach($id_khach){
-        // Lấy id_dat_tour trước khi xóa
-        $khach = $this->getKhach($id_khach);
-        if(!$khach) return;
+    // ❌ Không gọi recalcTongTien nữa
+}
 
-        $sqlDel = "DELETE FROM khach_trong_dat_tour WHERE id_khach = ?";
-        $stmtDel = $this->conn->prepare($sqlDel);
-        $stmtDel->execute([$id_khach]);
-
-        $this->recalcTongTien($khach['id_dat_tour']);
-    }
+public function countKhachThucTe($id_dat_tour){
+    $sql = "SELECT COUNT(*) FROM khach_trong_dat_tour WHERE id_dat_tour = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([$id_dat_tour]);
+    return $stmt->fetchColumn();
+}
 
     // Tính lại số lượng khách và tổng tiền
     private function recalcTongTien($id_dat_tour){

@@ -7,85 +7,119 @@
     
 </head>
 <style>
-    /* ================== CHI TIẾT HƯỚNG DẪN VIÊN ================== */
-.admin-content .chi-tiet-hdv {
+ body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom right, #e0f7fa, #ffffff);
+    margin: 0;
+
+    color: #333;
+}
+
+/* Khung chi tiết */
+.chi-tiet-hdv {
     max-width: 700px;
-    margin: 0 auto;
+    margin: 40px auto;
     background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     padding: 30px 40px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+    border-top: 6px solid #009688;
 }
 
 /* Tiêu đề */
-.admin-content .chi-tiet-hdv h1 {
-    color: #1e3a8a;
-    font-size: 22px;
+.chi-tiet-hdv h1 {
     text-align: center;
+    color: #00796b;
+    font-size: 2em;
     margin-bottom: 25px;
-    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
 }
 
-/* Dòng thông tin */
-.admin-content .chi-tiet-hdv p {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.chi-tiet-hdv h1::before {
+    content: "🌴";
+    margin-right: 10px;
+}
+
+.chi-tiet-hdv h1::after {
+    content: "✈️";
+    margin-left: 10px;
+}
+
+/* Nội dung */
+.chi-tiet-hdv p {
+    font-size: 16px;
+    margin: 10px 0;
     padding: 8px 12px;
-    margin: 6px 0;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 15px;
+    background: #f1f8f7;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.admin-content .chi-tiet-hdv p strong {
-    color: #334155;
-    min-width: 200px;
-    font-weight: 600;
+.chi-tiet-hdv p strong {
+    color: #00796b;
+    min-width: 180px;
 }
 
-/* Ảnh đại diện */
-.admin-content .chi-tiet-hdv img {
-    border-radius: 6px;
-    border: 1px solid #cbd5e1;
+.chi-tiet-hdv img {
+    border-radius: 10px;
+    border: 2px solid #009688;
 }
 
 /* Nút hành động */
-.admin-content .chi-tiet-hdv button {
-    background-color: #2563eb;
-    color: #fff;
+.chi-tiet-hdv button {
     border: none;
-    padding: 8px 16px;
-    margin: 15px 6px 0 6px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
+    color: white;
     cursor: pointer;
-    transition: background 0.3s ease;
+    font-size: 16px;
+    margin: 15px 10px 0 0;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.admin-content .chi-tiet-hdv button:hover {
-    background-color: #1d4ed8;
+/* Nút quay lại */
+.chi-tiet-hdv button:first-of-type {
+    background: linear-gradient(45deg, #0288d1, #26c6da);
+}
+.chi-tiet-hdv button:first-of-type:hover {
+    background: linear-gradient(45deg, #01579b, #0097a7);
+    transform: translateY(-2px);
+}
+
+/* Nút sửa */
+.chi-tiet-hdv button:last-of-type {
+    background: linear-gradient(45deg, #fbc02d, #fdd835);
+    color: #333;
+}
+.chi-tiet-hdv button:last-of-type:hover {
+    background: linear-gradient(45deg, #f9a825, #fbc02d);
+    transform: translateY(-2px);
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-    .admin-content .chi-tiet-hdv {
+    .chi-tiet-hdv {
         padding: 20px;
     }
 
-    .admin-content .chi-tiet-hdv p {
+    .chi-tiet-hdv p {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .admin-content .chi-tiet-hdv p strong {
-        margin-bottom: 4px;
+    .chi-tiet-hdv p strong {
+        margin-bottom: 5px;
     }
 
-    .admin-content .chi-tiet-hdv button {
+    .chi-tiet-hdv button {
         width: 100%;
-        margin-top: 10px;
+        margin: 10px 0;
     }
 }
 </style>
@@ -109,7 +143,7 @@
     <p><strong>Ghi chú:</strong> <?= $hdv['mo_ta'] ?></p>
 
     <button onclick="location.href='index.php?act=nhanSu'">Quay lại</button>
-    <button onclick="location.href='index.php?act=editNhanSu&id=<?= $hdv['id_hdv'] ?>'">Sửa</button>
+    <button onclick="location.href='index.php?act=nhanSu&action=edit&id=<?= $hdv['id_hdv'] ?>'">Sửa</button>
 </div>
 
 </body>

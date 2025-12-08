@@ -121,122 +121,100 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 <style>
-/* Container chính */
+/* ========================== */
+/* FORM CONTAINER */
+/* ========================== */
 .tour-form-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 30px 40px;
-    background-color: #fff;
+    background: #ffffff;
+    padding: 28px;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 650px;
+    margin: 20px auto;
+    border: 1px solid #e1e5eb;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
 }
 
-/* Tiêu đề */
 .tour-form-container h3 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #1e1e2f;
-    font-weight: 700;
-    font-size: 28px;
-}
-
-/* Nhóm form */
-.form-group {
     margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Nhãn form */
-.form-group label {
+    font-size: 22px;
     font-weight: 600;
-    color: #333;
-    margin-bottom: 6px;
+    color: #2c3e50;
+    text-align: center;
 }
 
-/* Input, select, textarea */
+/* ========================== */
+/* FORM GROUP */
+/* ========================== */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+/* Inputs + Select + Textarea */
 .form-group input,
 .form-group select,
 .form-group textarea {
+    width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    transition: all 0.3s;
+    border: 1px solid #cfd8e3;
+    font-size: 14px;
+    background: #f9fafb;
+    transition: 0.2s;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
+    border-color: #3498db;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
-/* Textarea */
-textarea {
-    resize: vertical;
-}
-
-/* Nút */
+/* ========================== */
+/* BUTTONS */
+/* ========================== */
 .form-buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
     margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.form-buttons .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .btn-success {
-    flex: 1;
-    padding: 12px 0;
-    background-color: #28a745;
+    background-color: #2ecc71;
+    color: #fff;
     border: none;
-    font-weight: 600;
-    font-size: 16px;
-    border-radius: 8px;
-    transition: all 0.3s;
 }
 
 .btn-success:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background-color: #27ae60;
 }
 
 .btn-secondary {
-    flex: 1;
-    padding: 12px 0;
-    background-color: #6c757d;
-    text-align: center;
+    background-color: #95a5a6;
     color: #fff;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s;
-    text-decoration: none;
 }
 
 .btn-secondary:hover {
-    background-color: #5a6268;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background-color: #7f8c8d;
 }
 
-/* Responsive nhỏ hơn 768px */
-@media (max-width: 767px) {
-    .tour-form-container {
-        padding: 20px;
-        margin: 20px;
-    }
-
-    .form-buttons {
-        flex-direction: column;
-    }
-
-    .form-buttons .btn-success,
-    .form-buttons .btn-secondary {
-        width: 100%;
-    }
-}
 </style>
