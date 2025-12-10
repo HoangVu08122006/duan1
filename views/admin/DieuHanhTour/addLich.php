@@ -1,148 +1,226 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm Lịch Khởi Hành</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/add.css">
-</head>
-<body>
-    <h1>Thêm Lịch Khởi Hành</h1>
+<?php
+// variables available from controller:
+// $latestBooking (array|null), $tours (array), $hdvList (array), $ttList (array), $error (string|null), $old (array)
+?>
 
-<form method="post" action="">
-    <label>Tour:</label>
-<select name="id_tour" id="id_tour" required>
-    <option value="">-- Chọn tour --</option> <!-- option trống ban đầu -->
-    <?php
-    $tourModel = new TourDuLich();
-    $tours = $tourModel->getAll();
-    foreach($tours as $tour){
-        // giả sử có cột ngay_khoi_hanh và ngay_ket_thuc trong $tour
-        echo "<option value='{$tour['id_tour']}' 
-                     data-ngay-khoi-hanh='{$tour['ngay_khoi_hanh']}' 
-                     data-ngay-ket-thuc='{$tour['ngay_ket_thuc']}'>
-                     {$tour['ten_tour']}
-              </option>";
-    }
-    ?>
-</select><br>
+<h2>Thêm Lịch Khởi Hành</h2>
 
+<?php if (!empty($error)): ?>
+    <div style="color: red; margin-bottom: 10px;">
+        <?= htmlspecialchars($error) ?>
+    </div>
+<?php endif; ?>
 
-    <label>Hướng dẫn viên chính:</label>
-    <select name="id_hdv" required>
+<?php if ($latestBooking): ?>
+    <div class="booking-info" style="border:1px solid #ddd;padding:8px;margin-bottom:12px;">
+        <p><strong>ID Đặt Tour mới nhất:</strong> <?= htmlspecialchars($latestBooking['id_dat_tour']) ?></p>
+
         <?php
-        $hdvModel = new HuongDanVien();
-        $hdvs = $hdvModel->getAll();
-        foreach($hdvs as $hdv){
-            echo "<option value='{$hdv['id_hdv']}'>{$hdv['ho_ten']}</option>";
-        }
+        // Tên khách: lấy từ first_passenger nếu có, nếu không, thử các key phổ biến
+        $passenger = $latestBooking['first_passenger'] ?? null;
+        $name = $passenger['ho_ten'] ?? $latestBooking['ho_ten'] ?? $latestBooking['ten_khach'] ?? '';
+        $phone = $passenger['so_dien_thoai'] ?? $latestBooking['so_dien_thoai'] ?? $latestBooking['sdt'] ?? '';
         ?>
-    </select><br>
+        <p><strong>Tên khách:</strong> <?= htmlspecialchars($name) ?></p>
+        <p><strong>Số điện thoại:</strong> <?= htmlspecialchars($phone) ?></p>
+        <p><strong>Số lượng khách:</strong> <?= htmlspecialchars($latestBooking['so_luong_khach'] ?? '') ?></p>
 
-    <label>Địa điểm khởi hành:</label>
-    <input type="text" name="dia_diem_khoi_hanh" required><br>
+        <?php if (!empty($latestBooking['passengers'])): ?>
+            <div>
+                <strong>Danh sách khách:</strong>
+                <ul>
+                    <?php foreach ($latestBooking['passengers'] as $p): ?>
+                        <li><?= htmlspecialchars($p['ho_ten'] ?? 'N/A') ?> - <?= htmlspecialchars($p['so_dien_thoai'] ?? '') ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php else: ?>
+    <p>Hiện chưa có booking nào!</p>
+<?php endif; ?>
 
-    <label>Địa điểm đến:</label>
-    <input type="text" name="dia_diem_den" required><br>
+<form method="POST" action="">
+    <!-- hidden booking & tour từ latestBooking nếu có, hoặc dùng old giữ giá trị khi lỗi -->
+    <input type="hidden" name="id_dat_tour" value="<?= htmlspecialchars($old['id_dat_tour'] ?? ($latestBooking['id_dat_tour'] ?? '')) ?>">
+    <input type="hidden" name="id_tour" value="<?= htmlspecialchars($old['id_tour'] ?? ($latestBooking['id_tour'] ?? '')) ?>">
 
-    <label>Ngày khởi hành:</label>
-    <input type="date" name="ngay_khoi_hanh" required><br>
+    <label>Chọn Tour</label>
+    <select name="id_tour" required>
+        <option value="">-- Chọn tour --</option>
+        <?php foreach ($tours as $t): ?>
+            <?php $sel = (($old['id_tour'] ?? ($latestBooking['id_tour'] ?? '')) == $t['id_tour']) ? 'selected' : ''; ?>
+            <option value="<?= htmlspecialchars($t['id_tour']) ?>" <?= $sel ?>><?= htmlspecialchars($t['ten_tour']) ?></option>
+        <?php endforeach; ?>
+    </select><br><br>
 
-    <label>Ngày kết thúc:</label>
-    <input type="date" name="ngay_ket_thuc" required><br>
+    <label>Hướng dẫn viên chính</label>
+    <select name="id_hdv">
+        <option value="">-- Chọn HDV --</option>
+        <?php foreach ($hdvList as $h): ?>
+            <?php $sel = (($old['id_hdv'] ?? '') == $h['id_hdv']) ? 'selected' : ''; ?>
+            <option value="<?= htmlspecialchars($h['id_hdv']) ?>" <?= $sel ?>><?= htmlspecialchars($h['ho_ten']) ?></option>
+        <?php endforeach; ?>
+    </select><br><br>
 
-    <label>Phương tiện:</label>
-    <input type="text" name="thong_tin_xe"><br>
+    <label>Địa điểm khởi hành</label>
+    <input type="text" name="dia_diem_khoi_hanh" value="<?= htmlspecialchars($old['dia_diem_khoi_hanh'] ?? ($latestBooking['dia_diem_khoi_hanh'] ?? '')) ?>"><br><br>
 
-    <label>Trạng thái:</label>
+    <label>Địa điểm đến</label>
+    <input type="text" name="dia_diem_den" value="<?= htmlspecialchars($old['dia_diem_den'] ?? '') ?>"><br><br>
+
+    <label>Trạng thái</label>
     <select name="id_trang_thai" required>
-        <?php
-        $ttModel = new TrangThaiLichKhoiHanh();
-        $ttList = $ttModel->getAll();
-        foreach($ttList as $tt){
-            echo "<option value='{$tt['id_trang_thai_lich_khoi_hanh']}'>{$tt['trang_thai_lich_khoi_hanh']}</option>";
-        }
-        ?>
-    </select><br>
+        <option value="">-- Chọn trạng thái --</option>
+        <?php foreach ($ttList as $tt): ?>
+            <?php $sel = (($old['id_trang_thai'] ?? '') == $tt['id_trang_thai_lich_khoi_hanh']) ? 'selected' : ''; ?>
+            <option value="<?= htmlspecialchars($tt['id_trang_thai_lich_khoi_hanh']) ?>" <?= $sel ?>><?= htmlspecialchars($tt['trang_thai_lich_khoi_hanh']) ?></option>
+        <?php endforeach; ?>
+    </select><br><br>
 
-    <label>Ghi chú:</label>
-    <textarea name="ghi_chu"></textarea><br>
+    <label>Ghi chú</label><br>
+    <textarea name="ghi_chu"><?= htmlspecialchars($old['ghi_chu'] ?? '') ?></textarea><br><br>
 
-    <h2>Lịch trình từng ngày</h2>
-    <div id="lichTrinhContainer"></div>
-
-    <button type="submit">Thêm mới</button>
-    <button type="button" onclick="location.href='index.php?act=dieuHanhTour'">Hủy</button>
+    <button type="submit"  class="btn btn-submit">Thêm mới</button>
+    <button type="button"  class="btn btn-cancel" onclick="location.href='index.php?act=dieuHanhTour'">Hủy</button>
 </form>
+<?php if (!$latestBooking): ?>
+    <p style="color:red;font-weight:bold;">
+        Không còn booking nào chưa tạo lịch khởi hành!
+    </p>
+<?php endif; ?>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(160deg, #a0e9fd 0%, #fdf6e3 100%);
+        color: #2c3e50;
+        
+    }
 
-<script>
-// Tạo bảng lịch trình theo số ngày
-function taoBangLichTrinh() {
-    const start = document.querySelector('input[name="ngay_khoi_hanh"]').value;
-    const end = document.querySelector('input[name="ngay_ket_thuc"]').value;
-    const container = document.getElementById('lichTrinhContainer');
-    container.innerHTML = '';
+    h2 {
+        font-size: 26px;
+        color: #ff6f61;
+        margin-bottom: 20px;
+        text-align: center;
+    }
 
-    if (start && end) {
-        const startDate = new Date(start);
-        const endDate = new Date(end);
-        const diffTime = endDate - startDate;
-        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    /* Card booking info */
+    .booking-info {
+        background-color: #ffffffcc;
+        border-left: 6px solid #ff6f61;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
 
-        for (let i = 1; i <= diffDays; i++) {
-            container.innerHTML += `
-            <fieldset style="margin:10px; padding:10px; border:1px solid #ccc;">
-                <legend>Ngày thứ ${i}</legend>
-                <label>Tiêu đề:</label>
-                <input type="text" name="lich_trinh[${i}][tieu_de]" required><br>
-                <label>Hoạt động:</label>
-                <input type="text" name="lich_trinh[${i}][hoat_dong]" required><br>
-                <label>Địa điểm:</label>
-                <input type="text" name="lich_trinh[${i}][dia_diem]" required><br>
-            </fieldset>`;
+    .booking-info:hover {
+        transform: translateY(-3px);
+    }
+
+    .booking-info p {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .booking-info strong {
+        color: #3498db;
+    }
+
+    .booking-info ul li {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    /* Form styling */
+    form {
+        background-color: #ffffffcc;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        max-width: 600px;
+        margin: auto;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #2c3e50;
+        display: block;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 18px;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #ff6f61;
+        box-shadow: 0 0 8px rgba(255,111,97,0.3);
+        outline: none;
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+        font-size: 14px;
+    }
+
+    .btn-submit {
+        background-color: #ff6f61;
+        color: #fff;
+        margin-right: 10px;
+    }
+
+    .btn-submit:hover {
+        background-color: #e85b4f;
+    }
+
+    .btn-cancel {
+        background-color: #3498db;
+        color: #fff;
+    }
+
+    .btn-cancel:hover {
+        background-color: #2980b9;
+    }
+
+    /* Error */
+    .error {
+        background-color: #ffe5e0;
+        color: #e74c3c;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 650px) {
+        form {
+            padding: 20px;
         }
     }
-}
-
-// Gọi hàm khi thay đổi ngày khởi hành hoặc kết thúc
-document.querySelector('input[name="ngay_khoi_hanh"]').addEventListener('change', taoBangLichTrinh);
-document.querySelector('input[name="ngay_ket_thuc"]').addEventListener('change', taoBangLichTrinh);
-
-// Khi chọn tour thì tự động điền ngày nếu có
-document.getElementById('id_tour').addEventListener('change', function() {
-    const selectedOption = this.options[this.selectedIndex];
-    const ngayKhoiHanh = selectedOption.getAttribute('data-ngay-khoi-hanh');
-    const ngayKetThuc = selectedOption.getAttribute('data-ngay-ket-thuc');
-
-    if (ngayKhoiHanh) {
-        document.querySelector('input[name="ngay_khoi_hanh"]').value = ngayKhoiHanh;
-    }
-    if (ngayKetThuc) {
-        document.querySelector('input[name="ngay_ket_thuc"]').value = ngayKetThuc;
-    }
-
-    taoBangLichTrinh();
-});
-
-// Kiểm tra trống khi submit
-document.querySelector('form').addEventListener('submit', function(e) {
-    let valid = true;
-    const inputs = document.querySelectorAll('#lichTrinhContainer input[type="text"]');
-    inputs.forEach(input => {
-        if (!input.value.trim()) {
-            valid = false;
-            input.style.border = "1px solid red"; // highlight ô trống
-        } else {
-            input.style.border = "1px solid #ccc";
-        }
-    });
-
-    if (!valid) {
-        e.preventDefault();
-        alert("Vui lòng điền đầy đủ lịch trình từng ngày!");
-    }
-});
-</script>
-
-</body>
-</html>
+</style>

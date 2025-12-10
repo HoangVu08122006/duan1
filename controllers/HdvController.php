@@ -11,7 +11,7 @@ class HdvController {
         require_once __DIR__ . '/../models/HdvModel.php';
         $model = new HdvModel();    
         $id_hdv = $this->getHdvId();
-        $tours = $model->getToursByHdv($id_hdv);
+        $tours = $model->getToursWithTotal($id_hdv);
 
         // file giao diện con
         $view_hdv_content = __DIR__ . '/../views/hdv/dashboard.php';
@@ -83,60 +83,62 @@ class HdvController {
 
     // ========= NHẬT KÝ =========
     public function nhatKy() {
-        require_once __DIR__ . '/../models/HdvModel.php';
-        $model = new HdvModel();
-        $id_hdv = $this->getHdvId();
+    require_once __DIR__ . '/../models/HdvModel.php';
+    $model = new HdvModel();
+    $id_hdv = $this->getHdvId();
 
-        // Xử lý POST (thêm/sửa nhật ký)
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id_nhat_ky = $_POST['id_nhat_ky'] ?? null;
-            $id_lich = $_POST['id_lich'] ?? null;
-            $ngay_ghi = $_POST['ngay_ghi'] ?? null;
-            $su_co = $_POST['su_co'] ?? '';
-            $phan_hoi = $_POST['phan_hoi'] ?? '';
-            $nhan_xet_hdv = $_POST['nhan_xet_hdv'] ?? '';
+    // Xử lý POST (thêm/sửa nhật ký)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id_nhat_ky = $_POST['id_nhat_ky'] ?? null;
+        $id_lich = $_POST['id_lich'] ?? null;
+        $ngay_ghi = $_POST['ngay_ghi'] ?? null;
+        $su_co = $_POST['su_co'] ?? '';
+        $phan_hoi = $_POST['phan_hoi'] ?? '';
+        $nhan_xet_hdv = $_POST['nhan_xet_hdv'] ?? '';
 
-            if ($id_nhat_ky) {
-                // Sửa nhật ký
-                $model->updateNhatKy($id_nhat_ky, [
-                    'id_lich' => $id_lich,
-                    'ngay_ghi' => $ngay_ghi,
-                    'su_co' => $su_co,
-                    'phan_hoi' => $phan_hoi,
-                    'nhan_xet_hdv' => $nhan_xet_hdv
-                ]);
-            } else {
-                // Thêm nhật ký mới
-                $model->createNhatKy([
-                    'id_lich' => $id_lich,
-                    'ngay_ghi' => $ngay_ghi,
-                    'su_co' => $su_co,
-                    'phan_hoi' => $phan_hoi,
-                    'nhan_xet_hdv' => $nhan_xet_hdv
-                ]);
-            }
-            header("Location: index.php?act=hdv_nhat_ky");
-            exit;
+        if ($id_nhat_ky) {
+            // Sửa nhật ký
+            $model->updateNhatKy($id_nhat_ky, [
+                'id_lich' => $id_lich,
+                'ngay_ghi' => $ngay_ghi,
+                'su_co' => $su_co,
+                'phan_hoi' => $phan_hoi,
+                'nhan_xet_hdv' => $nhan_xet_hdv
+            ]);
+        } else {
+            // Thêm nhật ký mới
+            $model->createNhatKy([
+                'id_hdv' => $id_hdv,   // <-- Gán id_hdv từ session
+                'id_lich' => $id_lich,
+                'ngay_ghi' => $ngay_ghi,
+                'su_co' => $su_co,
+                'phan_hoi' => $phan_hoi,
+                'nhan_xet_hdv' => $nhan_xet_hdv
+            ]);
         }
-
-        // Lấy danh sách lịch khởi hành của HDV này
-        $lichList = $model->getLichKhoiHanhByHdv($id_hdv);
-
-        // Lấy tất cả nhật ký của HDV
-        $nhatkyList = $model->getNhatKy($id_hdv);
-
-        // Nếu đang edit, lấy nhật ký cụ thể
-        $editingNhatKy = null;
-        if (isset($_GET['edit'])) {
-            $editingNhatKy = $model->getNhatKyById($_GET['edit']);
-        }
-
-        // Giao diện con
-        $view_hdv_content = __DIR__ . '/../views/hdv/nhat_ky_new.php';
-
-        // Gọi layout chính
-        require __DIR__ . '/../views/hdv/home.php';
+        header("Location: index.php?act=hdv_nhat_ky");
+        exit;
     }
+
+    // Lấy danh sách lịch khởi hành của HDV này
+    $lichList = $model->getLichKhoiHanhByHdv($id_hdv);
+
+    // Lấy tất cả nhật ký của HDV
+    $nhatkyList = $model->getNhatKy($id_hdv);
+
+    // Nếu đang edit, lấy nhật ký cụ thể
+    $editingNhatKy = null;
+    if (isset($_GET['edit'])) {
+        $editingNhatKy = $model->getNhatKyById($_GET['edit']);
+    }
+
+    // Giao diện con
+    $view_hdv_content = __DIR__ . '/../views/hdv/nhat_ky_new.php';
+
+    // Gọi layout chính
+    require __DIR__ . '/../views/hdv/home.php';
+}
+
 
     // ========= XÓA NHẬT KÝ =========
     public function deleteNhatKy() {

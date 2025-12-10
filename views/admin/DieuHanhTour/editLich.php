@@ -146,10 +146,10 @@ button:hover {
     </div>
 
     <div class="form-group">
-        <label>Phương tiện:</label>
-        <input type="text" name="thong_tin_xe" 
-               value="<?= htmlspecialchars($lich['thong_tin_xe']) ?>">
-    </div>
+    <label>Phương tiện:</label>
+    <input type="text" value="<?= htmlspecialchars($lich['nha_xe'] ?? 'Không có') ?>" disabled>
+</div>
+
 
     <div class="form-group">
         <label>Trạng thái:</label>

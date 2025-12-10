@@ -105,6 +105,7 @@ switch ($act) {
             case 'edit': bookingEdit(); break;
             case 'delete': bookingDelete(); break;
             case 'detail': bookingDetail(); break;
+            case 'addKhach': addKhach(); break;
             default: booking(); break;
         }
         break;
@@ -114,7 +115,7 @@ switch ($act) {
         requireAdmin();
         switch ($action) {
             case 'view': viewDoanKhach($id); break;
-            case 'addKhach': addKhach(); break;
+            
             case 'editKhach': editKhach(); break;
             case 'deleteKhach': deleteKhach(); break;
             default: doanKhach(); break;

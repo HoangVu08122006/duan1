@@ -10,24 +10,25 @@ class DoanKhach {
 
     // Lấy toàn bộ đoàn khách có tour + HDV
     public function getAll() {
-        $sql = "
-            SELECT 
-                dt.id_dat_tour,
-                t.ten_tour,
-                hdv.ho_ten AS ten_hdv,
-                lk.ngay_khoi_hanh,
-                lk.ngay_ket_thuc,
-                dt.so_luong_khach,
-                dt.tong_tien,
-                dt.trang_thai
-            FROM dat_tour dt
-            JOIN tour_du_lich t ON dt.id_tour = t.id_tour
-            JOIN lich_khoi_hanh lk ON dt.id_lich = lk.id_lich
-            JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
-            ORDER BY dt.id_dat_tour DESC
-        ";
-        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-    }
+    $sql = "
+        SELECT 
+            dt.id_dat_tour,
+            t.ten_tour,
+            hdv.ho_ten AS ten_hdv,
+            dt.ngay_khoi_hanh,
+            dt.ngay_ket_thuc,
+            dt.so_luong_khach,
+            dt.tong_tien,
+            dt.trang_thai
+        FROM dat_tour dt
+        JOIN tour_du_lich t ON dt.id_tour = t.id_tour
+        JOIN lich_khoi_hanh lk ON dt.id_dat_tour = lk.id_dat_tour   -- sửa chỗ này
+        JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
+        ORDER BY dt.id_dat_tour DESC
+    ";
+    return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     // Lấy danh sách khách theo đoàn
     // Lấy danh sách khách theo đoàn, kèm tên trạng thái
@@ -65,13 +66,13 @@ public function getKhach($id_khach){
         SELECT 
             dt.*,
             t.ten_tour,
-            t.gia_co_ban,   -- thêm dòng này để lấy giá cơ bản
+            t.gia_co_ban,
             hdv.ho_ten AS ten_hdv,
-            lk.ngay_khoi_hanh,
-            lk.ngay_ket_thuc
+            dt.ngay_khoi_hanh,
+            dt.ngay_ket_thuc
         FROM dat_tour dt
         JOIN tour_du_lich t ON dt.id_tour = t.id_tour
-        JOIN lich_khoi_hanh lk ON dt.id_lich = lk.id_lich
+        JOIN lich_khoi_hanh lk ON dt.id_tour = lk.id_tour   -- sửa chỗ này
         JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
         WHERE dt.id_dat_tour = ?
     ";
@@ -79,6 +80,8 @@ public function getKhach($id_khach){
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
+
 
 public function checkKhachTonTai($id_dat_tour, $data){
     $sql = "SELECT COUNT(*) 

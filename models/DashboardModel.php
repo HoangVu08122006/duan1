@@ -33,17 +33,25 @@ class DashboardModel {
 
     // 3. Lịch khởi hành sắp tới
     public function getUpcomingDepartures($limit = 5) {
-        $sql = "SELECT t.ten_tour, lk.ngay_khoi_hanh 
-                FROM lich_khoi_hanh lk
-                JOIN tour_du_lich t ON lk.id_tour = t.id_tour
-                WHERE lk.ngay_khoi_hanh >= CURDATE()
-                ORDER BY lk.ngay_khoi_hanh ASC
-                LIMIT :limit";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    $sql = "SELECT 
+                t.ten_tour, 
+                hdv.ho_ten,
+                lk.ngay_khoi_hanh,
+                dt.ngay_ket_thuc
+            FROM lich_khoi_hanh lk
+            JOIN tour_du_lich t ON lk.id_tour = t.id_tour
+            LEFT JOIN huong_dan_vien hdv ON lk.id_hdv = hdv.id_hdv
+            LEFT JOIN dat_tour dt ON lk.id_dat_tour = dt.id_dat_tour
+            WHERE lk.ngay_khoi_hanh >= CURDATE()
+            ORDER BY lk.ngay_khoi_hanh ASC
+            LIMIT :limit";
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     // 4. Doanh thu theo tháng (trong năm hiện tại)
     public function getMonthlyRevenue() {

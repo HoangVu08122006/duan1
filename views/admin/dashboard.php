@@ -70,7 +70,8 @@
     <tr style="background:#009688; color:#fff;">
       <th>Tour</th><th>HDV</th><th>Ngày khởi hành</th><th>Ngày kết thúc</th>
     </tr>
-    <?php foreach($data['upcomingDepartures'] as $lich): ?>
+    <?php foreach($data['upcomingDepartures'] ?? [] as $lich): ?>
+
     <tr>
       <td><?= $lich['ten_tour'] ?? '-' ?></td>
       <td><?= $lich['ho_ten'] ?? 'Chưa phân công' ?></td>

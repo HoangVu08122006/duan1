@@ -195,10 +195,7 @@ table tr:hover {
 
 <!-- Nút thêm -->
 <p>
-<a class="btn-add" 
-   href="index.php?act=doanKhach&action=addKhach&id=<?= $doan['id_dat_tour'] ?>">
-   + Thêm khách mới
-</a>
+
 
 </p>
 

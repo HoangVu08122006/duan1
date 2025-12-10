@@ -47,42 +47,75 @@ class TourDuLich
     //     return $stmt->fetch(PDO::FETCH_ASSOC);
     // }
     public function getOne($id_tour)
-    {
-        $sql = "SELECT t.*, 
-               t.gia_co_ban AS gia,
-               ks.ten_khach_san,
-               nh.ten_nha_hang,
-               tt.trang_thai_tour AS trang_thai,
-               lk.ngay_khoi_hanh,
-               lk.ngay_ket_thuc,
-               nx.nha_xe
-        FROM tour_du_lich t
-        LEFT JOIN khach_san ks ON t.id_khach_san = ks.id_khach_san
-        LEFT JOIN nha_hang nh ON t.id_nha_hang = nh.id_nha_hang
-        LEFT JOIN trang_thai_tour tt ON t.id_trang_thai_tour = tt.id_trang_thai_tour
-        LEFT JOIN lich_khoi_hanh lk ON t.id_tour = lk.id_tour
-        LEFT JOIN nha_xe nx ON t.id_xe = nx.id_xe
-        WHERE t.id_tour = :id
-        LIMIT 1";
+{
+    $sql = "SELECT t.*, 
+                   t.gia_co_ban AS gia,
+                   ks.ten_khach_san,
+                   nh.ten_nha_hang,
+                   tt.trang_thai_tour AS trang_thai,
+                   dt.ngay_khoi_hanh,
+                   dt.ngay_ket_thuc,
+                   nx.nha_xe
+            FROM tour_du_lich t
+            LEFT JOIN khach_san ks ON t.id_khach_san = ks.id_khach_san
+            LEFT JOIN nha_hang nh ON t.id_nha_hang = nh.id_nha_hang
+            LEFT JOIN trang_thai_tour tt ON t.id_trang_thai_tour = tt.id_trang_thai_tour
+            LEFT JOIN dat_tour dt ON t.id_tour = dt.id_tour
+            LEFT JOIN nha_xe nx ON t.id_xe = nx.id_xe
+            WHERE t.id_tour = :id
+            ORDER BY dt.id_dat_tour DESC
+            LIMIT 1";
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id_tour]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute(['id' => $id_tour]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 
 
     
-   // Thêm tour mới
 public function create($data)
 {
     $sql = "INSERT INTO tour_du_lich 
-        (id_danh_muc, id_trang_thai_tour, id_khach_san, id_nha_hang, id_xe, ten_tour, mo_ta, thoi_luong, gia_co_ban, chinh_sach)
-        VALUES 
-        (:id_danh_muc, :id_trang_thai_tour, :id_khach_san, :id_nha_hang, :id_xe, :ten_tour, :mo_ta, :thoi_luong, :gia_co_ban, :chinh_sach)";
+            (id_danh_muc, id_trang_thai_tour, id_khach_san, id_nha_hang, id_xe, 
+             ten_tour, mo_ta, chinh_sach)
+            VALUES 
+            (:id_danh_muc, :id_trang_thai_tour, :id_khach_san, :id_nha_hang, :id_xe,
+             :ten_tour, :mo_ta, :chinh_sach)";
 
+    $stmt = $this->pdo->prepare($sql);
+
+    $stmt->execute([
+        ':id_danh_muc'        => $data['id_danh_muc'],
+        ':id_trang_thai_tour' => $data['id_trang_thai_tour'],
+        ':id_khach_san'       => $data['id_khach_san'],
+        ':id_nha_hang'        => $data['id_nha_hang'],
+        ':id_xe'              => $data['id_xe'],
+        ':ten_tour'           => $data['ten_tour'],
+        ':mo_ta'              => $data['mo_ta'],
+        ':chinh_sach'         => $data['chinh_sach']
+    ]);
+}
+
+
+public function update($id, $data)
+{
+    $data['id_tour'] = $id;
+    $sql = "UPDATE tour_du_lich SET 
+                id_danh_muc = :id_danh_muc,
+                id_trang_thai_tour = :id_trang_thai_tour,
+                id_nha_hang = :id_nha_hang, 
+                id_khach_san = :id_khach_san,
+                id_xe = :id_xe,
+                ten_tour = :ten_tour,
+                mo_ta = :mo_ta,
+                
+                chinh_sach = :chinh_sach
+            WHERE id_tour = :id_tour";
     $stmt = $this->pdo->prepare($sql);
     return $stmt->execute($data);
 }
+
 
 public function getLastInsertId()
     {
@@ -124,27 +157,7 @@ public function getLastInsertId()
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute($data);
     }
-    // Cập nhật tour
-    public function update($id, $data)
-    {
-        $data['id_tour'] = $id;
-        $sql = "UPDATE tour_du_lich SET 
-                    id_danh_muc = :id_danh_muc,
-                    id_trang_thai_tour = :id_trang_thai_tour,
-                   
-                     id_nha_hang= :id_nha_hang, 
-                     id_khach_san = :id_khach_san,
-                    id_xe= :id_xe,
-                    ten_tour = :ten_tour,
-                    mo_ta = :mo_ta,
-                    thoi_luong = :thoi_luong,
-
-                    gia_co_ban = :gia_co_ban,
-                    chinh_sach = :chinh_sach
-                WHERE id_tour = :id_tour";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute($data);
-    }
+   
 
     // Xóa tour
     public function delete($id)
@@ -242,16 +255,17 @@ public function countActiveTours()
 
 public function getTourAlerts()
 {
-    $sql = "SELECT t.ten_tour, tt.trang_thai_tour, lk.ngay_khoi_hanh
+    $sql = "SELECT t.ten_tour, tt.trang_thai_tour, dt.ngay_khoi_hanh
             FROM tour_du_lich t
             JOIN trang_thai_tour tt ON t.id_trang_thai_tour = tt.id_trang_thai_tour
-            JOIN lich_khoi_hanh lk ON t.id_tour = lk.id_tour
-            WHERE lk.ngay_khoi_hanh BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
-            ORDER BY lk.ngay_khoi_hanh ASC";
+            JOIN dat_tour dt ON t.id_tour = dt.id_tour
+            WHERE dt.ngay_khoi_hanh BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+            ORDER BY dt.ngay_khoi_hanh ASC";
 
     $stmt = $this->pdo->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 
 }

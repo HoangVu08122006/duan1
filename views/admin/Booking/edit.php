@@ -1,56 +1,73 @@
 <h1>Sửa Booking</h1>
 
 <form action="index.php?act=booking&action=edit&id=<?= $booking['id_dat_tour'] ?>" method="POST">
+    <!-- Chọn Tour -->
     <div class="mb-3">
         <label for="id_tour">Tour:</label>
         <select name="id_tour" id="id_tour" class="form-control" required>
-    <option value="">-- Chọn Tour --</option>
-    <?php foreach($tours as $t): ?>
-        <option 
-            value="<?= $t['id_tour'] ?>" 
-            data-gia="<?= $t['gia_co_ban'] ?>" 
-            <?= ($booking['id_tour'] == $t['id_tour']) ? 'selected' : '' ?>>
-            <?= htmlspecialchars($t['ten_tour']) ?> (<?= number_format($t['gia_co_ban']) ?> VNĐ/người)
-        </option>
-    <?php endforeach; ?>
-</select>
-    </div>
-
-    <div class="mb-3">
-        <label for="id_lich">Lịch khởi hành:</label>
-        <select name="id_lich" id="id_lich" class="form-control" required>
-            <option value="">-- Chọn Lịch --</option>
-           <?php foreach($lich as $l): ?>
-    <option 
-        value="<?= $l['id_lich'] ?>" 
-        data-tour="<?= $l['id_tour'] ?>"
-        <?= ($booking['id_lich'] == $l['id_lich']) ? 'selected' : '' ?>>
-        <?= date('d/m/Y', strtotime($l['ngay_khoi_hanh'])) ?> - <?= date('d/m/Y', strtotime($l['ngay_ket_thuc'])) ?>
-    </option>
-<?php endforeach; ?>
-
-
+            <option value="">-- Chọn Tour --</option>
+            <?php foreach($tours as $t): ?>
+                <option 
+                    value="<?= $t['id_tour'] ?>" 
+                    data-gia="<?= $t['gia_co_ban'] ?>" 
+                    <?= ($booking['id_tour'] == $t['id_tour']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($t['ten_tour']) ?> 
+                </option>
+            <?php endforeach; ?>
         </select>
     </div>
 
+    <!-- Ngày khởi hành -->
+    <div class="mb-3">
+        <label for="ngay_khoi_hanh">Ngày khởi hành:</label>
+        <input type="date" name="ngay_khoi_hanh" id="ngay_khoi_hanh" class="form-control"
+               value="<?= date('Y-m-d', strtotime($booking['ngay_khoi_hanh'])) ?>" required>
+    </div>
+
+    <!-- Ngày kết thúc -->
+    <div class="mb-3">
+        <label for="ngay_ket_thuc">Ngày kết thúc:</label>
+        <input type="date" name="ngay_ket_thuc" id="ngay_ket_thuc" class="form-control"
+               value="<?= date('Y-m-d', strtotime($booking['ngay_ket_thuc'])) ?>" required>
+    </div>
+
+    <!-- Giá cơ bản -->
+    <div class="mb-3">
+        <label for="gia_co_ban">Giá cơ bản (VNĐ/người):</label>
+        <input type="number" name="gia_co_ban" id="gia_co_ban" class="form-control" min="0"
+               value="<?= htmlspecialchars($booking['gia_co_ban']) ?>" required>
+    </div>
+
+    <!-- Nhà xe -->
+    <div class="mb-3">
+        <label for="id_nha_xe">Nhà xe:</label>
+        <select name="id_nha_xe" id="id_nha_xe" class="form-control">
+            <option value="">-- Chọn Nhà xe --</option>
+            <?php foreach($nhaXeList as $nx): ?>
+                <option value="<?= $nx['id_nha_xe'] ?>" <?= ($booking['id_nha_xe'] == $nx['id_nha_xe']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($nx['ten_nha_xe']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <!-- Số lượng khách -->
     <div class="mb-3">
         <label for="so_luong_khach">Số lượng khách:</label>
-        <input type="number" name="so_luong_khach" id="so_luong_khach" class="form-control" min="1" 
+        <input type="number" name="so_luong_khach" id="so_luong_khach" class="form-control" min="1"
                value="<?= htmlspecialchars($booking['so_luong_khach']) ?>" required>
     </div>
 
-    <?php 
-        $khachChinh = $booking['khachList'][0] ?? [];
-    ?>
+    <?php $khachChinh = $booking['khachList'][0] ?? []; ?>
     <div class="mb-3">
         <label for="ho_ten">Tên khách đặt:</label>
-        <input type="text" name="ho_ten" id="ho_ten" class="form-control" 
+        <input type="text" name="ho_ten" id="ho_ten" class="form-control"
                value="<?= htmlspecialchars($khachChinh['ho_ten'] ?? '') ?>" required>
     </div>
 
     <div class="mb-3">
         <label for="so_dien_thoai">Số điện thoại:</label>
-        <input type="text" name="so_dien_thoai" id="so_dien_thoai" class="form-control" 
+        <input type="text" name="so_dien_thoai" id="so_dien_thoai" class="form-control"
                value="<?= htmlspecialchars($khachChinh['so_dien_thoai'] ?? '') ?>" required>
     </div>
 
@@ -62,23 +79,30 @@
         </select>
     </div>
 
-    <div class="mb-3">
-        <label for="tong_tien">Tổng tiền:</label>
-        <input type="number" name="tong_tien" id="tong_tien" class="form-control" min="0" step="1000"
-               value="<?= htmlspecialchars($booking['tong_tien']) ?>" required>
-    </div>
+    <!-- Tổng tiền -->
+    <!-- Tổng tiền -->
+<div class="mb-3">
+    <label for="tong_tien">Tổng tiền:</label>
+    <input type="number" name="tong_tien" id="tong_tien" class="form-control" min="0" step="1000"
+           value="<?= htmlspecialchars($booking['tong_tien']) ?>" required>
+    <small id="tong_tien_display" style="font-weight:600;color:#27ae60;"></small>
+</div>
 
+
+    <!-- Ngày đặt -->
     <div class="mb-3">
         <label for="ngay_dat">Ngày đặt:</label>
-        <input type="date" name="ngay_dat" id="ngay_dat" class="form-control" 
+        <input type="date" name="ngay_dat" id="ngay_dat" class="form-control"
                value="<?= date('Y-m-d', strtotime($booking['ngay_dat'])) ?>" required>
     </div>
 
+    <!-- Ghi chú -->
     <div class="mb-3">
         <label for="ghi_chu">Ghi chú:</label>
         <textarea name="ghi_chu" id="ghi_chu" class="form-control" rows="3"><?= htmlspecialchars($booking['ghi_chu'] ?? '') ?></textarea>
     </div>
 
+    <!-- Trạng thái -->
     <div class="mb-3">
         <label for="trang_thai">Trạng thái:</label>
         <select name="trang_thai" id="trang_thai" class="form-control" required>
@@ -92,55 +116,42 @@
     <a href="index.php?act=booking" class="btn btn-secondary">Quay lại</a>
 </form>
 <script>
-const tourSelect = document.getElementById('id_tour');
+const giaCoBanInput = document.getElementById('gia_co_ban');
 const soLuongInput = document.getElementById('so_luong_khach');
 const tongTienInput = document.getElementById('tong_tien');
+const tongTienDisplay = document.getElementById('tong_tien_display');
 
 function tinhTongTien() {
-    const selectedTour = tourSelect.options[tourSelect.selectedIndex];
-    const giaCoBan = selectedTour ? parseFloat(selectedTour.dataset.gia || 0) : 0;
+    const giaCoBan = parseFloat(giaCoBanInput.value || 0);
     const soLuong = parseInt(soLuongInput.value) || 0;
     const tongTien = giaCoBan * soLuong;
+
+    // gán số thô vào input để submit
     tongTienInput.value = tongTien;
+
+    // hiển thị đẹp ra ngoài
+    tongTienDisplay.textContent = tongTien.toLocaleString('vi-VN') + ' VNĐ';
 }
 
-tourSelect.addEventListener('change', tinhTongTien);
+giaCoBanInput.addEventListener('input', tinhTongTien);
 soLuongInput.addEventListener('input', tinhTongTien);
 
-// Tính lại khi trang vừa load
+// chạy khi trang load
 window.addEventListener('DOMContentLoaded', tinhTongTien);
 </script>
-<script>
-const tourSelects = document.getElementById('id_tour');
-const lichSelect = document.getElementById('id_lich');
-const allLichOptions = Array.from(lichSelect.options); // lưu tất cả option lịch
 
-function filterLich() {
-    const idTour = tourSelects.value;
-    lichSelect.innerHTML = '<option value="">-- Chọn Lịch --</option>';
-
-    allLichOptions.forEach(opt => {
-        if (opt.dataset.tour == idTour) {
-            lichSelect.appendChild(opt);
-        }
-    });
-}
-
-// chạy khi chọn tour
-tourSelects.addEventListener('change', filterLich);
-
-// chạy khi trang load để hiển thị đúng lịch của tour đã chọn
-window.addEventListener('DOMContentLoaded', filterLich);
-</script>
 
 <style>
+/* ================== RESET & BASE ================== */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     margin: 0;
     
+    color: #2d3748;
 }
 
+/* ================== FORM CONTAINER ================== */
 form {
     background: #ffffff;
     border-radius: 12px;
@@ -148,9 +159,10 @@ form {
     max-width: 700px;
     margin: 0 auto;
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    animation: fadeIn 0.6s ease;
 }
 
-/* Nhóm form */
+/* ================== FORM GROUP ================== */
 .mb-3 {
     margin-bottom: 20px;
 }
@@ -162,7 +174,7 @@ label {
     display: block;
 }
 
-/* Input & Select */
+/* ================== INPUT & SELECT ================== */
 .form-control {
     width: 100%;
     padding: 12px 14px;
@@ -184,13 +196,13 @@ label {
     border-color: #cbd5e0;
 }
 
-/* Textarea */
+/* ================== TEXTAREA ================== */
 textarea.form-control {
     resize: vertical;
     min-height: 100px;
 }
 
-/* Buttons */
+/* ================== BUTTONS ================== */
 .btn {
     border-radius: 8px;
     padding: 12px 20px;
@@ -198,6 +210,7 @@ textarea.form-control {
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
+    cursor: pointer;
 }
 
 .btn-success {
@@ -222,11 +235,19 @@ textarea.form-control {
     transform: translateY(-2px);
 }
 
-/* Responsive */
+/* ================== ANIMATIONS ================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================== RESPONSIVE ================== */
 @media (max-width: 600px) {
     form {
         padding: 20px;
+        margin: 20px;
     }
 }
+
 
 </style>

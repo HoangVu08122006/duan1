@@ -27,28 +27,34 @@
             </div>
         </div>
 
-        <!-- Thông tin Tour -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card shadow-sm p-4 h-100">
-                <h3 class="card-title-section">Thông tin Tour</h3>
-                <p><strong>Tên Tour:</strong> <?= htmlspecialchars($tour['ten_tour'] ?? '-') ?></p>
-                <p><strong>Danh mục:</strong> <?= htmlspecialchars($tour['ten_danh_muc'] ?? '-') ?></p>
-                <p><strong>Mô tả:</strong> <?= nl2br(htmlspecialchars($tour['mo_ta'] ?? '-')) ?></p>
-                <p><strong>Thời gian:</strong>
-                    <?= $tour['ngay_khoi_hanh'] ? date('d/m/Y', strtotime($tour['ngay_khoi_hanh'])) : '-' ?> -
-                    <?= $tour['ngay_ket_thuc'] ? date('d/m/Y', strtotime($tour['ngay_ket_thuc'])) : '-' ?>
-                </p>
-                <p><strong>Khách sạn:</strong> <?= htmlspecialchars($tour['ten_khach_san'] ?? '-') ?></p>
-                <p><strong>Nhà hàng:</strong> <?= htmlspecialchars($tour['ten_nha_hang'] ?? '-') ?></p>
-                <p><strong>Giá cơ bản:</strong> <?= number_format($tour['gia_co_ban'] ?? 0, 0, ',', '.') ?> VNĐ</p>
-                <p><strong>Trạng thái tour:</strong> <?= htmlspecialchars($tour['trang_thai_tour'] ?? '-') ?></p>
-            </div>
-        </div>
+        <!-- Thông tin Tour + Booking -->
+<div class="col-lg-4 col-md-6">
+    <div class="card shadow-sm p-4 h-100">
+        <h3 class="card-title-section">Thông tin Tour</h3>
+        <p><strong>Tên Tour:</strong> <?= htmlspecialchars($booking['ten_tour'] ?? '-') ?></p>
+        <p><strong>Mô tả:</strong> <?= nl2br(htmlspecialchars($booking['mo_ta'] ?? '-')) ?></p>
+        <p><strong>Thời gian:</strong>
+            <?= $booking['ngay_khoi_hanh'] ? date('d/m/Y', strtotime($booking['ngay_khoi_hanh'])) : '-' ?> -
+            <?= $booking['ngay_ket_thuc'] ? date('d/m/Y', strtotime($booking['ngay_ket_thuc'])) : '-' ?>
+        </p>
+        <p><strong>Khách sạn:</strong> <?= htmlspecialchars($booking['ten_khach_san'] ?? '-') ?></p>
+        <p><strong>Nhà hàng:</strong> <?= htmlspecialchars($booking['ten_nha_hang'] ?? '-') ?></p>
+        <p><strong>Nhà xe:</strong> <?= htmlspecialchars($booking['nha_xe'] ?? '-') ?></p>
+        <p><strong>Giá cơ bản:</strong> <?= number_format($booking['gia_co_ban'] ?? 0, 0, ',', '.') ?> VNĐ</p>
+        <p><strong>Trạng thái tour:</strong> <?= htmlspecialchars($booking['trang_thai_tour'] ?? '-') ?></p>
+    </div>
+</div>
+
+
 
         <!-- Danh sách khách -->
         <div class="col-lg-4 col-md-12">
             <div class="card shadow-sm p-4 h-100">
                 <h4 class="card-title-section">Danh sách khách</h4>
+                <a class="btn-add" 
+                    href="index.php?act=booking&action=addKhach&id=<?= $booking['id_dat_tour'] ?>">
+                    + Thêm khách mới
+                </a>
                 <?php if (!empty($khachList)): ?>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped mb-0">
@@ -60,10 +66,11 @@
                                     <th>CMND/CCCD</th>
                                     <th>SĐT</th>
                                     <th>Trạng thái</th>
+                                    <th>Vai trò</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($khachList as $k): ?>
+                                <?php foreach ($khachList as $index => $k): ?>
                                     <tr>
                                         <td><?= htmlspecialchars($k['ho_ten']) ?></td>
                                         <td><?= htmlspecialchars($k['gioi_tinh']) ?></td>
@@ -71,9 +78,15 @@
                                         <td><?= htmlspecialchars($k['so_cmnd_cccd'] ?? '-') ?></td>
                                         <td><?= htmlspecialchars($k['so_dien_thoai'] ?? '-') ?></td>
                                         <td><?= htmlspecialchars($k['trang_thai_khach'] ?? '-') ?></td>
+                                        <td>
+                                            <?php if ($index === 0): ?>
+                                                <span class="badge badge-primary">Đại diện</span>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
+
                         </table>
                     </div>
                 <?php else: ?>
@@ -98,6 +111,14 @@ body {
     color: #2c3e50;
     margin: 0;
     padding: 0;
+}
+.badge-primary {
+    background: #007bff;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
 /* Tiêu đề trang */

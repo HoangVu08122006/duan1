@@ -30,23 +30,40 @@ class HdvModel {
     }
 
     // Lấy tất cả tour theo HDV
-    public function getToursByHdv($id_hdv) {
-        $sql = "SELECT t.* 
-                FROM tour_du_lich t
-                JOIN lich_khoi_hanh l ON t.id_tour = l.id_tour
-                WHERE l.id_hdv = ?
-                GROUP BY t.id_tour";
-        return $this->pdo_query($sql, [$id_hdv]);
-    }
+   // Lấy tất cả tour của HDV kèm tổng tiền (tính từ dat_tour)
+public function getToursWithTotal($id_hdv) {
+    $sql = "
+        SELECT 
+            t.id_tour,
+            t.ten_tour,
+            t.thoi_luong,
+            IFNULL(MAX(d.tong_tien), 0) AS tong_tien
+        FROM tour_du_lich t
+        JOIN lich_khoi_hanh l ON l.id_tour = t.id_tour
+        LEFT JOIN dat_tour d ON d.id_tour = t.id_tour
+        WHERE l.id_hdv = ?
+        GROUP BY t.id_tour, t.ten_tour, t.thoi_luong
+        ORDER BY t.ten_tour ASC
+    ";
+    return $this->pdo_query($sql, [$id_hdv]);
+}
+
+
+
+
+
+
 
     // Lấy lịch trình theo HDV (group theo id_tour)
     public function getLichTrinhByHdv($id_hdv) {
-        $sql = "SELECT lt.*, l.id_tour, lt.ngay_thu, t.ten_tour
-                FROM lich_trinh lt
-                JOIN lich_khoi_hanh l ON lt.id_tour = l.id_tour
-                JOIN tour_du_lich t ON l.id_tour = t.id_tour
-                WHERE l.id_hdv = ?
-                ORDER BY l.id_tour, lt.ngay_thu";
+        $sql = "SELECT k.*, d.id_lich, d.ngay_dat, d.ngay_khoi_hanh, d.ngay_ket_thuc, l.id_hdv, t.trang_thai_khach
+        FROM khach_trong_dat_tour k
+        JOIN dat_tour d ON k.id_dat_tour = d.id_dat_tour
+        JOIN lich_khoi_hanh l ON d.id_lich = l.id_lich
+        LEFT JOIN trang_thai_khach t ON k.id_trang_thai_khach = t.id_trang_thai_khach
+        WHERE l.id_hdv = ?
+        ORDER BY d.ngay_khoi_hanh DESC, d.id_dat_tour, k.id_khach";
+
         $rows = $this->pdo_query($sql, [$id_hdv]);
         $grouped = [];
         foreach ($rows as $r) {
@@ -68,13 +85,15 @@ class HdvModel {
 
     // Lấy lịch trình phân theo trạng thái (sắp diễn ra/đang diễn ra vs đã kết thúc)
     public function getLichTrinhByStatus($id_hdv) {
-        $sql = "SELECT lt.*, l.id_tour, l.id_lich, l.ngay_khoi_hanh, l.ngay_ket_thuc, lt.ngay_thu, t.ten_tour, ts.trang_thai_lich_khoi_hanh
-                FROM lich_trinh lt
-                JOIN lich_khoi_hanh l ON lt.id_tour = l.id_tour
-                JOIN tour_du_lich t ON l.id_tour = t.id_tour
-                JOIN trang_thai_lich_khoi_hanh ts ON l.id_trang_thai_lich_khoi_hanh = ts.id_trang_thai_lich_khoi_hanh
-                WHERE l.id_hdv = ?
-                ORDER BY ts.trang_thai_lich_khoi_hanh DESC, l.ngay_khoi_hanh DESC, l.id_lich, lt.ngay_thu";
+        $sql = "SELECT lt.*, l.id_tour, l.id_lich, d.ngay_khoi_hanh, d.ngay_ket_thuc, lt.ngay_thu, t.ten_tour, ts.trang_thai_lich_khoi_hanh
+        FROM lich_trinh lt
+        JOIN lich_khoi_hanh l ON lt.id_tour = l.id_tour
+        JOIN dat_tour d ON l.id_dat_tour = d.id_dat_tour
+        JOIN tour_du_lich t ON l.id_tour = t.id_tour
+        JOIN trang_thai_lich_khoi_hanh ts ON l.id_trang_thai_lich_khoi_hanh = ts.id_trang_thai_lich_khoi_hanh
+        WHERE l.id_hdv = ?
+        ORDER BY ts.trang_thai_lich_khoi_hanh DESC, d.ngay_khoi_hanh DESC, l.id_lich, lt.ngay_thu";
+
         $rows = $this->pdo_query($sql, [$id_hdv]);
         
         // Phân loại tour theo trạng thái
@@ -132,21 +151,27 @@ public function diemDanh($id_khach, $trang_thai) {
 
     // Lấy tất cả nhật ký theo HDV
     public function getNhatKy($id_hdv) {
-    $sql = "SELECT nk.*, l.ngay_khoi_hanh, t.ten_tour 
+    $sql = "SELECT nk.*, d.ngay_khoi_hanh, t.ten_tour, h.ho_ten AS ten_hdv
             FROM nhat_ky_tour nk
             LEFT JOIN lich_khoi_hanh l ON nk.id_lich = l.id_lich
+            LEFT JOIN dat_tour d ON l.id_dat_tour = d.id_dat_tour
             LEFT JOIN tour_du_lich t ON l.id_tour = t.id_tour
+            LEFT JOIN huong_dan_vien h ON nk.id_hdv = h.id_hdv
             WHERE l.id_hdv = ?";
     return $this->pdo_query($sql, [$id_hdv]);
 }
 
+
+
     // Lấy 1 nhật ký theo ID
     public function getNhatKyById($id_nhat_ky) {
-    $sql = "SELECT nk.*, l.id_tour, l.ngay_khoi_hanh, t.ten_tour
-            FROM nhat_ky_tour nk
-            LEFT JOIN lich_khoi_hanh l ON nk.id_lich = l.id_lich
-            LEFT JOIN tour_du_lich t ON l.id_tour = t.id_tour
-            WHERE nk.id_nhat_ky = ?";
+    $sql = "SELECT nk.*, l.id_tour, d.ngay_khoi_hanh, d.ngay_ket_thuc, t.ten_tour
+        FROM nhat_ky_tour nk
+        LEFT JOIN lich_khoi_hanh l ON nk.id_lich = l.id_lich
+        LEFT JOIN dat_tour d ON l.id_dat_tour = d.id_dat_tour
+        LEFT JOIN tour_du_lich t ON l.id_tour = t.id_tour
+        WHERE nk.id_nhat_ky = ?";
+
     $rows = $this->pdo_query($sql, [$id_nhat_ky]);
     return $rows[0] ?? null;
 }
@@ -168,18 +193,25 @@ public function diemDanh($id_khach, $trang_thai) {
     }
 
     // Lấy chi tiết tour theo tour ID + HDV ID
-    public function getTourDetailByHdv($id_tour, $id_hdv) {
-        $sql = "SELECT t.*, lk.id_lich, lk.ngay_khoi_hanh, lk.ngay_ket_thuc, 
-                       lk.dia_diem_khoi_hanh, lk.dia_diem_den, lk.thong_tin_xe,
-                       tt.trang_thai_lich_khoi_hanh
-                FROM tour_du_lich t
-                JOIN lich_khoi_hanh lk ON t.id_tour = lk.id_tour
-                JOIN trang_thai_lich_khoi_hanh tt ON lk.id_trang_thai_lich_khoi_hanh = tt.id_trang_thai_lich_khoi_hanh
-                WHERE t.id_tour = ? AND lk.id_hdv = ?
-                LIMIT 1";
-        $rows = $this->pdo_query($sql, [$id_tour, $id_hdv]);
-        return $rows[0] ?? null;
-    }
+   public function getTourDetailByHdv($id_tour, $id_hdv) {
+    $sql = "SELECT t.*, 
+               lk.id_lich, lk.ngay_khoi_hanh, lk.ngay_ket_thuc, 
+               lk.dia_diem_khoi_hanh, lk.dia_diem_den,
+               nx.nha_xe AS thong_tin_xe, nx.sdt_nha_xe, nx.gia_nha_xe,
+               tt.trang_thai_lich_khoi_hanh
+        FROM tour_du_lich t
+        LEFT JOIN lich_khoi_hanh lk ON t.id_tour = lk.id_tour AND lk.id_hdv = ?
+        LEFT JOIN trang_thai_lich_khoi_hanh tt ON lk.id_trang_thai_lich_khoi_hanh = tt.id_trang_thai_lich_khoi_hanh
+        LEFT JOIN nha_xe nx ON t.id_xe = nx.id_xe
+        WHERE t.id_tour = ?
+        LIMIT 1";
+$rows = $this->pdo_query($sql, [$id_hdv, $id_tour]);
+return $rows[0] ?? null;
+
+    $rows = $this->pdo_query($sql, [$id_tour, $id_hdv]);
+    return $rows[0] ?? null;
+}
+
 
     // Lấy danh sách khách theo tour ID + HDV ID (để điểm danh)
     public function getKhachByTourAndHdv($id_tour, $id_hdv) {
@@ -195,14 +227,16 @@ public function diemDanh($id_khach, $trang_thai) {
 
     // Lấy danh sách khách theo lịch khởi hành cụ thể (không gộp chung)
     public function getKhachByLichKhoiHanh($id_lich) {
-        $sql = "SELECT k.*, tk.trang_thai_khach, d.id_dat_tour, d.ngay_dat
-                FROM khach_trong_dat_tour k
-                JOIN dat_tour d ON k.id_dat_tour = d.id_dat_tour
-                LEFT JOIN trang_thai_khach tk ON k.id_trang_thai_khach = tk.id_trang_thai_khach
-                WHERE d.id_lich = ?
-                ORDER BY d.id_dat_tour, k.id_khach";
-        return $this->pdo_query($sql, [$id_lich]);
-    }
+    $sql = "SELECT k.*, tk.trang_thai_khach, d.id_dat_tour, d.ngay_dat
+            FROM khach_trong_dat_tour k
+            JOIN dat_tour d ON k.id_dat_tour = d.id_dat_tour
+            JOIN lich_khoi_hanh lk ON d.id_dat_tour = lk.id_dat_tour
+            LEFT JOIN trang_thai_khach tk ON k.id_trang_thai_khach = tk.id_trang_thai_khach
+            WHERE lk.id_lich = ?
+            ORDER BY d.id_dat_tour, k.id_khach";
+    return $this->pdo_query($sql, [$id_lich]);
+}
+
 
     // Lấy tất cả trạng thái khách
     public function getTrangThaiKhach() {
@@ -229,9 +263,14 @@ public function diemDanh($id_khach, $trang_thai) {
 
     // Lấy danh sách lịch khởi hành của 1 tour theo id_tour + id_hdv
     public function getLichKhoiHanhByTour($id_tour, $id_hdv) {
-        $sql = "SELECT * FROM lich_khoi_hanh WHERE id_tour = ? AND id_hdv = ? ORDER BY ngay_khoi_hanh DESC";
-        return $this->pdo_query($sql, [$id_tour, $id_hdv]);
-    }
+    $sql = "SELECT lk.*, d.ngay_khoi_hanh, d.ngay_ket_thuc
+            FROM lich_khoi_hanh lk
+            JOIN dat_tour d ON lk.id_dat_tour = d.id_dat_tour
+            WHERE lk.id_tour = ? AND lk.id_hdv = ?
+            ORDER BY d.ngay_khoi_hanh DESC";
+    return $this->pdo_query($sql, [$id_tour, $id_hdv]);
+}
+
 
     // Lấy lịch trình của một lịch khởi hành cụ thể
     public function getLichTrinhByLichKhoiHanh($id_lich) {
@@ -246,26 +285,29 @@ public function diemDanh($id_khach, $trang_thai) {
 
     // Lấy danh sách lịch khởi hành theo HDV (kèm thông tin tour)
     public function getLichKhoiHanhByHdv($id_hdv) {
-        $sql = "SELECT lk.id_lich, t.ten_tour, lk.ngay_khoi_hanh
-                FROM lich_khoi_hanh lk
-                JOIN tour_du_lich t ON lk.id_tour = t.id_tour
-                WHERE lk.id_hdv = ?
-                ORDER BY lk.ngay_khoi_hanh DESC";
-        return $this->pdo_query($sql, [$id_hdv]);
-    }
+    $sql = "SELECT lk.id_lich, t.ten_tour, d.ngay_khoi_hanh
+            FROM lich_khoi_hanh lk
+            JOIN tour_du_lich t ON lk.id_tour = t.id_tour
+            JOIN dat_tour d ON lk.id_dat_tour = d.id_dat_tour
+            WHERE lk.id_hdv = ?
+            ORDER BY d.ngay_khoi_hanh DESC";
+    return $this->pdo_query($sql, [$id_hdv]);
+}
 
     // Tạo nhật ký mới
     public function createNhatKy($data) {
-        $sql = "INSERT INTO nhat_ky_tour (id_lich, ngay_ghi, su_co, phan_hoi, nhan_xet_hdv)
-                VALUES (?, ?, ?, ?, ?)";
-        return $this->pdo_execute($sql, [
-            $data['id_lich'],
-            $data['ngay_ghi'],
-            $data['su_co'],
-            $data['phan_hoi'],
-            $data['nhan_xet_hdv']
-        ]);
-    }
+    $sql = "INSERT INTO nhat_ky_tour (id_lich, id_hdv, ngay_ghi, su_co, phan_hoi, nhan_xet_hdv)
+            VALUES (?, ?, ?, ?, ?, ?)";
+    return $this->pdo_execute($sql, [
+        $data['id_lich'],
+        $data['id_hdv'],       // phải truyền id_hdv ở đây
+        $data['ngay_ghi'],
+        $data['su_co'],
+        $data['phan_hoi'],
+        $data['nhan_xet_hdv']
+    ]);
+}
+
 
     // Cập nhật nhật ký
     public function updateNhatKy($id_nhat_ky, $data) {
@@ -293,29 +335,33 @@ public function diemDanh($id_khach, $trang_thai) {
     }
 
     // Lấy lịch sử tour của HDV (tất cả tour đã/đang hướng dẫn)
-    public function getTourHistory($id_hdv, $sort = 'ngay_khoi_hanh', $order = 'DESC') {
-        $validSorts = ['ngay_khoi_hanh', 'ten_tour', 'gia_co_ban', 'trang_thai_lich_khoi_hanh'];
-        $sort = in_array($sort, $validSorts) ? $sort : 'ngay_khoi_hanh';
-        $order = ($order === 'ASC') ? 'ASC' : 'DESC';
+   public function getTourHistory($id_hdv, $sort = 'ngay_khoi_hanh', $order = 'DESC') {
+    $validSorts = ['ngay_khoi_hanh', 'ten_tour', 'gia_co_ban', 'trang_thai_lich_khoi_hanh'];
+    $sort = in_array($sort, $validSorts) ? $sort : 'ngay_khoi_hanh';
+    $order = ($order === 'ASC') ? 'ASC' : 'DESC';
 
-        $sql = "SELECT t.*, 
-                       l.id_lich,
-                       l.ngay_khoi_hanh,
-                       l.ngay_ket_thuc,
-                       ts.trang_thai_lich_khoi_hanh,
-                       COUNT(DISTINCT d.id_dat_tour) as so_dat_tour,
-                       COUNT(DISTINCT k.id_khach) as so_khach,
-                       DATEDIFF(NOW(), l.ngay_ket_thuc) as ngay_da_qua
-                FROM tour_du_lich t
-                JOIN lich_khoi_hanh l ON t.id_tour = l.id_tour
-                JOIN trang_thai_lich_khoi_hanh ts ON l.id_trang_thai_lich_khoi_hanh = ts.id_trang_thai_lich_khoi_hanh
-                LEFT JOIN dat_tour d ON l.id_lich = d.id_lich
-                LEFT JOIN khach_trong_dat_tour k ON d.id_dat_tour = k.id_dat_tour
-                WHERE l.id_hdv = ?
-                GROUP BY t.id_tour, l.id_lich
-                ORDER BY $sort $order";
-        return $this->pdo_query($sql, [$id_hdv]);
-    }
+    $sql = "SELECT t.*, 
+                   l.id_lich,
+                   d.ngay_khoi_hanh,
+                   d.ngay_ket_thuc,
+                   ts.trang_thai_lich_khoi_hanh,
+                   COUNT(DISTINCT d.id_dat_tour) as so_dat_tour,
+                   COUNT(DISTINCT k.id_khach) as so_khach,
+                   DATEDIFF(NOW(), d.ngay_ket_thuc) as ngay_da_qua
+            FROM tour_du_lich t
+            JOIN lich_khoi_hanh l ON t.id_tour = l.id_tour
+            JOIN trang_thai_lich_khoi_hanh ts ON l.id_trang_thai_lich_khoi_hanh = ts.id_trang_thai_lich_khoi_hanh
+            LEFT JOIN dat_tour d ON l.id_dat_tour = d.id_dat_tour
+            LEFT JOIN khach_trong_dat_tour k ON d.id_dat_tour = k.id_dat_tour
+            WHERE l.id_hdv = ?
+            GROUP BY t.id_tour, l.id_lich
+            ORDER BY $sort $order";
+
+    return $this->pdo_query($sql, [$id_hdv]);
+}
+
+
+
 
 
 }

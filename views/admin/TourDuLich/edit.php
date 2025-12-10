@@ -29,7 +29,7 @@
             </select>
         </div>
 
-        <!-- Khách sạn  -->
+        <!-- Khách sạn -->
         <div class="mb-3">
             <label class="form-label">Khách sạn</label>
             <select name="id_khach_san" class="form-select" required>
@@ -42,7 +42,7 @@
             </select>
         </div>
 
-        <!-- Nhà hàng-->
+        <!-- Nhà hàng -->
         <div class="mb-3">
             <label class="form-label">Nhà hàng</label>
             <select name="id_nha_hang" class="form-select" required>
@@ -54,14 +54,14 @@
                 <?php endforeach; ?>
             </select>
         </div>
+
         <!-- Xe -->
         <div class="mb-3">
             <label class="form-label">Xe</label>
             <select name="id_xe" class="form-select" required>
                 <option value="">--Chọn xe--</option>
                 <?php foreach ($xeList as $xe): ?>
-                    <option value="<?= $xe['id_xe'] ?>" 
-                        <?= ($xe['id_xe'] == $tour['id_xe']) ? 'selected' : '' ?>>
+                    <option value="<?= $xe['id_xe'] ?>" <?= ($xe['id_xe'] == $tour['id_xe']) ? 'selected' : '' ?>>
                         <?= htmlspecialchars($xe['nha_xe']) ?>
                     </option>
                 <?php endforeach; ?>
@@ -71,54 +71,29 @@
         <!-- Tên tour -->
         <div class="mb-3">
             <label class="form-label">Tên tour</label>
-            <input type="text" name="ten_tour" class="form-control" value="<?= htmlspecialchars($tour['ten_tour']) ?>"
-                required>
+            <input type="text" name="ten_tour" class="form-control" value="<?= htmlspecialchars($tour['ten_tour']) ?>" required>
         </div>
 
         <!-- Mô tả -->
         <div class="mb-3">
             <label class="form-label">Mô tả</label>
-<textarea name="mo_ta" class="form-control" rows="3"><?= htmlspecialchars($tour['mo_ta']) ?></textarea>
+            <textarea name="mo_ta" class="form-control" rows="3"><?= htmlspecialchars($tour['mo_ta']) ?></textarea>
         </div>
 
-        <!-- Thời lượng -->
-        <div class="mb-3">
-            <label class="form-label">Thời lượng</label>
-            <input type="text" name="thoi_luong" class="form-control"
-                value="<?= htmlspecialchars($tour['thoi_luong']) ?>">
-        </div>
-
-        <!-- Giá cơ bản -->
-        <div class="mb-3">
-            <label class="form-label">Giá cơ bản</label>
-            <input type="number" name="gia_co_ban" class="form-control" value="<?= $tour['gia_co_ban'] ?>" step="0.01">
-        </div>
-        <!-- Ngày khởi hành -->
-        <div class="mb-3">
-            <label class="form-label">Ngày khởi hành</label>
-            <input type="date" name="ngay_khoi_hanh" class="form-control"
-                value="<?= htmlspecialchars($tour['ngay_khoi_hanh']) ?>" required>
-        </div>
-
-        <!-- Ngày kết thúc -->
-        <div class="mb-3">
-            <label class="form-label">Ngày kết thúc</label>
-            <input type="date" name="ngay_ket_thuc" class="form-control"
-                value="<?= htmlspecialchars($tour['ngay_ket_thuc']) ?>" required>
-        </div>
-
+       
 
         <!-- Chính sách -->
         <div class="mb-3">
             <label class="form-label">Chính sách</label>
-            <textarea name="chinh_sach" class="form-control"
-                rows="3"><?= htmlspecialchars($tour['chinh_sach']) ?></textarea>
+            <textarea name="chinh_sach" class="form-control" rows="3"><?= htmlspecialchars($tour['chinh_sach']) ?></textarea>
         </div>
 
         <button type="submit" class="btn btn-success">Cập nhật tour</button>
         <a href="index.php?act=tour" class="btn btn-secondary">Quay lại</a>
     </form>
 </div>
+
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {

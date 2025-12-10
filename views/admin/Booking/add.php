@@ -1,44 +1,53 @@
 <h1>Thêm Booking mới</h1>
 
 <form action="index.php?act=booking&action=add" method="POST">
+    <!-- Chọn Tour -->
     <div class="mb-3">
         <label for="id_tour">Tour:</label>
         <select name="id_tour" id="id_tour" class="form-control" required>
-    <option value="">-- Chọn Tour --</option>
-    <?php foreach($tours as $t): ?>
-        <option 
-            value="<?= $t['id_tour'] ?>" 
-            data-gia="<?= $t['gia_co_ban'] ?>">
-            <?= htmlspecialchars($t['ten_tour']) ?> (<?= number_format($t['gia_co_ban']) ?> VNĐ/người)
-        </option>
-    <?php endforeach; ?>
-</select>
-
-    </div>
-
-    
-
-    <div class="mb-3">
-        <label for="id_lich">Lịch khởi hành:</label>
-        <select name="id_lich" id="id_lich" class="form-control" required>
-            <option value="">-- Chọn Lịch --</option>
-            <?php foreach($lich as $l): ?>
-                <option value="<?= $l['id_lich'] ?>">
-                    <?= date('d/m/Y', strtotime($l['ngay_khoi_hanh'])) ?> - <?= date('d/m/Y', strtotime($l['ngay_ket_thuc'])) ?>
+            <option value="">-- Chọn Tour --</option>
+            <?php foreach($tours as $t): ?>
+                <option 
+                    value="<?= $t['id_tour'] ?>" 
+                    data-gia="<?= $t['gia_co_ban'] ?>">
+                    <?= htmlspecialchars($t['ten_tour']) ?> 
                 </option>
             <?php endforeach; ?>
         </select>
     </div>
 
+    <!-- Ngày khởi hành -->
+    <div class="mb-3">
+        <label for="ngay_khoi_hanh">Ngày khởi hành:</label>
+        <input type="date" name="ngay_khoi_hanh" id="ngay_khoi_hanh" class="form-control" required>
+    </div>
+
+    <!-- Ngày kết thúc -->
+    <div class="mb-3">
+        <label for="ngay_ket_thuc">Ngày kết thúc:</label>
+        <input type="date" name="ngay_ket_thuc" id="ngay_ket_thuc" class="form-control" required>
+    </div>
+
+    <!-- Giá cơ bản -->
+    <div class="mb-3">
+    <label for="gia_co_ban">Giá cơ bản (VNĐ):</label>
+    <input type="number" name="gia_co_ban" id="gia_co_ban" class="form-control" min="0" required>
+</div>
+
+
+    <!-- Số lượng khách -->
     <div class="mb-3">
         <label for="so_luong_khach">Số lượng khách:</label>
         <input type="number" name="so_luong_khach" id="so_luong_khach" class="form-control" min="1" required>
     </div>
-<div class="mb-3">
-    <label for="tong_tien">Tổng tiền:</label>
-    <input type="text" id="tong_tien" name="tong_tien" class="form-control" readonly>
-</div>
 
+    <!-- Tổng tiền -->
+    <div class="mb-3">
+        <label for="tong_tien">Tổng tiền:</label>
+        <input type="text" id="tong_tien" name="tong_tien" class="form-control" readonly>
+    </div>
+
+    <!-- Thông tin khách -->
     <div class="mb-3">
         <label for="ho_ten">Tên khách đặt:</label>
         <input type="text" name="ho_ten" id="ho_ten" class="form-control" required>
@@ -71,48 +80,29 @@
     <a href="index.php?act=booking" class="btn btn-secondary">Quay lại</a>
 </form>
 
+
+
 <script>
-const tourSelects = document.getElementById('id_tour');
+const giaCoBanInput = document.getElementById('gia_co_ban');
 const soLuongInput = document.getElementById('so_luong_khach');
 const tongTienInput = document.getElementById('tong_tien');
 
 function tinhTongTien() {
-    const selectedTour = tourSelects.options[tourSelects.selectedIndex];
-    const giaCoBan = selectedTour ? parseFloat(selectedTour.dataset.gia || 0) : 0;
+    const giaCoBan = parseFloat(giaCoBanInput.value || 0);
     const soLuong = parseInt(soLuongInput.value) || 0;
     const tongTien = giaCoBan * soLuong;
     tongTienInput.value = tongTien.toLocaleString('vi-VN') + ' VNĐ';
 }
 
-tourSelects.addEventListener('change', tinhTongTien);
+giaCoBanInput.addEventListener('input', tinhTongTien);
 soLuongInput.addEventListener('input', tinhTongTien);
+
+
+
 </script>
 
 
-<script>
-    // dữ liệu lịch khởi hành từ PHP
-    const lichTheoTour = <?= json_encode($lich) ?>;
 
-    const tourSelect = document.getElementById('id_tour');
-    const lichSelect = document.getElementById('id_lich');
-
-    tourSelect.addEventListener('change', function() {
-        const idTour = this.value;
-        lichSelect.innerHTML = '<option value="">-- Chọn Lịch --</option>';
-
-        lichTheoTour.forEach(l => {
-            if (l.id_tour == idTour) {
-                const option = document.createElement('option');
-                option.value = l.id_lich;
-                option.textContent =
-                    new Date(l.ngay_khoi_hanh).toLocaleDateString('vi-VN') +
-                    ' - ' +
-                    new Date(l.ngay_ket_thuc).toLocaleDateString('vi-VN');
-                lichSelect.appendChild(option);
-            }
-        });
-    });
-</script>
 
 
 <style>

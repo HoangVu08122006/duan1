@@ -41,16 +41,15 @@
             </select>
         </div>
 
-                    <div class="form-group">
-    <label>Xe</label>
-    <select name="id_xe" required>
-        <option value="">--Chọn xe--</option>
-        <?php foreach ($xeList as $xe): ?>
-            <option value="<?= $xe['id_xe'] ?>"><?= htmlspecialchars($xe['nha_xe']) ?></option>
-        <?php endforeach; ?>
-    </select>
-</div>
-
+        <div class="form-group">
+            <label>Xe</label>
+            <select name="id_xe" required>
+                <option value="">--Chọn xe--</option>
+                <?php foreach ($xeList as $xe): ?>
+                    <option value="<?= $xe['id_xe'] ?>"><?= htmlspecialchars($xe['nha_xe']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
         <div class="form-group">
             <label>Tên tour</label>
@@ -62,25 +61,8 @@
             <textarea name="mo_ta" rows="3"></textarea>
         </div>
 
-        <div class="form-group">
-            <label>Thời lượng</label>
-            <input type="text" name="thoi_luong">
-        </div>
+        
 
-        <div class="form-group">
-            <label>Ngày khởi hành</label>
-            <input type="date" name="ngay_khoi_hanh" required>
-        </div>
-
-        <div class="form-group">
-            <label>Ngày kết thúc</label>
-            <input type="date" name="ngay_ket_thuc" required>
-        </div>
-
-        <div class="form-group">
-            <label>Giá cơ bản</label>
-            <input type="number" name="gia_co_ban" step="0.01">
-        </div>
 
         <div class="form-group">
             <label>Chính sách</label>
@@ -89,7 +71,7 @@
 
         <div class="form-buttons">
             <button type="submit" class="btn btn-success">Thêm tour</button>
-<a href="index.php?act=tour" class="btn btn-secondary">Quay lại</a>
+            <a href="index.php?act=tour" class="btn btn-secondary">Quay lại</a>
         </div>
     </form>
 </div>

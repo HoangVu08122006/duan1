@@ -26,8 +26,7 @@
             <th>ID</th>
             <th>Tên tour</th>
             <th>Loại tour</th>
-            <th>Thời lượng</th>
-            <th>Giá</th>
+            
             <th>Mô tả</th>
             <th>Chính sách</th>
             <th>Trạng thái</th>
@@ -41,8 +40,6 @@
             <td><?= $tour['id_tour'] ?></td>
             <td><?= htmlspecialchars($tour['ten_tour']) ?></td>
             <td><?= htmlspecialchars($tour['ten_danh_muc']) ?></td>
-            <td><?= htmlspecialchars($tour['thoi_luong'] ?? '') ?></td>
-            <td><?= number_format($tour['gia_co_ban'] ?? 0) ?>đ</td>
             <td><?= htmlspecialchars($tour['mo_ta'] ?? '') ?></td>
             <td><?= htmlspecialchars($tour['chinh_sach'] ?? '') ?></td>
             <td><?= htmlspecialchars($tour['trang_thai_tour']) ?></td>
@@ -66,6 +63,8 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+
+
 
 
 <style>

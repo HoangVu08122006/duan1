@@ -41,27 +41,28 @@ class HuongDanVien {
     }
 
     // Cập nhật HDV
-    public function update($id, $data) {
-        $sql = "UPDATE huong_dan_vien SET
-                    avatar=:avatar,
-                    ho_ten=:ho_ten,
-                    gioi_tinh=:gioi_tinh,
-                    ngay_sinh=:ngay_sinh,
-                    so_cccd=:so_cccd,
-                    email=:email,
-                    so_dien_thoai=:so_dien_thoai,
-                    id_loai_hdv=:id_loai_hdv,
-                    so_nam_kinh_nghiem=:so_nam_kinh_nghiem,
-                    dia_chi=:dia_chi,
-                    pass=:pass,
-                    id_trang_thai_lam_viec_hdv=:id_trang_thai_lam_viec_hdv,
-                    luong_hdv=:luong_hdv
-                    mo_ta=:mo_ta
-                WHERE id_hdv=:id";
-        $data['id'] = $id;
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute($data);
-    }
+   public function update($id, $data) {
+    $sql = "UPDATE huong_dan_vien SET
+                avatar = :avatar,
+                ho_ten = :ho_ten,
+                gioi_tinh = :gioi_tinh,
+                ngay_sinh = :ngay_sinh,
+                so_cccd = :so_cccd,
+                email = :email,
+                so_dien_thoai = :so_dien_thoai,
+                id_loai_hdv = :id_loai_hdv,
+                so_nam_kinh_nghiem = :so_nam_kinh_nghiem,
+                dia_chi = :dia_chi,
+                pass = :pass,
+                id_trang_thai_lam_viec_hdv = :id_trang_thai_lam_viec_hdv,
+                luong_hdv = :luong_hdv,
+                mo_ta = :mo_ta
+            WHERE id_hdv = :id";
+    $data['id'] = $id;
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute($data);
+}
+
 
     // Xóa HDV
     public function delete($id) {

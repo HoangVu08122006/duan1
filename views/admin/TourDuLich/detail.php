@@ -1,44 +1,37 @@
-
 <div class="container mt-4">
 
     <!-- Thông tin tour -->
     <h2 class="text-primary"><?= htmlspecialchars($tour['ten_tour']) ?></h2>
     <p><?= htmlspecialchars($tour['mo_ta']) ?></p>
 
-    <!-- ngày khởi hành và kết thúc tour (từ bảng lich_khoi_hanh) -->
-    <div class="alert alert-info">
-        <b>Ngày khởi hành:</b> <?= htmlspecialchars($tour['ngay_khoi_hanh'] ?? '') ?><br>
-        <b>Ngày kết thúc:</b> <?= htmlspecialchars($tour['ngay_ket_thuc'] ?? '') ?>
-    </div>
+    <hr>
+    <!-- Ảnh tour -->
+    <?php if (!empty($anhTour)): ?>
+        <div class="tour-images">
+            <?php foreach ($anhTour as $img): ?>
+                <div class="tour-img">
+                    <img src="<?= htmlspecialchars($img) ?>" 
+                         alt="<?= htmlspecialchars($tour['ten_tour']) ?>">
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <p>Chưa có ảnh cho tour này.</p>
+    <?php endif; ?>
 
     <hr>
-<!-- Ảnh tour -->
-<?php if (!empty($anhTour)): ?>
-    <div class="tour-images">
-        <?php foreach ($anhTour as $img): ?>
-            <div class="tour-img">
-                <img src="<?= htmlspecialchars($img) ?>" 
-                     alt="<?= htmlspecialchars($tour['ten_tour']) ?>">
-            </div>
-        <?php endforeach; ?>
-    </div>
-<?php else: ?>
-    <p>Chưa có ảnh cho tour này.</p>
-<?php endif; ?>
-
-
-    <hr>
-    <!-- Các thông tin khác từ lich_khoi_hanh nếu muốn -->
+    <!-- Thông tin khởi hành -->
     <h3 class="mt-4 mb-3 text-warning">Thông tin khởi hành</h3>
+    <div class="card mb-3 shadow-sm p-3">
+        <p><strong>Địa điểm xuất phát:</strong> <?= htmlspecialchars($tour['dia_diem_xuat_phat'] ?? 'Chưa có') ?></p>
+        <p><strong>Địa điểm đến:</strong> <?= htmlspecialchars($tour['dia_diem_den'] ?? 'Chưa có') ?></p>
+    </div>
+
     <?php if (!empty($lichKhoiHanh)): ?>
         <?php foreach ($lichKhoiHanh as $lkh): ?>
             <div class="card mb-3 shadow-sm p-3">
-                <p><strong>Địa điểm khởi hành:</strong> <?= htmlspecialchars($lkh['dia_diem_khoi_hanh']) ?></p>
-                <p><strong>Địa điểm đến:</strong> <?= htmlspecialchars($lkh['dia_diem_den']) ?></p>
+                
                 <p><strong>Thông tin xe:</strong> <?= htmlspecialchars($lkh['thong_tin_xe']) ?></p>
-                <!-- <p><strong>Nhà hàng:</strong> <?= htmlspecialchars($lkh['ten_nha_hang'] ?? 'Chưa chọn') ?></p>
-                <p><strong>Khách sạn:</strong> <?= htmlspecialchars($lkh['ten_khach_san'] ?? 'Chưa chọn') ?></p> -->
-
                 <p><strong>Ghi chú:</strong> <?= htmlspecialchars($lkh['ghi_chu']) ?></p>
             </div>
         <?php endforeach; ?>
@@ -47,8 +40,7 @@
     <?php endif; ?>
 
     <hr>
-
-    <!-- Lịch trình từng ngày (từ bảng lich_trinh) -->
+    <!-- Lịch trình từng ngày -->
     <h3 class="mt-4 mb-3 text-success">📅 Lịch trình từng ngày</h3>
     <?php if (!empty($lichTrinh)): ?>
         <?php foreach ($lichTrinh as $lt): ?>
@@ -64,11 +56,10 @@
     <?php endif; ?>
 
     <hr>
-
-
-
     <a href="index.php?act=tour" class="btn btn-secondary">Quay lại</a>
 </div>
+
+
 <style>
     /* Container padding */
     .container {

@@ -17,7 +17,7 @@ $hdv = $_SESSION['hdv']; // lúc này $hdv là mảng
         <tr>
             <th>Tên Tour</th>
             <th>Thời gian</th>
-            <th>Giá cơ bản</th>
+            <th>Tổng tiền</th>
             <th>Hành động</th>
         </tr>
     </thead>
@@ -30,7 +30,15 @@ $hdv = $_SESSION['hdv']; // lúc này $hdv là mảng
             </a>
         </td>
         <td><?= $tour['thoi_luong'] ?></td>
-        <td><?= number_format($tour['gia_co_ban'], 0, ',', '.') ?> VNĐ</td>
+       <td>
+            <?php
+            $tong = $tour['tong_tien'] ?? 0; // lấy từ CSDL
+            echo number_format($tong, 0, ',', '.') . " VNĐ";
+            ?>
+        </td>
+
+
+
         <td>
             <a href="index.php?act=hdv_lich_trinh&id_tour=<?= $tour['id_tour'] ?>">
                 Xem Lịch Trình
