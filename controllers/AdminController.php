@@ -152,6 +152,7 @@ function tourDuLich() {
 function tourAdd()
 {
     $model = new TourDuLich();
+    $lichTrinhModel = new LichTrinh(); // gọi model lịch trình
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_khach_san = $_POST['id_khach_san'] ?? null;
@@ -162,6 +163,26 @@ function tourAdd()
             die("Vui lòng chọn khách sạn, nhà hàng và xe!");
         }
 
+        // Xử lý upload nhiều ảnh
+        $anhTourList = [];
+        if (!empty($_FILES['anh_tour']['name'][0])) {
+            $targetDir = "./uploads/tours/";
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+
+            foreach ($_FILES['anh_tour']['name'] as $key => $name) {
+                if ($_FILES['anh_tour']['error'][$key] === UPLOAD_ERR_OK) {
+                    $fileName = time() . "_" . basename($name);
+                    $targetFile = $targetDir . $fileName;
+                    if (move_uploaded_file($_FILES['anh_tour']['tmp_name'][$key], $targetFile)) {
+                        $anhTourList[] = $fileName;
+                    }
+                }
+            }
+        }
+
+        // Dữ liệu tour
         $data = [
             'id_danh_muc'        => $_POST['id_danh_muc'],
             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
@@ -170,12 +191,25 @@ function tourAdd()
             'id_xe'              => $id_xe,
             'ten_tour'           => trim($_POST['ten_tour']),
             'mo_ta'              => trim($_POST['mo_ta']),
-            
-            'chinh_sach'         => trim($_POST['chinh_sach'])
+            'chinh_sach'         => trim($_POST['chinh_sach']),
+            'anh_tour'           => $anhTourList,
+            'so_ngay'            => (int)$_POST['so_ngay']
         ];
 
-        // Tạo tour
-        $model->create($data);
+        // 1. Tạo tour và lấy id_tour
+        $idTour = $model->create($data);
+
+        // 2. Thêm lịch trình nếu có
+        if (!empty($_POST['lich_trinh']) && is_array($_POST['lich_trinh'])) {
+            foreach ($_POST['lich_trinh'] as $ngay => $lt) {
+                $lichTrinhModel->create($idTour, [
+                    'ngay_thu'  => (int)$ngay, 
+                    'tieu_de'   => $lt['tieu_de'],
+                    'hoat_dong' => $lt['hoat_dong'],
+                    'dia_diem'  => $lt['dia_diem']
+                ]);
+            }
+        }
 
         header('Location: index.php?act=tour');
         exit();
@@ -194,17 +228,27 @@ function tourAdd()
     require './views/layout_admin.php';
 }
 
+
 function tourEdit() {
     $model = new TourDuLich();
     $id    = $_GET['id'] ?? 0;
-    $tour  = $model->getOne($id);
 
+    // Lấy thông tin tour
+    $tour  = $model->getOne($id);
     if (!$tour) {
         echo "Tour không tồn tại!";
         exit;
     }
 
+    // Lấy lịch trình của tour
+    $lichTrinh = $model->getLichTrinh($id);
+
+    // ==================================================
+    // ===============  XỬ LÝ SUBMIT  ===================
+    // ==================================================
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        // ------ 1. Cập nhật thông tin cơ bản của tour ------
         $data = [
             'id_danh_muc'        => $_POST['id_danh_muc'],
             'id_trang_thai_tour' => $_POST['id_trang_thai_tour'],
@@ -213,28 +257,111 @@ function tourEdit() {
             'id_xe'              => $_POST['id_xe'],
             'ten_tour'           => $_POST['ten_tour'],
             'mo_ta'              => $_POST['mo_ta'],
-            
             'chinh_sach'         => $_POST['chinh_sach']
         ];
 
         $model->update($id, $data);
 
+        // ------ 2. Xoá ảnh đã đánh dấu từ form ------
+        if (!empty($_POST['delete_images'])) {
+            foreach ($_POST['delete_images'] as $fileName) {
+
+                if ($fileName == "") continue;
+
+                $path = __DIR__ . "/../uploads/tours/" . $fileName;
+
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+
+                $model->deleteImage($id, $fileName);
+            }
+        }
+
+        // ------ 3. Upload ảnh mới ------
+        if (!empty($_FILES['anh_tour']['name'][0])) {
+            $uploadDir = __DIR__ . "/../uploads/tours/";
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            foreach ($_FILES['anh_tour']['tmp_name'] as $key => $tmpName) {
+                if ($_FILES['anh_tour']['error'][$key] === UPLOAD_ERR_OK) {
+
+                    $ext = pathinfo($_FILES['anh_tour']['name'][$key], PATHINFO_EXTENSION);
+                    $fileName = time() . "_" . uniqid() . "." . $ext;
+
+                    move_uploaded_file($tmpName, $uploadDir . $fileName);
+
+                    $model->addImage($id, $fileName);
+                }
+            }
+        }
+
+        // 4 — Update lịch trình
+if (!empty($_POST['lich_trinh']) && is_array($_POST['lich_trinh'])) {
+    foreach ($_POST['lich_trinh'] as $id_lich_trinh => $lt) {
+        // sanitize/normalize dữ liệu trước khi gửi model
+        $dataLt = [
+            'ngay_thu'  => isset($lt['ngay_thu']) ? (int)$lt['ngay_thu'] : null,
+            'tieu_de'   => trim($lt['tieu_de'] ?? ''),
+            'hoat_dong' => trim($lt['hoat_dong'] ?? ''),
+            'dia_diem'  => trim($lt['dia_diem'] ?? '')
+        ];
+        $model->updateLichTrinh($id_lich_trinh, $dataLt);
+    }
+}
+
+    // ========== 5 — TỰ ĐỘNG CẬP NHẬT SỐ NGÀY ==========
+
+// Số ngày mới nhập từ form
+$soNgayMoi = isset($_POST['so_ngay']) ? (int)$_POST['so_ngay'] : count($lichTrinh);
+
+// Số ngày cũ trong DB (đếm số bản ghi lịch trình hiện có)
+$soNgayCu = count($lichTrinh);
+
+if ($soNgayMoi > $soNgayCu) {
+    // ==== THÊM NGÀY MỚI ====
+    for ($i = $soNgayCu + 1; $i <= $soNgayMoi; $i++) {
+        $model->addLichTrinh($id, [
+            'ngay_thu'  => $i,
+            'tieu_de'   => "Ngày $i",
+            'hoat_dong' => "",
+            'dia_diem'  => ""
+        ]);
+    }
+
+} elseif ($soNgayMoi < $soNgayCu) {
+    // ==== XOÁ NGÀY DƯ ====
+    $model->deleteLichTrinhFromDay($id, $soNgayMoi);
+}
+
+
+
+        // Sau khi cập nhật xong → quay về danh sách
         header('Location: index.php?act=tour');
         exit;
     }
 
-    // lấy dữ liệu cho form
+    // ==================================================
+    // ===============  LOAD DỮ LIỆU FORM  ===============
+    // ==================================================
+
     $danhMucList   = $model->getAllDanhMuc();
     $trangThaiList = $model->getAllTrangThai();
     $khachSanList  = $model->getAllKhachSan();
     $nhaHangList   = $model->getAllNhaHang();
     $xeList        = $model->getAllXe();
 
+    // Render view
     ob_start();
     require './views/admin/TourDuLich/edit.php';
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
+
 
 function tourDelete()
 {
@@ -261,8 +388,10 @@ function tourDetail() {
 
     // Lấy lịch trình từng ngày
     $lichTrinh    = $model->getLichTrinh($id);
+
     // Lấy lịch khởi hành
     $lichKhoiHanh = $model->getLichKhoiHanh($id);
+
     // Lấy ảnh từ folder
     $anhTour      = $model->getAnhTourFolder($id);
 
@@ -271,6 +400,7 @@ function tourDetail() {
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
+
 
 
 
@@ -285,17 +415,21 @@ function booking() {
     $content = ob_get_clean();
     require './views/layout_admin.php';
 }
-
 function bookingAdd() {
     $bookingModel = new BookingModel();
     $tours = $bookingModel->getAllTours();
+
+    // Gắn ảnh cho từng tour
+    foreach ($tours as &$tour) {
+        $tour['anh_tour'] = $bookingModel->getAnhTour($tour['id_tour']);
+    }
+    unset($tour);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idTour = $_POST['id_tour'] ?? null;
         $soLuongKhach = $_POST['so_luong_khach'] ?? 1;
         $giaCoBan = $_POST['gia_co_ban'] ?? 0;
 
-        // Lấy thông tin tour
         $tour = $bookingModel->getTourById($idTour);
         if (!$tour) {
             echo "Tour không tồn tại!";
@@ -304,7 +438,6 @@ function bookingAdd() {
 
         $tongTien = $giaCoBan * $soLuongKhach;
 
-        // Dữ liệu booking
         $dataBooking = [
             'id_tour' => $idTour,
             'so_luong_khach' => $soLuongKhach,
@@ -316,7 +449,6 @@ function bookingAdd() {
             'gia_co_ban' => $giaCoBan
         ];
 
-        // Dữ liệu khách đặt
         $khachDat = [[
             'ho_ten' => $_POST['ho_ten'] ?? '-',
             'so_dien_thoai' => $_POST['so_dien_thoai'] ?? '-',
@@ -336,6 +468,7 @@ function bookingAdd() {
     require './views/layout_admin.php';
 }
 
+
 function bookingEdit() {
     $id = $_GET['id'] ?? 0;
     $model = new BookingModel();
@@ -347,6 +480,12 @@ function bookingEdit() {
     }
 
     $tours = $model->getAllTours();
+    // Gắn ảnh cho từng tour
+    foreach ($tours as &$tour) {
+        $tour['anh_tour'] = $model->getAnhTour($tour['id_tour']);
+    }
+    unset($tour);
+
     $khach = $booking['khachList'][0] ?? [];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -382,6 +521,7 @@ function bookingEdit() {
     require './views/layout_admin.php';
 }
 
+
 function bookingDelete() {
     $id = $_GET['id'] ?? 0;
     $model = new BookingModel();
@@ -410,6 +550,9 @@ function bookingDetail() {
         exit;
     }
 
+    // Lấy ảnh tour
+    $anhTour = $bookingModel->getAnhTour($booking['id_tour']);
+    
     $tour = [
         'ten_tour' => $booking['ten_tour'] ?? '-',
         'mo_ta' => $booking['mo_ta'] ?? '-',
@@ -419,7 +562,7 @@ function bookingDetail() {
         'ten_khach_san' => $booking['ten_khach_san'] ?? '-',
         'ten_nha_hang' => $booking['ten_nha_hang'] ?? '-',
         'nha_xe' => $booking['nha_xe'] ?? '-',
-        
+        'anh_tour' => $anhTour // thêm ảnh tour vào mảng
     ];
 
     $khachList = $booking['khachList'] ?? [];
@@ -1158,44 +1301,30 @@ function vanHanh(){
     require_once './models/BookingModel.php';
     $bookingModel = new BookingModel();
 
-    // Lấy doanh thu theo tuần
+    // Tuần hiện tại
     $weeklyRevenue = $bookingModel->getWeeklyRevenue();
-
-    // Tổng số booking tuần này
     $totalBookings = $bookingModel->countBookingsThisWeek();
-
-    // Tổng số khách tuần này (bạn cần tạo hàm countCustomersThisWeek() trong BookingModel)
     $totalCustomers = $bookingModel->countCustomersThisWeek();
+    $days = array_column($weeklyRevenue, 'ngay');
+    $revenueByDay = array_column($weeklyRevenue, 'doanh_thu');
+    $totalRevenue = array_sum($revenueByDay);
 
-    // Lấy ngày từ thứ 2 đến chủ nhật
-    $start = strtotime('monday this week');
-    $days = [];
-    for ($i = 0; $i < 7; $i++) {
-        $days[] = date('Y-m-d', strtotime("+$i day", $start));
-    }
+    // Tuần trước
+    $lastWeekRevenue = $bookingModel->getWeeklyRevenue(-1); // truyền tham số -1 để lấy tuần trước
+    $lastTotalBookings = $bookingModel->countBookingsLastWeek();
+    $lastTotalCustomers = $bookingModel->countCustomersLastWeek();
+    $lastTotalRevenue = array_sum(array_column($lastWeekRevenue, 'doanh_thu'));
 
-    // Map doanh thu theo ngày (0 nếu không có)
-    $revenueByDay = [];
-    foreach ($days as $day) {
-        $found = false;
-        foreach ($weeklyRevenue as $w) {
-            if ($w['ngay'] == $day) { // dùng 'ngay' theo SQL
-                $revenueByDay[] = $w['doanh_thu'];
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) $revenueByDay[] = 0;
-    }
+    // Tính % tăng giảm
+    $bookingChange = $lastTotalBookings ? (($totalBookings - $lastTotalBookings) / $lastTotalBookings) * 100 : 0;
+    $customerChange = $lastTotalCustomers ? (($totalCustomers - $lastTotalCustomers) / $lastTotalCustomers) * 100 : 0;
+    $revenueChange = $lastTotalRevenue ? (($totalRevenue - $lastTotalRevenue) / $lastTotalRevenue) * 100 : 0;
 
-    // Chuyển tên ngày cho biểu đồ (ví dụ: Thứ 2, Thứ 3,...)
-    $dayNames = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
-
-    // Load view báo cáo vận hành
     ob_start(); 
     require './views/admin/BaoCaoVanHanh/baoCaoVanHanh.php'; 
     $content = ob_get_clean(); 
     require './views/layout_admin.php'; 
 }
+
 
  

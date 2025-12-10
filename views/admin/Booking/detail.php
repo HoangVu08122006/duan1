@@ -31,6 +31,20 @@
 <div class="col-lg-4 col-md-6">
     <div class="card shadow-sm p-4 h-100">
         <h3 class="card-title-section">Thông tin Tour</h3>
+
+        <?php if (!empty($tour['anh_tour'])): ?>
+    <div class="tour-img mb-3">
+        <img src="./uploads/tours/<?= htmlspecialchars($tour['anh_tour'][0]) ?>" 
+             alt="<?= htmlspecialchars($tour['ten_tour']) ?>" 
+             style="width:100%; border-radius:12px; object-fit:cover; max-height:200px;">
+    </div>
+<?php else: ?>
+    <img src="./assets/no-image.png" 
+         alt="No image" 
+         style="width:100%; border-radius:12px; object-fit:cover; max-height:200px;" class="mb-3">
+<?php endif; ?>
+
+
         <p><strong>Tên Tour:</strong> <?= htmlspecialchars($booking['ten_tour'] ?? '-') ?></p>
         <p><strong>Mô tả:</strong> <?= nl2br(htmlspecialchars($booking['mo_ta'] ?? '-')) ?></p>
         <p><strong>Thời gian:</strong>

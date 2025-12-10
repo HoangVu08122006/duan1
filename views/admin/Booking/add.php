@@ -1,19 +1,40 @@
 <h1>Thêm Booking mới</h1>
 
 <form action="index.php?act=booking&action=add" method="POST">
-    <!-- Chọn Tour -->
+
+    <!-- Chọn Tour kiểu card -->
     <div class="mb-3">
-        <label for="id_tour">Tour:</label>
-        <select name="id_tour" id="id_tour" class="form-control" required>
-            <option value="">-- Chọn Tour --</option>
-            <?php foreach($tours as $t): ?>
-                <option 
-                    value="<?= $t['id_tour'] ?>" 
-                    data-gia="<?= $t['gia_co_ban'] ?>">
-                    <?= htmlspecialchars($t['ten_tour']) ?> 
-                </option>
+        <label>Chọn Tour:</label>
+        <div class="tour-list">
+            <?php foreach ($tours as $tour): ?>
+                <div class="tour-card selectable" 
+                     data-id="<?= $tour['id_tour'] ?>" 
+                     data-gia="<?= $tour['gia_co_ban'] ?>">
+                    
+                     <div class="tour-card-img">
+            <?php if (!empty($tour['anh_tour']) && is_array($tour['anh_tour'])): ?>
+                <div class="tour-gallery slideshow">
+                    <?php foreach ($tour['anh_tour'] as $img): ?>
+                        <img src="./uploads/tours/<?= htmlspecialchars($img) ?>" 
+                             alt="<?= htmlspecialchars($tour['ten_tour']) ?>">
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <img src="./assets/no-image.png" alt="No image">
+            <?php endif; ?>
+        </div>
+
+
+                    <div class="tour-card-body">
+                        <h3 class="tour-name"><?= htmlspecialchars($tour['ten_tour']) ?></h3>
+                        <p class="tour-status"><?= htmlspecialchars($tour['trang_thai_tour']) ?></p>
+                    </div>
+                </div>
             <?php endforeach; ?>
-        </select>
+        </div>
+
+        <!-- Input ẩn lưu id tour -->
+        <input type="hidden" name="id_tour" id="id_tour_selected" required>
     </div>
 
     <!-- Ngày khởi hành -->
@@ -30,10 +51,9 @@
 
     <!-- Giá cơ bản -->
     <div class="mb-3">
-    <label for="gia_co_ban">Giá cơ bản (VNĐ):</label>
-    <input type="number" name="gia_co_ban" id="gia_co_ban" class="form-control" min="0" required>
-</div>
-
+        <label for="gia_co_ban">Giá cơ bản (VNĐ):</label>
+        <input type="number" name="gia_co_ban" id="gia_co_ban" class="form-control" min="0" required>
+    </div>
 
     <!-- Số lượng khách -->
     <div class="mb-3">
@@ -98,7 +118,50 @@ giaCoBanInput.addEventListener('input', tinhTongTien);
 soLuongInput.addEventListener('input', tinhTongTien);
 
 
+const tourCards = document.querySelectorAll('.tour-card');
+const idTourInput = document.getElementById('id_tour_selected');
 
+
+tourCards.forEach(card => {
+    card.addEventListener('click', () => {
+        // Bỏ chọn thẻ khác
+        tourCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+
+        // Cập nhật input ẩn
+        idTourInput.value = card.dataset.id;
+
+        // Cập nhật giá cơ bản
+        giaCoBanInput.value = card.dataset.gia;
+
+        // Tính tổng tiền nếu có số lượng
+        tinhTongTien();
+    });
+});
+
+document.querySelectorAll('.tour-gallery').forEach(gallery => {
+    const imgs = gallery.querySelectorAll('img');
+    let index = 0;
+    let interval;
+
+    if (imgs.length > 0) {
+        imgs[0].classList.add('active');
+    }
+
+    gallery.addEventListener('mouseenter', () => {
+        interval = setInterval(() => {
+            imgs[index].classList.remove('active');
+            index = (index + 1) % imgs.length;
+            imgs[index].classList.add('active');
+        }, 1500); // đổi ảnh mỗi 1.5s
+    });
+
+    gallery.addEventListener('mouseleave', () => {
+        clearInterval(interval);
+        imgs.forEach(img => img.classList.remove('active'));
+        if (imgs.length > 0) imgs[0].classList.add('active');
+    });
+});
 </script>
 
 
@@ -106,6 +169,75 @@ soLuongInput.addEventListener('input', tinhTongTien);
 
 
 <style>
+   /* ================== TOUR LIST ================== */
+.tour-list {
+    display: flex;              /* hiển thị theo hàng ngang */
+    gap: 20px;                  /* khoảng cách giữa các card */
+    overflow-x: auto;           /* cho phép cuộn ngang */
+    padding: 10px;
+    scroll-snap-type: x mandatory; /* cuộn mượt từng card */
+}
+
+.tour-card {
+    flex: 0 0 220px;            /* cố định chiều rộng card */
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    background: #fff;
+    scroll-snap-align: start;   /* card bám vào khi cuộn */
+}
+
+.tour-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+}
+
+.tour-card.selected {
+    border: 2px solid #0d6efd;
+    background: #0d6efd;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(13,110,253,0.4);
+}
+
+/* ================== TOUR CARD IMAGE ================== */
+.tour-card-img {
+    width: 100%;
+    height: 150px;              /* khung ảnh cố định */
+    overflow: hidden;
+    position: relative;
+}
+
+.tour-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+.tour-card-img img.active {
+    display: block;
+}
+
+/* ================== TOUR CARD BODY ================== */
+.tour-card-body {
+    padding: 8px;
+}
+
+.tour-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 5px 0;
+}
+
+.tour-status {
+    font-size: 0.85rem;
+    color: #ff5722;
+}
+
+/* ================== FORM ================== */
 form {
     max-width: 700px;
     margin: 40px auto;
@@ -174,4 +306,5 @@ form a.btn-secondary:hover {
         margin: 20px;
     }
 }
+
 </style>

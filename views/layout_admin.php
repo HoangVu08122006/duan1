@@ -12,11 +12,13 @@ require_once __DIR__ . '/../commons/env.php';
 
 <body>
 <div class="admin-container">
-
-    <!-- MENU TRÁI -->
+    <div class="sidebar">
+     <!-- MENU TRÁI -->
     <?php require_once __DIR__ . '/components/sidebar.php'; ?>
+</div>
 
-    <!-- PHẦN BÊN PHẢI -->
+    <div class="admin-right">
+     <!-- PHẦN BÊN PHẢI -->
     <div class="admin-right">
                       
         <!-- HEADER -->
@@ -30,6 +32,9 @@ require_once __DIR__ . '/../commons/env.php';
         <!-- FOOTER -->
         <?php require_once __DIR__ . '/components/footer.php'; ?>
     </div>
+  </div>
+
+   
 
 </div>
 </body>
