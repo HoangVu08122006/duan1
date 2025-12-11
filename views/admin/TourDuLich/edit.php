@@ -157,17 +157,17 @@
                    name="lich_trinh[<?= htmlspecialchars($idLt) ?>][ngay_thu]"
                    value="<?= htmlspecialchars($ngayThu) ?>" 
                    class="form-control">
-
+<hr>
             <label class="mt-2">Tiêu đề</label>
             <input type="text" 
                    name="lich_trinh[<?= htmlspecialchars($idLt) ?>][tieu_de]"
                    value="<?= htmlspecialchars($tieuDe) ?>" 
                    class="form-control">
-
+<hr>
             <label class="mt-2">Mô tả / Hoạt động</label>
             <textarea name="lich_trinh[<?= htmlspecialchars($idLt) ?>][hoat_dong]" 
                       class="form-control" rows="3"><?= htmlspecialchars($hoatDong) ?></textarea>
-
+<hr>
             <label class="mt-2">Địa điểm</label>
             <input type="text" 
                    name="lich_trinh[<?= htmlspecialchars($idLt) ?>][dia_diem]"
@@ -300,6 +300,41 @@ function removeImage(btn, fileName) {
 </script>
 
 <style>
+    /* Container lịch trình */
+#lichTrinhContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* mỗi item ít nhất 300px */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Mỗi block lịch trình */
+.lich-item {
+    background: #f4f7fb;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover đẹp */
+.lich-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+/* Responsive nhỏ hơn */
+@media (max-width: 1200px) {
+    #lichTrinhContainer {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+@media (max-width: 768px) {
+    #lichTrinhContainer {
+        grid-template-columns: 1fr;
+    }
+}
+
     /* ======= LAYOUT 3 CỘT ======= */
 #editTourLayout {
     display: grid;

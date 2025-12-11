@@ -4,7 +4,7 @@ body {
     font-family: "Inter", Arial, sans-serif;
     background: #f3f6fb;
     color: #1e293b;
-    font-size: 13px; /* chữ nhỏ hơn */
+    font-size: 13px;
 }
 
 .admin-container {
@@ -15,7 +15,7 @@ body {
 
 /* ================= SIDEBAR ================= */
 .sidebar {
-    width: 160px; /* sidebar hẹp hơn */
+    width: 160px;
     background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
     color: #fff;
     display: flex;
@@ -34,21 +34,98 @@ body {
 }
 
 /* Menu chính */
-.menu li a {
-    padding: 8px 12px;
-    font-size: 13px;
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
 }
 
-/* Submenu */
-.menu .submenu li a {
+.menu li {
+    position: relative;
+}
+
+.menu li a {
+    display: block;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+/* Hover menu */
+.menu li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 4px;
+}
+
+/* Menu active */
+.menu li a.active {
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #1d4ed8;
+    border-radius: 4px;
+}
+
+/* Submenu (nếu thêm) */
+.menu li.has-submenu > a::after {
+    content: '▾';
+    float: right;
+    margin-right: 5px;
+    font-size: 10px;
+}
+
+.menu li.has-submenu .submenu {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li.has-submenu.open .submenu {
+    display: block;
+}
+
+.menu li.has-submenu .submenu li a {
     padding: 6px 20px;
     font-size: 12px;
+    color: #fff;
+}
+
+/* Hover submenu */
+.menu li.has-submenu .submenu li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 4px;
+}
+
+/* Active submenu */
+.menu li.has-submenu .submenu li a.active {
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.4);
+    color: #1d4ed8;
+    border-radius: 4px;
 }
 
 /* Logout box */
 .logout-box {
     padding: 8px;
     font-size: 13px;
+}
+
+.logout-box a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.logout-box a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* ================= PHẦN BÊN PHẢI ================= */
@@ -88,4 +165,27 @@ body {
     font-size: 12px;
     color: #475569;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+}
+/* Sidebar cố định */
+.sidebar {
+    position: fixed; /* cố định bên trái */
+    top: 0;
+    left: 0;
+    width: 160px;
+    height: 100vh;
+    background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.08);
+    z-index: 1000; /* luôn trên nội dung */
+    overflow-y: auto; /* scroll nếu quá dài */
+}
+
+.admin-right {
+    margin-left: 160px; /* để không bị che bởi sidebar */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
