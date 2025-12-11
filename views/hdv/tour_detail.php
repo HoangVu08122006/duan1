@@ -307,41 +307,49 @@
         color: #0066cc;
     }
 </style>
+<!-- ... giữ nguyên CSS của bạn ... -->
 
 <div class="tour-detail-container">
     <a href="index.php?act=hdv_dashboard" class="btn-back">← Quay lại Dashboard</a>
 
     <div class="tour-info">
-        <h2><?= htmlspecialchars($tour['ten_tour']) ?></h2>
+        <h2><?= htmlspecialchars($tour['ten_tour'] ?? '') ?></h2>
 
         <div class="info-grid">
             <div class="info-item">
                 <span class="info-label">Thời gian</span>
-                <span class="info-value"><?= htmlspecialchars($tour['thoi_luong']) ?></span>
+                <span class="info-value"><?= htmlspecialchars($tour['thoi_luong'] ?? '-') ?></span>
             </div>
             <div class="info-item">
-                <span class="info-label">Giá cơ bản</span>
-                <span class="info-value"><?= number_format($tour['gia_co_ban'], 0, ',', '.') ?> VNĐ</span>
+                <span class="info-label">Tổng tiền</span>
+    <span class="info-value"><?= number_format($tongTien, 0, ',', '.') ?> VNĐ</span>
+            </div>
+
+            <div class="info-item" style="background: #e7f3ff; padding: 10px; border-radius: 4px; border-left: 4px solid #0066cc;">
+                <span class="info-label">📅 Ngày khởi hành</span>
+                <span class="info-value"><?= isset($tour['ngay_khoi_hanh']) ? date('d/m/Y', strtotime($tour['ngay_khoi_hanh'])) : 'Chưa có' ?></span>
             </div>
             <div class="info-item" style="background: #e7f3ff; padding: 10px; border-radius: 4px; border-left: 4px solid #0066cc;">
-                <span class="info-label">📅 Ngày khởi hành (Lịch này)</span>
-                <span class="info-value" style="color: #0066cc; font-weight: bold;"><?= htmlspecialchars($tour['ngay_khoi_hanh']) ?></span>
+                <span class="info-label">📅 Ngày kết thúc</span>
+                <span class="info-value"><?= isset($tour['ngay_ket_thuc']) ? date('d/m/Y', strtotime($tour['ngay_ket_thuc'])) : 'Chưa có' ?></span>
             </div>
-            <div class="info-item" style="background: #e7f3ff; padding: 10px; border-radius: 4px; border-left: 4px solid #0066cc;">
-                <span class="info-label">📅 Ngày kết thúc (Lịch này)</span>
-                <span class="info-value" style="color: #0066cc; font-weight: bold;"><?= htmlspecialchars($tour['ngay_ket_thuc']) ?></span>
-            </div>
+
             <div class="info-item">
                 <span class="info-label">Khởi hành từ</span>
-                <span class="info-value"><?= htmlspecialchars($tour['dia_diem_khoi_hanh']) ?></span>
+                <span class="info-value"><?= htmlspecialchars($tour['dia_diem_khoi_hanh'] ?? '-') ?></span>
             </div>
+            
+
+
+
+
             <div class="info-item">
                 <span class="info-label">Đến</span>
-                <span class="info-value"><?= htmlspecialchars($tour['dia_diem_den']) ?></span>
+                <span class="info-value"><?= htmlspecialchars($tour['dia_diem_den'] ?? '-') ?></span>
             </div>
             <div class="info-item">
                 <span class="info-label">Phương tiện</span>
-                <span class="info-value"><?= htmlspecialchars($tour['thong_tin_xe']) ?></span>
+                <span class="info-value"><?= htmlspecialchars($tour['nha_xe'] ?? 'Chưa có xe') ?></span>
             </div>
             <div class="info-item">
                 <span class="info-label">Trạng thái</span>
@@ -352,50 +360,48 @@
         <?php if (!empty($tour['mo_ta'])): ?>
         <div class="info-item" style="margin-top: 15px;">
             <span class="info-label">Mô tả</span>
-            <span class="info-value"><?= htmlspecialchars($tour['mo_ta']) ?></span>
+            <span class="info-value"><?= htmlspecialchars($tour['mo_ta'] ?? '') ?></span>
         </div>
         <?php endif; ?>
     </div>
 
+    <!-- Lịch trình -->
     <div class="khach-list">
         <h3>📅 Lịch Trình</h3>
-
         <?php if (count($lichTrinh) > 0): ?>
-            <table class="khach-table" style="margin-top: 15px;">
-                <thead>
-                    <tr>
-                        <th>Ngày thứ</th>
-                        <th>Tiêu đề</th>
-                        <th>Hoạt động</th>
-                        <th>Địa điểm</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($lichTrinh as $lt): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($lt['ngay_thu']) ?></td>
-                        <td><?= htmlspecialchars($lt['tieu_de']) ?></td>
-                        <td><?= htmlspecialchars($lt['hoat_dong']) ?></td>
-                        <td><?= htmlspecialchars($lt['dia_diem']) ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+        <table class="khach-table" style="margin-top: 15px;">
+            <thead>
+                <tr>
+                    <th>Ngày thứ</th>
+                    <th>Tiêu đề</th>
+                    <th>Hoạt động</th>
+                    <th>Địa điểm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($lichTrinh as $lt): ?>
+                <tr>
+                    <td><?= htmlspecialchars($lt['ngay_thu'] ?? '-') ?></td>
+                    <td><?= htmlspecialchars($lt['tieu_de'] ?? '-') ?></td>
+                    <td><?= htmlspecialchars($lt['hoat_dong'] ?? '-') ?></td>
+                    <td><?= htmlspecialchars($lt['dia_diem'] ?? '-') ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
         <?php else: ?>
-            <div class="no-khach">
-                ⚠️ Chưa có lịch trình nào cho tour này
-            </div>
+        <div class="no-khach">⚠️ Chưa có lịch trình nào cho tour này</div>
         <?php endif; ?>
     </div>
 
+    <!-- Danh sách khách -->
     <div class="khach-list">
-        <h3>📋 Danh Sách Khách Hàng & Điểm Danh</h3>
-
-        <?php if (count($khachs) > 0): ?>
+        <h3>📋 Điểm Danh Ngày <?= htmlspecialchars($ngayDangDiemDanh ?? 'Không xác định') ?></h3>
+        
+        <?php if (count($khachsNgayHienTai) > 0): ?>
             <?php
-            // Nhóm khách theo đơn đặt tour (RIÊNG CHO TOUR NÀY)
             $grouped = [];
-            foreach ($khachs as $khach) {
+            foreach ($khachsNgayHienTai as $khach) {
                 $id_dat = $khach['id_dat_tour'];
                 if (!isset($grouped[$id_dat])) {
                     $grouped[$id_dat] = [
@@ -405,104 +411,98 @@
                 }
                 $grouped[$id_dat]['khachs'][] = $khach;
             }
-            
-            // Nếu có id_lich, chỉ hiển thị khách của lịch này (đã lọc từ controller)
-            // Nếu không có, hiển thị khách của tất cả lịch của tour này
             ?>
 
             <?php foreach ($grouped as $id_dat => $dat_info): ?>
             <div class="don-dat-tour-group">
                 <div class="don-dat-tour-header">
-                    <strong>Đơn đặt tour #<?= $id_dat ?></strong> - Ngày đặt: <?= htmlspecialchars($dat_info['ngay_dat']) ?>
+                    <strong>Đơn đặt tour #<?= $id_dat ?></strong> - Ngày đặt: <?= htmlspecialchars($dat_info['ngay_dat'] ?? '') ?>
                 </div>
 
-                <table class="khach-table">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Họ Tên</th>
-                            <th>SĐT</th>
-                            <th>Giới tính</th>
-                            <th>Ngày sinh</th>
-                            <th>CMND/CCCD</th>
-                            <th>Yêu cầu đặc biệt</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <table class="khach-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ Tên</th>
+                        <th>SĐT</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        <th>CMND/CCCD</th>
+                        <th>Yêu cầu đặc biệt</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
                         <?php foreach ($dat_info['khachs'] as $idx => $khach): ?>
-                        <tr>
-                            <td><?= $idx + 1 ?></td>
-                            <td><?= htmlspecialchars($khach['ho_ten']) ?></td>
-                            <td><?= htmlspecialchars($khach['so_dien_thoai']) ?></td>
-                            <td><?= htmlspecialchars($khach['gioi_tinh']) ?></td>
-                            <td><?= htmlspecialchars($khach['ngay_sinh']) ?></td>
-                            <td><?= htmlspecialchars($khach['so_cmnd_cccd']) ?></td>
+                    <tr>
+                        <td><?= $idx + 1 ?></td>
+                        <td><?= htmlspecialchars($khach['ho_ten'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($khach['so_dien_thoai'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($khach['gioi_tinh'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($khach['ngay_sinh'] ?? '-') ?></td>
+                        <td><?= htmlspecialchars($khach['so_cmnd_cccd'] ?? '-') ?></td>
                             <td style="max-width: 200px; word-wrap: break-word;">
                                 <small><?= htmlspecialchars($khach['yeu_cau_dac_biet'] ?? '-') ?></small>
                             </td>
                             <td><?= htmlspecialchars($khach['trang_thai_khach'] ?? 'Chưa xác định') ?></td>
                             <td>
-                                <!-- Nút điểm danh nhanh -->
                                 <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <?php 
+                                    $idCoMat = null; $idVang = null;
+                            foreach ($trangThaiList as $tt) {
+                                if (stripos($tt['trang_thai_khach'], 'có mặt') !== false) $idCoMat = $tt['id_trang_thai_khach'];
+                                if (stripos($tt['trang_thai_khach'], 'vắng') !== false) $idVang = $tt['id_trang_thai_khach'];
+                            }
+                            ?>
                                     <?php 
-                                    // Tìm ID của trạng thái "Có mặt" và "Vắng"
-                                    $idCoMat = null;
-                                    $idVang = null;
-                                    foreach ($trangThaiList as $tt) {
-                                        if (stripos($tt['trang_thai_khach'], 'có mặt') !== false) {
-                                            $idCoMat = $tt['id_trang_thai_khach'];
-                                        }
-                                        if (stripos($tt['trang_thai_khach'], 'vắng') !== false) {
-                                            $idVang = $tt['id_trang_thai_khach'];
-                                        }
-                                    }
-                                    ?>
-                                    
-                                    <!-- Button Có mặt -->
-                                    <?php if ($idCoMat): ?>
-                                    <form method="POST" style="display: inline;">
-                                        <input type="hidden" name="id_khach" value="<?= $khach['id_khach'] ?>">
-                                        <input type="hidden" name="trang_thai" value="<?= $idCoMat ?>">
-                                        <button type="submit" class="btn-diem-danh btn-co-mat" title="Đánh dấu có mặt">✓ Có mặt</button>
-                                    </form>
-                                    <?php endif; ?>
-                                    
-                                    <!-- Button Vắng -->
-                                    <?php if ($idVang): ?>
-                                    <form method="POST" style="display: inline;">
-                                        <input type="hidden" name="id_khach" value="<?= $khach['id_khach'] ?>">
-                                        <input type="hidden" name="trang_thai" value="<?= $idVang ?>">
-                                        <button type="submit" class="btn-diem-danh btn-vang" title="Đánh dấu vắng">✗ Vắng</button>
-                                    </form>
-                                    <?php endif; ?>
-                                    
-                                    <!-- Button sửa yêu cầu đặc biệt -->
-                                    <button type="button" class="btn-edit-khach" onclick="editYeuCau(<?= $khach['id_khach'] ?>, '<?= htmlspecialchars($khach['yeu_cau_dac_biet'] ?? '', ENT_QUOTES) ?>')" title="Sửa yêu cầu đặc biệt">⚙️ Yêu cầu</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-            <?php endforeach; ?>
+                            $trang_thai = strtolower($khach['trang_thai_khach'] ?? '');
 
+                            $isCoMat = (strpos($trang_thai, 'có mặt') !== false);
+
+                                // Tìm ID trạng thái
+                                $idCoMat = null; 
+                                $idVang = null;
+                                foreach ($trangThaiList as $tt) {
+                                    if (stripos($tt['trang_thai_khach'], 'có mặt') !== false) $idCoMat = $tt['id_trang_thai_khach'];
+                                    if (stripos($tt['trang_thai_khach'], 'vắng')     !== false) $idVang = $tt['id_trang_thai_khach'];
+                                }
+
+                                // Xác định trạng thái tiếp theo
+                                $nextTrangThai = $isCoMat ? $idVang : $idCoMat;
+
+                                // Giao diện nút
+                                $btnClass = $isCoMat ? "btn-vang" : "btn-co-mat";
+                                $btnText  = $isCoMat ? "✗ Đánh dấu Vắng" : "✓ Đánh dấu Có mặt";
+                                ?>
+
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="action" value="diem_danh">
+                                    <input type="hidden" name="id_khach" value="<?= $khach['id_khach'] ?>">
+                                    <input type="hidden" name="trang_thai" value="<?= $nextTrangThai ?>">
+                                    <button type="submit" class="btn-diem-danh <?= $btnClass ?>"><?= $btnText ?></button>
+                                </form>
+
+
+                                    <button type="button" class="btn-edit-khach" onclick="editYeuCau(event, <?= $khach['id_khach'] ?>, '<?= htmlspecialchars($khach['yeu_cau_dac_biet'] ?? '', ENT_QUOTES) ?>')" title="Sửa yêu cầu đặc biệt">⚙️ Yêu cầu</button>
+                                </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+                </div>
+            <?php endforeach; ?>
         <?php else: ?>
-            <div class="no-khach">
-                ⚠️ Chưa có khách hàng nào cho tour này
-            </div>
+            <div class="no-khach">⚠️ Chưa có khách hàng nào cho tour này</div>
         <?php endif; ?>
     </div>
 </div>
 
-<!-- Modal sửa yêu cầu đặc biệt -->
+<!-- Modal -->
 <div id="editModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            Cập nhật yêu cầu đặc biệt
-        </div>
+        <div class="modal-header">Cập nhật yêu cầu đặc biệt</div>
         <form method="POST" id="editForm">
             <div class="modal-body">
                 <input type="hidden" name="id_khach" id="modalIdKhach">
@@ -515,7 +515,7 @@
 
                 <div class="form-group">
                     <label for="yeuCau">Yêu cầu đặc biệt <span style="color: red;">*</span></label>
-                    <textarea name="yeu_cau_dac_biet" id="yeuCau" placeholder="Ví dụ: Ăn chay, dị ứng, bệnh tiểu đường, sợ độc lập, cần ghế có tay vịn, v.v..." required></textarea>
+                    <textarea name="yeu_cau_dac_biet" id="yeuCau" placeholder="Ví dụ: Ăn chay, dị ứng..." required></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -527,8 +527,7 @@
 </div>
 
 <script>
-function editYeuCau(idKhach, yeuCau) {
-    // Lấy tên khách từ bảng
+function editYeuCau(event, idKhach, yeuCau) {
     const row = event.target.closest('tr');
     const hoTen = row.querySelector('td:nth-child(2)').textContent;
     
@@ -542,10 +541,8 @@ function closeModal() {
     document.getElementById('editModal').classList.remove('active');
 }
 
-// Đóng modal khi click bên ngoài
 document.getElementById('editModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
+    if (e.target === this) closeModal();
 });
 </script>
+

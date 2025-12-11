@@ -262,68 +262,65 @@
                     <th>Ngày Kết Thúc</th>
                     <th>Trạng Thái</th>
                     <th>Giá Cơ Bản</th>
-                    <th>Đơn Đặt</th>
+                    <th>Tổng tiền</th>
                     <th>Khách</th>
                     <th>Hành Động</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($tourHistory as $tour): ?>
-                <tr>
-                    <td>
-                        <div class="tour-name"><?= htmlspecialchars($tour['ten_tour']) ?></div>
-                        <small class="tour-date"><?= $tour['thoi_luong'] ?></small>
-                    </td>
-                    <td>
-                        <div class="tour-date"><?= htmlspecialchars($tour['ngay_khoi_hanh']) ?></div>
-                    </td>
-                    <td>
-                        <div class="tour-date"><?= htmlspecialchars($tour['ngay_ket_thuc']) ?></div>
-                        <?php if ($tour['ngay_da_qua'] >= 0): ?>
-                            <small style="color: #999;">(<?= $tour['ngay_da_qua'] ?> ngày trước)</small>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php
-                        $status = $tour['trang_thai_lich_khoi_hanh'];
-                        $statusClass = 'status-pending';
-                        if ($status === 'Đang diễn ra') {
-                            $statusClass = 'status-ongoing';
-                        } elseif ($status === 'Đã kết thúc' || $tour['ngay_da_qua'] >= 0) {
-                            $statusClass = 'status-completed';
-                        } elseif ($status === 'Hủy') {
-                            $statusClass = 'status-cancelled';
-                        }
-                        ?>
-                        <span class="status-badge <?= $statusClass ?>">
-                            <?= htmlspecialchars($status) ?>
-                        </span>
-                    </td>
-                    <td>
-                        <strong><?= number_format($tour['gia_co_ban'], 0, ',', '.') ?> VNĐ</strong>
-                    </td>
-                    <td>
-                        <div class="stat-box">
-                            <div class="stat-label">Đơn</div>
-                            <div class="stat-value"><?= $tour['so_dat_tour'] ?></div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="stat-box">
-                            <div class="stat-label">Khách</div>
-                            <div class="stat-value"><?= $tour['so_khach'] ?></div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="action-links">
-                            <a href="index.php?act=hdv_tour_detail&id_tour=<?= $tour['id_tour'] ?>" class="btn-detail">
-                                Xem chi tiết
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
+<?php foreach ($tourHistory as $tour): ?>
+<tr>
+    <td>
+        <div class="tour-name"><?= htmlspecialchars($tour['ten_tour'] ?? '') ?></div>
+        <small class="tour-date"><?= htmlspecialchars($tour['thoi_luong'] ?? '') ?></small>
+    </td>
+    <td>
+        <div class="tour-date"><?= htmlspecialchars($tour['ngay_khoi_hanh'] ?? '') ?></div>
+    </td>
+    <td>
+        <div class="tour-date"><?= htmlspecialchars($tour['ngay_ket_thuc'] ?? '') ?></div>
+        <?php if (isset($tour['ngay_da_qua']) && $tour['ngay_da_qua'] >= 0): ?>
+            <small style="color: #999;">(<?= $tour['ngay_da_qua'] ?> ngày trước)</small>
+        <?php endif; ?>
+    </td>
+    <td>
+        <?php
+        $status = $tour['trang_thai_lich_khoi_hanh'] ?? '';
+        $statusClass = 'status-pending';
+        if ($status === 'Đang diễn ra') $statusClass = 'status-ongoing';
+        elseif ($status === 'Đã kết thúc' || ($tour['ngay_da_qua'] ?? -1) >= 0) $statusClass = 'status-completed';
+        elseif ($status === 'Hủy') $statusClass = 'status-cancelled';
+        ?>
+        <span class="status-badge <?= $statusClass ?>"><?= htmlspecialchars($status) ?></span>
+    </td>
+    <td>
+        <strong><?= isset($tour['gia_co_ban']) ? number_format($tour['gia_co_ban'], 0, ',', '.') : 0 ?> VNĐ</strong>
+    </td>
+    <td>
+        <?php 
+            $tongTien = (isset($tour['gia_co_ban'], $tour['so_khach'])) 
+                        ? $tour['gia_co_ban'] * $tour['so_khach'] 
+                        : 0; 
+        ?>
+        <strong><?= number_format($tongTien, 0, ',', '.') ?> VNĐ</strong>
+    </td>
+    <td>
+        <div class="stat-box">
+            <div class="stat-label">Khách</div>
+            <div class="stat-value"><?= $tour['so_khach'] ?? 0 ?></div>
+        </div>
+    </td>
+    <td>
+        <div class="action-links">
+            <a href="index.php?act=hdv_tour_detail&id_tour=<?= $tour['id_tour'] ?? 0 ?>" class="btn-detail">
+                Xem chi tiết
+            </a>
+        </div>
+    </td>
+</tr>
+<?php endforeach; ?>
+</tbody>
+
         </table>
 
     <?php else: ?>

@@ -266,3 +266,42 @@ form input, form select, form textarea {
     background-color: #c82333;
 }
 
+/* Toggle button styles */
+.btn-diem-danh {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-diem-danh.btn-co-mat {
+    background-color: #28a745;
+}
+
+.btn-diem-danh.btn-co-mat:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.btn-diem-danh.btn-vang {
+    background-color: #dc3545;
+}
+
+.btn-diem-danh.btn-vang:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.btn-diem-danh.btn-pending {
+    background-color: #6c757d;
+}
+
+.btn-diem-danh.btn-pending:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+

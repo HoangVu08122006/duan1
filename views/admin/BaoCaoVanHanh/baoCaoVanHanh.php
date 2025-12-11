@@ -10,25 +10,25 @@
 <style>
     /* assets/css/tab.css */
 
-body {
+.report-weekly {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #fdfdfd;
     color: #333;
-    
+    padding: 20px;
 }
 
-h1 {
+.report-weekly h1 {
     text-align: center;
     color: #0078d7;
     margin-bottom: 20px;
 }
 
-div p {
+.report-weekly div p {
     font-size: 16px;
     margin: 5px 0;
 }
 
-table {
+.report-weekly table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
@@ -38,33 +38,33 @@ table {
     overflow: hidden;
 }
 
-table th {
+.report-weekly table th {
     background: #0078d7;
     color: #fff;
     padding: 12px;
     text-align: center;
 }
 
-table td {
+.report-weekly table td {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #eee;
 }
 
-table tr:nth-child(even) {
+.report-weekly table tr:nth-child(even) {
     background: #f9f9f9;
 }
 
-table tr:hover {
+.report-weekly table tr:hover {
     background: #eaf4ff;
 }
 
-tr[style] {
+.report-weekly tr[style] {
     font-style: italic;
     color: #555;
 }
 
-canvas {
+.report-weekly canvas {
     margin-top: 30px;
     background: #fff;
     border: 1px solid #eee;
@@ -72,8 +72,10 @@ canvas {
     padding: 10px;
 }
 
+
 </style>
 <body>
+    <div class="report-weekly">
     <h1>Báo cáo vận hành tuần này</h1>
 
 <div>
@@ -275,7 +277,7 @@ canvas {
 </script>
 
 
-
+    </div>
 
 </body>
 </html>
