@@ -1,0 +1,307 @@
+
+/* ====================== LAYOUT ======================= */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+}
+
+.hdv-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ====================== SIDEBAR ======================= */
+.sidebar {
+    width: 230px;
+    background: #1e293b;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin-bottom: 12px;
+}
+
+.menu li a {
+    display: block;
+    padding: 10px 12px;
+    background: #334155;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.menu li a:hover {
+    background: #475569;
+}
+
+.menu li a.active {
+    background: #0ea5e9;
+}
+
+/* nút logout */
+.logout-box {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.logout-box a {
+    display: block;
+    padding: 10px;
+    background: #dc2626;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.logout-box a:hover {
+    background: #b91c1c;
+}
+
+/* ====================== PHẦN NỘI DUNG ======================= */
+.hdv-right {
+    flex: 1;
+    padding: 25px;
+    overflow-y: auto;
+}
+
+/* tiêu đề chung */
+.page-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    color: #1e293b;
+}
+
+/* box chứa nội dung */
+.content-box {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+}
+
+/* ====================== TABLE ======================= */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+}
+
+table th {
+    background: #1e40af;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+table td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+table tr:hover {
+    background: #f1f5f9;
+}
+
+/* ====================== BUTTON ======================= */
+.btn {
+    padding: 10px 16px;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #2563eb;
+}
+.btn-danger {
+    background: #dc2626;
+}
+.btn-success {
+    background: #16a34a;
+}
+
+/* hover */
+.btn-primary:hover { background: #1d4ed8; }
+.btn-danger:hover { background: #b91c1c; }
+.btn-success:hover { background: #15803d; }
+
+/* ====================== STATUS TAG ======================= */
+.status {
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-ok { background: #22c55e; }
+.status-wait { background: #facc15; color: black; }
+.status-no { background: #ef4444; }
+
+/* ====================== FORM ======================= */
+form {
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+form label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+}
+.hdv-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.tour-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 25px 0 10px;
+    color: #334155;
+}
+
+.hdv-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.hdv-table th {
+    background: #1e293b;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.hdv-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+}
+
+.hdv-table tr:hover {
+    background: #f8fafc;
+    transition: 0.2s;
+}
+
+.no-data {
+    padding: 20px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    text-align: center;
+}
+.diem-danh-form {
+    display: flex;
+    gap: 10px;
+}
+
+.diem-danh-form .btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+/* Nút xanh lá cho Có mặt */
+.diem-danh-form .btn.green {
+    background-color: #28a745;
+}
+
+.diem-danh-form .btn.green:hover {
+    background-color: #218838;
+}
+
+/* Nút đỏ cho Vắng mặt */
+.diem-danh-form .btn.red {
+    background-color: #dc3545;
+}
+
+.diem-danh-form .btn.red:hover {
+    background-color: #c82333;
+}
+
+/* Toggle button styles */
+.btn-diem-danh {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-diem-danh.btn-co-mat {
+    background-color: #28a745;
+}
+
+.btn-diem-danh.btn-co-mat:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.btn-diem-danh.btn-vang {
+    background-color: #dc3545;
+}
+
+.btn-diem-danh.btn-vang:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.btn-diem-danh.btn-pending {
+    background-color: #6c757d;
+}
+
+.btn-diem-danh.btn-pending:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
